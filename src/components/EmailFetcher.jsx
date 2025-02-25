@@ -7,7 +7,7 @@ const EmailFetcher = () => {
   const fetchEmail = async () => {
     setError("");
     try {
-      const response = await fetch("http://localhost:8787/api/auth/google");
+      const response = await fetch("http://localhost:8787/api/email/fetch");
       if (!response.ok) {
         throw new Error("No recent email found or an error occurred");
       }
