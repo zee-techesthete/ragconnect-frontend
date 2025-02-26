@@ -25,7 +25,7 @@ const EmailFetcher = () => {
         <h1 className="text-2xl font-bold mb-4">Email Summary</h1>
         <button
           onClick={fetchEmail}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-blue-600 transition"
         >
           Fetch Latest Email
         </button>
