@@ -1,6 +1,7 @@
 import React from "react";
 import Connector from "./menuScreens/Connector";
 import Header from "../components/Header";
+import MessageInbound from "./menuScreens/Message/MessageInbound";
 
 const MenuSide = ({ selectedMenu }) => {
   const renderContent = () => {
@@ -8,7 +9,7 @@ const MenuSide = ({ selectedMenu }) => {
       case "home":
         return <div>Home Content</div>;
       case "inbound":
-        return <div>Inbound Content</div>;
+        return <MessageInbound/>;
       case "customerHub":
         return <div>Customer Hub Content</div>;
       case "trainingHub":
