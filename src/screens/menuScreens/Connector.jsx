@@ -56,7 +56,7 @@ const Connector = () => {
     { name: "Google", url: googleIcon },
     { name: "Slack", url: slackIcon },
     { name: "Instagram", url: instagramIcon },
-    { name: "Telegram", url: telegramIcon },
+    { name: "Outlook", url: telegramIcon },
     { name: "Facebook", url: facebookIcon },
     { name: "TripAdvisor", url: tripadvisorIcon },
     { name: "Pinterest", url: pinterestIcon },
