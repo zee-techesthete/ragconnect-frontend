@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
+import Logo from "../../assets/svgs/logo.svg";
 const Onboarding1 = () => {
   const [formData, setFormData] = useState({
     businessType: "",
@@ -20,14 +21,10 @@ const Onboarding1 = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
-      <div className="w-2/5 p-8 flex flex-col justify-between bg-primary ">
+      <div className="w-2/5 px-24 py-8 flex flex-col justify-between bg-primary ">
         {/* Logo */}
         <div>
-          <img
-            src="../../src/assets/images/logo.png"
-            alt="Company Logo"
-            className="w-32 h-auto mb-8"
-          />
+          <img src={Logo} alt="Company Logo" className="w-32 h-auto mb-8" />
         </div>
 
         {/* Step Indicator and Heading */}
@@ -44,17 +41,17 @@ const Onboarding1 = () => {
         </div>
 
         {/* Back Button */}
-        <div className="flex justify-start items-center space-x-4">
+        <div className="flex justify-start">
           <PrimaryBtn
             title="Back"
-            className="text-blue-500"
+            className="text-black bg-white border-none"
             icon="arrow_back"
           />
         </div>
       </div>
 
       {/* Right Section */}
-      <div className="w-3/5 p-8 flex flex-col justify-between">
+      <div className="w-3/5 px-24 py-8 flex flex-col justify-between">
         {/* Login */}
         <div className="flex gap-4 justify-end">
           <PrimaryBtn title={"Get help"} />
@@ -78,7 +75,7 @@ const Onboarding1 = () => {
                 }
                 className={
                   formData.businessType === "business"
-                    ? "bg-black text-white"
+                    ? "border-black "
                     : "bg-white"
                 }
               />
@@ -92,7 +89,7 @@ const Onboarding1 = () => {
                 }
                 className={
                   formData.businessType === "individual"
-                    ? "bg-black text-white"
+                    ? "border-black "
                     : "bg-white"
                 }
               />
@@ -107,7 +104,7 @@ const Onboarding1 = () => {
               placeholder="e.g Company XYZ"
               value={formData.companyName}
               onChange={handleInputChange}
-              className="mt-2 p-2 w-full border rounded-md"
+              className="mt-2 p-2 w-full border border-gray rounded-md"
             />
           </div>
 
@@ -121,7 +118,7 @@ const Onboarding1 = () => {
               placeholder="e.g Company XYZ"
               value={formData.companyWebsite}
               onChange={handleInputChange}
-              className="mt-2 p-2 w-full border rounded-md"
+              className="mt-2 p-2 w-full border border-gray rounded-md"
             />
           </div>
 
@@ -144,9 +141,7 @@ const Onboarding1 = () => {
                     }))
                   }
                   className={
-                    formData.companySize === size
-                      ? "bg-black text-white"
-                      : "bg-white"
+                    formData.companySize === size ? "border-black" : "bg-white"
                   }
                 />
               ))}
@@ -178,9 +173,7 @@ const Onboarding1 = () => {
                     }))
                   }
                   className={
-                    formData.industry === industry
-                      ? "bg-black text-white"
-                      : "bg-white"
+                    formData.industry === industry ? "border-black" : "bg-white"
                   }
                 />
               ))}

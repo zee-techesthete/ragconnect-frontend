@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
+import Logo from "../../assets/svgs/logo.svg";
 const Onboarding3 = () => {
   const [formData, setFormData] = useState({
     businessType: "",
@@ -20,14 +21,10 @@ const Onboarding3 = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
-      <div className="w-2/5 p-8 flex flex-col justify-between bg-primary ">
+      <div className="w-2/5 px-24 py-8 flex flex-col justify-between bg-primary ">
         {/* Logo */}
         <div>
-          <img
-            src="../../src/assets/images/logo.png"
-            alt="Company Logo"
-            className="w-32 h-auto mb-8"
-          />
+          <img src={Logo} alt="Company Logo" className="w-32 h-auto mb-8" />
         </div>
 
         {/* Step Indicator and Heading */}
@@ -51,7 +48,7 @@ const Onboarding3 = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-3/5 p-8 flex flex-col justify-between">
+      <div className="w-3/5 px-24 py-8 flex flex-col justify-between">
         {/* Login */}
         <div className="flex gap-4 justify-end">
           <PrimaryBtn title={"Get help"} />
@@ -68,7 +65,7 @@ const Onboarding3 = () => {
               placeholder="e.g Company XYZ"
               value={formData.companyName}
               onChange={handleInputChange}
-              className="mt-2 p-2 w-full border rounded-md"
+              className="mt-2 p-2 w-full border border-gray rounded-md"
             />
           </div>
 
@@ -80,7 +77,7 @@ const Onboarding3 = () => {
               placeholder="e.g Company XYZ"
               value={formData.companyWebsite}
               onChange={handleInputChange}
-              className="mt-2 p-2 w-full border rounded-md"
+              className="mt-2 p-2 w-full border border-gray rounded-md"
             />
           </div>
         </div>

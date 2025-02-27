@@ -5,8 +5,8 @@ const SocialCards = ({ platform, onClick, isSelected, connect }) => {
   return (
     <div
       onClick={onClick}
-      className={`flex items-center justify-between border border-gray p-4 rounded-md cursor-pointer gap-4 ${
-        isSelected ? "bg-black text-white" : "bg-white"
+      className={`flex items-center justify-between border border-gray p-4 rounded-md cursor-pointer gap-4 hover:border-black ${
+        isSelected ? "border-black" : "bg-white"
       }`}
     >
       <div className="flex items-center gap-4">

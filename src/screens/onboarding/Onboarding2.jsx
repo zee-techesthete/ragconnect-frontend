@@ -22,6 +22,7 @@ import wechatIcon from "../../assets/social-icons/Icon-left (17).png";
 import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 // import skypeIcon from "../../assets/social-icons/Icon-left (19).png";
 // import viberIcon from "../../assets/social-icons/Icon-left (20).png";
+import Logo from "../../assets/svgs/logo.svg";
 
 const Onboarding2 = () => {
   const [formData, setFormData] = useState({
@@ -67,14 +68,10 @@ const Onboarding2 = () => {
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
-      <div className="w-2/5 p-8 flex flex-col justify-between bg-primary">
+      <div className="w-2/5 px-24 py-8 flex flex-col justify-between bg-primary">
         {/* Logo */}
         <div>
-          <img
-            src="../../src/assets/images/logo.png"
-            alt="Company Logo"
-            className="w-32 h-auto mb-8"
-          />
+          <img src={Logo} alt="Company Logo" className="w-32 h-auto mb-8" />
         </div>
 
         {/* Step Indicator and Heading */}

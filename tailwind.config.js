@@ -11,6 +11,8 @@ export default {
         warning: "#e9c46a",
         error: "#f53f7c",
         gray: "#D6DFDF",
+        gray200: "#E2E3E4",
+        gray300: "#E0E7E7",
       },
       spacing: {
         12: "3rem",
