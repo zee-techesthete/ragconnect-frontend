@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import SocialCards from "../../components/SocialCard";
 import googleIcon from "../../assets/social-icons/Icon-left.png";
 import slackIcon from "../../assets/social-icons/Icon-left (1).png";
@@ -22,12 +23,29 @@ import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 // import skypeIcon from "../../assets/social-icons/Icon-left (19).png";
 // import viberIcon from "../../assets/social-icons/Icon-left (20).png";
 
+const rootUrl = import.meta.env.VITE_ROOT_URL;
+
 const Connector = () => {
   const [formData, setFormData] = useState({
     socialPlatform: "", // Store the selected platform
   });
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = async (field, value) => {
+    console.log("*field: ", field, value);
+
+    try {
+      // Send a request to the backend to initiate the Google OAuth flow
+      if (value === "Google") {
+        const response = await axios.get(`${rootUrl}/api/auth/google`); // Replace with the actual backend URL
+        if (response.data && response.data.url) {
+          // Redirect user to the Google login page
+          window.location.href = response.data.url;
+        }
+      }
+    } catch (error) {
+      console.error("Error initiating authentication:", error);
+    }
+
     setFormData((prevState) => ({
       ...prevState,
       [field]: value, // Update the selected social platform
