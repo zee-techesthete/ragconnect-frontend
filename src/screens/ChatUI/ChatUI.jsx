@@ -52,7 +52,17 @@ const ChatUI = () => {
           </div>
 
           {/* Chat Input Box */}
-          <ChatInput />
+          <ChatInput
+            suggestions={false}
+            data={[
+              "Small (1-9)",
+              "Medium (10-49)",
+              "Large (50-249)",
+              "Enterprise (250+)",
+              "Enterprise (250+)",
+              "Enterprise (250+)",
+            ]}
+          />
         </div>
       </div>
     </div>
