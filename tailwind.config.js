@@ -10,6 +10,7 @@ export default {
         info: "#3182ce",
         warning: "#e9c46a",
         error: "#f53f7c",
+        gray: "#D6DFDF",
       },
       spacing: {
         12: "3rem",

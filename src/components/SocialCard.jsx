@@ -1,17 +1,19 @@
 import React from "react";
+import PrimaryBtn from "./PrimaryBtn";
 
-const SocialCards = ({ platform, onClick, isSelected }) => {
+const SocialCards = ({ platform, onClick, isSelected, connect }) => {
   return (
     <div
       onClick={onClick}
-      className={`flex items-center border border-gray-300 p-4 rounded-md cursor-pointer ${
+      className={`flex items-center justify-between border border-gray p-4 rounded-md cursor-pointer gap-4 ${
         isSelected ? "bg-black text-white" : "bg-white"
       }`}
     >
-      <div className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full">
-        <span className="material-icons">{platform.toLowerCase()}</span>
+      <div className="flex items-center gap-4">
+        <img src={platform.url} alt={platform.name} className="w-8 h-8" />
+        <span>{platform.name}</span>
       </div>
-      <span className="font-semibold">{platform}</span>
+      <div>{connect && <PrimaryBtn title={"Connect"} />}</div>
     </div>
   );
 };

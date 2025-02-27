@@ -5,6 +5,7 @@ import Onboarding1 from "./screens/onboarding/Onboarding1";
 import Onboarding2 from "./screens/onboarding/Onboarding2";
 import Onboarding3 from "./screens/onboarding/Onboarding3";
 import ChatUI from "./screens/ChatUI/ChatUI";
+import MainScreen from "./screens/MainScreen";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/onboarding2" element={<Onboarding2 />} />
           <Route path="/onboarding3" element={<Onboarding3 />} />
           <Route path="/chatui" element={<ChatUI />} />
+          <Route path="/main" element={<MainScreen />} />
         </Routes>
       </div>
     </Router>
