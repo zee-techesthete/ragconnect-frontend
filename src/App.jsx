@@ -6,12 +6,16 @@ import Onboarding2 from "./screens/onboarding/Onboarding2";
 import Onboarding3 from "./screens/onboarding/Onboarding3";
 import ChatUI from "./screens/ChatUI/ChatUI";
 import MainScreen from "./screens/MainScreen";
+import Login from "./screens/Login/Login";
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
+          {/* Login routes */}
+          <Route path="/login" element={<Login />} />
+
           {/* Define routes */}
           <Route path="/" element={<Onboarding1 />} />
           <Route path="/onboarding2" element={<Onboarding2 />} />
