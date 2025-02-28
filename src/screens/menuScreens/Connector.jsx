@@ -1,27 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import SocialCards from "../../components/SocialCard";
-import googleIcon from "../../assets/social-icons/Icon-left.png";
-import slackIcon from "../../assets/social-icons/Icon-left (1).png";
-import instagramIcon from "../../assets/social-icons/Icon-left (2).png";
-import telegramIcon from "../../assets/social-icons/Icon-left (3).png";
-import facebookIcon from "../../assets/social-icons/Icon-left (4).png";
-import tripadvisorIcon from "../../assets/social-icons/Icon-left (5).png";
-import pinterestIcon from "../../assets/social-icons/Icon-left (6).png";
-import discordIcon from "../../assets/social-icons/Icon-left (7).png";
-import yahooIcon from "../../assets/social-icons/Icon-left (8).png";
-import twitterIcon from "../../assets/social-icons/Icon-left (9).png";
-import linkedinIcon from "../../assets/social-icons/Icon-left (10).png";
-import snapchatIcon from "../../assets/social-icons/Icon-left (11).png";
-import redditIcon from "../../assets/social-icons/Icon-left (12).png";
-import youtubeIcon from "../../assets/social-icons/Icon-left (13).png";
-import whatsappIcon from "../../assets/social-icons/Icon-left (14).png";
-import tiktokIcon from "../../assets/social-icons/Icon-left (15).png";
-import twitchIcon from "../../assets/social-icons/Icon-left (16).png";
-import wechatIcon from "../../assets/social-icons/Icon-left (17).png";
-import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { useDispatch, useSelector } from "react-redux";
+import socialIcons from "../../utils/socialIcons";
+import { authenticateSocial } from "../../redux/slices/socialAuthSlice";
 
 const rootUrl = import.meta.env.VITE_ROOT_URL;
 
@@ -30,61 +12,31 @@ const Connector = () => {
     socialPlatform: "", // Store the selected platform
     selectedMenu: "channels", // Store selected menu item
   });
+  const [selectedPlatform, setSelectedPlatform] = useState("");
+
   const dispatch = useDispatch();
-  const { isLoading, isConnected } = useSelector((state) => state.googleAuth);
+  // const { isLoading, isConnected } = useSelector((state) => state.googleAuth);
+  const { isConnected = {}, isLoading = false } =
+  useSelector((state) => state?.socialAuth) || {};
 
-  const handleGoogleAuth = () => {
-    dispatch(authenticateGoogle());
-  };
 
-  // const handleInputChange = async (field, value) => {
-  //   console.log("*field: ", field, value);
 
-  //   try {
-  //     // Send a request to the backend to initiate the Google OAuth flow
-  //     if (value === "Google") {
-  //       const response = await axios.get(`${rootUrl}/api/auth/google`);
-  //       if (response.data && response.data.url) {
-  //         window.location.href = response.data.url;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error initiating authentication:", error);
-  //   }
-
-  //   setFormData((prevState) => ({
-  //     ...prevState,
-  //     [field]: value,
-  //   }));
-  // };
-
-  const socialPlatforms = [
-    { name: "Google", url: googleIcon, connected: isConnected },
-    { name: "Slack", url: slackIcon },
-    { name: "Instagram", url: instagramIcon },
-    { name: "Outlook", url: telegramIcon },
-    { name: "Facebook", url: facebookIcon },
-    { name: "TripAdvisor", url: tripadvisorIcon },
-    { name: "Pinterest", url: pinterestIcon },
-    { name: "Discord", url: discordIcon },
-    { name: "Yahoo", url: yahooIcon },
-    { name: "Twitter", url: twitterIcon },
-    { name: "LinkedIn", url: linkedinIcon },
-    { name: "Snapchat", url: snapchatIcon },
-    { name: "Reddit", url: redditIcon },
-    { name: "YouTube", url: youtubeIcon },
-    { name: "WhatsApp", url: whatsappIcon },
-    { name: "TikTok", url: tiktokIcon },
-    { name: "Twitch", url: twitchIcon },
-    { name: "WeChat", url: wechatIcon },
-    { name: "Messenger", url: messengerIcon },
-  ];
+  const socialPlatforms = Object.keys(socialIcons).map((key) => ({
+    name: key.charAt(0).toUpperCase() + key.slice(1),
+    url: socialIcons[key],
+    connected: isConnected[key] || false,
+  }));
 
   const handleMenuClick = (menu) => {
     setFormData((prevState) => ({
       ...prevState,
       selectedMenu: menu, // Set selected menu
     }));
+  };
+
+  const handleSocialAuth = (platform) => {
+    setSelectedPlatform(platform);
+    dispatch(authenticateSocial(platform.toLowerCase()));
   };
 
   const menuItems = ["channels", "settings", "help", "profile"];
@@ -132,10 +84,10 @@ const Connector = () => {
           <SocialCards
             key={platform.name}
             platform={platform}
-            connect={true}
-            connected={platform.connected}
-            onClick={() => handleInputChange("socialPlatform", platform.name)}
-            isSelected={formData.socialPlatform === platform.name}
+            onConnect={() => handleSocialAuth(platform.name)}
+            isConnecting={isLoading && selectedPlatform === platform.name}
+            isConnected={platform.connected}
+            isSelected={selectedPlatform === platform.name}
           />
         ))}
       </div>

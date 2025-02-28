@@ -3,15 +3,15 @@ import PrimaryBtn from "./PrimaryBtn";
 
 const SocialCards = ({
   platform,
-  onClick,
-  isSelected,
-  connect,
-  connected,
+  onConnect,
+  isConnecting,
+  isConnected,
   linkText,
+  isSelected,
+  isLoading
 }) => {
   return (
     <div
-      onClick={onClick}
       className={`flex flex-col border border-gray p-4 rounded-md cursor-pointer gap-2 hover:border-black ${
         isSelected ? "border-black" : "bg-white"
       }`}
@@ -21,12 +21,16 @@ const SocialCards = ({
           <img src={platform.url} alt={platform.name} className="w-8 h-8" />
           <span className="text-sm md:text-base">{platform.name}</span>
         </div>
-        {connected ? (
-          <span className="material-icons text-sm md:text-base">
-            {"settings"}
+        {isConnected ? (
+          <span className="material-icons text-gray-500 text-sm md:text-base">
+            settings
           </span>
         ) : (
-          <div>{connect && <PrimaryBtn title={"Connect"} />}</div>
+          <PrimaryBtn
+        title={isConnected ? "Connected" : isConnecting ? "Connecting..." : "Connect"}
+        onClick={onConnect} // ✅ Ensure onClick uses onConnect
+        disabled={isConnecting || isConnected} // Disable if already connected or connecting
+      />
         )}
       </div>
       {linkText && (
