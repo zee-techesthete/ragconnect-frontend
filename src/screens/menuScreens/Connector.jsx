@@ -20,14 +20,14 @@ import tiktokIcon from "../../assets/social-icons/Icon-left (15).png";
 import twitchIcon from "../../assets/social-icons/Icon-left (16).png";
 import wechatIcon from "../../assets/social-icons/Icon-left (17).png";
 import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
-// import skypeIcon from "../../assets/social-icons/Icon-left (19).png";
-// import viberIcon from "../../assets/social-icons/Icon-left (20).png";
+import PrimaryBtn from "../../components/PrimaryBtn";
 
 const rootUrl = import.meta.env.VITE_ROOT_URL;
 
 const Connector = () => {
   const [formData, setFormData] = useState({
     socialPlatform: "", // Store the selected platform
+    selectedMenu: "channels", // Store selected menu item
   });
 
   const handleInputChange = async (field, value) => {
@@ -36,9 +36,8 @@ const Connector = () => {
     try {
       // Send a request to the backend to initiate the Google OAuth flow
       if (value === "Google") {
-        const response = await axios.get(`${rootUrl}/api/auth/google`); // Replace with the actual backend URL
+        const response = await axios.get(`${rootUrl}/api/auth/google`);
         if (response.data && response.data.url) {
-          // Redirect user to the Google login page
           window.location.href = response.data.url;
         }
       }
@@ -48,12 +47,12 @@ const Connector = () => {
 
     setFormData((prevState) => ({
       ...prevState,
-      [field]: value, // Update the selected social platform
+      [field]: value,
     }));
   };
 
   const socialPlatforms = [
-    { name: "Google", url: googleIcon },
+    { name: "Google", url: googleIcon, connected: true },
     { name: "Slack", url: slackIcon },
     { name: "Instagram", url: instagramIcon },
     { name: "Outlook", url: telegramIcon },
@@ -72,12 +71,54 @@ const Connector = () => {
     { name: "Twitch", url: twitchIcon },
     { name: "WeChat", url: wechatIcon },
     { name: "Messenger", url: messengerIcon },
-    // { name: "Skype", url: skypeIcon },
-    // { name: "Viber", url: viberIcon },
   ];
+
+  const handleMenuClick = (menu) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      selectedMenu: menu, // Set selected menu
+    }));
+  };
+
+  const menuItems = ["channels", "settings", "help", "profile"];
 
   return (
     <div>
+      {/* Menu Selection with Dynamic Styles */}
+      <div className="my-6 border border-t-gray border-b-gray border-l-0 border-r-0 flex gap-4">
+        {menuItems.map((menu) => (
+          <div
+            key={menu}
+            onClick={() => handleMenuClick(menu)}
+            className={`flex items-center gap-2 cursor-pointer p-4 ${
+              formData.selectedMenu === menu
+                ? " text-black border-b-2 border-black"
+                : " text-gray-500 border-b-2 border-white"
+            }`}
+          >
+            <span className="p-4 bg-gray rounded-xl"></span>
+            <span>{menu.charAt(0).toUpperCase() + menu.slice(1)}</span>{" "}
+            {/* Capitalize first letter */}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between items-center my-6">
+        <h2 className="font-semibold tetx-xl"> All Channels</h2>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 p-2 rounded-lg border border-gray300 ">
+            {/* Search input field */}
+            <span className="material-icons text-gray">{"search"}</span>
+            <input
+              type="search"
+              className="focus:outline-none focus:ring-0"
+              placeholder="Search..."
+            />
+          </div>
+          <PrimaryBtn className="px-2" icon="tune" />
+        </div>
+      </div>
+
       {/* Social Platform Selection */}
       <div className="grid grid-cols-3 gap-4">
         {socialPlatforms.map((platform) => (
@@ -85,6 +126,7 @@ const Connector = () => {
             key={platform.name}
             platform={platform}
             connect={true}
+            connected={platform.connected}
             onClick={() => handleInputChange("socialPlatform", platform.name)}
             isSelected={formData.socialPlatform === platform.name}
           />

@@ -1,84 +1,134 @@
 import React from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
+import Logo from "../../assets/svgs/logo.svg";
+import AiBubble from "../../components/AiBubble";
+import UserBubble from "../../components/UserBubble";
+import ChatInput from "../../components/ChatInput";
+import { Avatar } from "antd";
+import {
+  StarOutlined,
+  MoreOutlined,
+  UserAddOutlined,
+  FolderOpenOutlined,
+} from "@ant-design/icons";
+
 const ChatUI = () => {
   return (
-    <div className="flex flex-col h-screen bg-primary">
+    <div className="flex flex-col bg-primary">
       {/* Top Navbar */}
-      <div className="flex justify-between items-center p-12">
-        <img
-          src="../../src/assets/images/logo.png"
-          alt="Company Logo"
-          className="w-32 h-auto"
-        />
-        <div className="flex gap-4">
-          <PrimaryBtn title={"Get help"} className="bg-white" />
-          <PrimaryBtn title={"Login"} className="bg-white" />
+      <div className="flex justify-between items-center p-3 px-6 bg-white border-b border-gray">
+        {/* User Info Section */}
+        <div className="flex items-center">
+          <Avatar
+            size="large"
+            src="https://via.placeholder.com/40"
+            className="me-2"
+          />
+          <div className="flex">
+            <p className="font-medium underline me-2">Dave Osborn</p>
+            <span className="font-medium">• Instagram</span>
+          </div>
+        </div>
+
+        {/* Action Icons */}
+        <div className="flex gap-2">
+          <StarOutlined className="text-xl cursor-pointer " />
+          <MoreOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
+          <UserAddOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
+          <FolderOpenOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
         </div>
       </div>
 
       {/* Chat Container */}
-      <div className="flex-grow flex justify-center items-center">
-        <div className="w-full max-w-2xl h-[80vh] flex flex-col p-4 overflow-hidden">
+      <div className="flex-grow flex justify-center items-center bg-white">
+        <div className="w-full p-5 flex flex-col h-full">
           {/* Chat Messages */}
-          <div className="flex flex-col flex-grow space-y-4 overflow-y-auto p-2">
+          <div
+            className="flex flex-col space-y-4 overflow-y-auto flex-grow p-2 max-h-[70vh] scrollbar-hide"
+            style={{
+              overflowY: "auto",
+              maxHeight: "70vh",
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // Internet Explorer/Edge
+            }}
+          >
             {/* AI Message */}
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 text-gray-700 font-bold flex items-center justify-center rounded-md">
-                IM
-              </div>
-              <div className="bg-white border p-3 rounded-lg shadow-sm max-w-[75%]">
-                Welcome to IntellMark 👋 We're excited to get you started. Let's
-                tailor your experience to match your goals.
-              </div>
-            </div>
+            <UserBubble
+              message={
+                "Thank you! Let me check that for you. One moment, please..."
+              }
+              userAvatar={true}
+            />
 
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 text-gray-700 font-bold flex items-center justify-center rounded-md">
-                IM
-              </div>
-              <div className="bg-white border p-3 rounded-lg shadow-sm max-w-[75%]">
-                Only six quick questions to configure everything to your needs,
-                this won’t take more than a minute!
-              </div>
-            </div>
+            <AiBubble
+              message={
+                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
+              }
+              botAvatar={true}
+            />
+            <UserBubble
+              message={
+                "Thank you! Let me check that for you. One moment, please..."
+              }
+              userAvatar={true}
+            />
+
+            <AiBubble
+              message={
+                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
+              }
+              botAvatar={true}
+            />
+            <UserBubble
+              message={
+                "Thank you! Let me check that for you. One moment, please..."
+              }
+              userAvatar={true}
+            />
+
+            <AiBubble
+              message={
+                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
+              }
+              botAvatar={true}
+            />
+            <UserBubble
+              message={
+                "Thank you! Let me check that for you. One moment, please..."
+              }
+              userAvatar={true}
+            />
 
             {/* User Message */}
-            <div className="flex items-start space-x-2 justify-end">
-              <div className="bg-gray-300 text-black p-3 rounded-lg shadow-sm max-w-[75%]">
-                Business
-              </div>
-              <div className="w-8 h-8 bg-gray-500 text-white font-bold flex items-center justify-center rounded-md">
-                Me
-              </div>
-            </div>
+            <UserBubble message={"XYZ Store"} userAvatar={true} />
 
             {/* Another AI Message */}
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 text-gray-700 font-bold flex items-center justify-center rounded-md">
-                IM
-              </div>
-              <div className="bg-white border p-3 rounded-lg shadow-sm max-w-[75%]">
-                What is your company name?
-              </div>
-            </div>
-
-            {/* User Response */}
-            <div className="flex items-start space-x-2 justify-end">
-              <div className="bg-gray-200 text-black p-3 rounded-lg shadow-sm max-w-[75%]">
-                XYZ Store
-              </div>
-              <div className="p-2 bg-white rounded-md">me</div>
-            </div>
+            <AiBubble
+              message={
+                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
+              }
+              botAvatar={true}
+            />
+            <UserBubble
+              message={
+                "Thank you! Let me check that for you. One moment, please..."
+              }
+              userAvatar={true}
+            />
           </div>
 
           {/* Chat Input Box */}
-          <div className="flex items-center p-3 bg-gray-100">
-            <textarea
-              className="flex-grow p-2 focus:outline-none resize-none h-20 max-h-40 bg-transparent"
-              placeholder="Enter your company website or social media link"
-            ></textarea>
-            <PrimaryBtn icon="arrow_upward" className="px-2 py-2" />
-          </div>
+          <ChatInput
+            suggestions={false}
+            data={[
+              "Small (1-9)",
+              "Medium (10-49)",
+              "Large (50-249)",
+              "Enterprise (250+)",
+              "Enterprise (250+)",
+              "Enterprise (250+)",
+            ]}
+          />
         </div>
       </div>
     </div>

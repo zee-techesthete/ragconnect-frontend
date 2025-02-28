@@ -9,6 +9,7 @@ export default function PrimaryBtn({
   icon = null,
   icon2 = null,
   href,
+  iconSize = 18,
 }) {
   return (
     <Link to={href}>
@@ -16,10 +17,10 @@ export default function PrimaryBtn({
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className={` py-2 px-6 border rounded-md flex items-center justify-center space-x-2 transition-all disabled:opacity-50 ${className}`}
+        className={` py-2 px-6 border border-gray rounded-md flex items-center justify-center space-x-2 transition-all disabled:opacity-50 hover:border-black ${className}`}
       >
         {icon && <span className="material-icons">{icon}</span>}
-        <span>{title}</span>
+        <span className="text-sm">{title}</span>
         {icon2 && <span className="material-icons">{icon2}</span>}
       </button>
     </Link>

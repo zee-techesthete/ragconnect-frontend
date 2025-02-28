@@ -64,10 +64,29 @@ const MenuSide = ({ selectedMenu }) => {
 
     if (userId) fetchEmails(userId);
   }, [userId]);
+  // Dynamic title based on the selected menu
+  const getTitle = () => {
+    switch (selectedMenu) {
+      case "home":
+        return "Home";
+      case "inbound":
+        return "Inbound Messages";
+      case "customerHub":
+        return "Customer Hub";
+      case "trainingHub":
+        return "Training Hub";
+      case "connector":
+        return "Connector";
+      case "agentSetting":
+        return "Agent Settings";
+      default:
+        return "Select a menu";
+    }
+  };
 
   return (
-    <div className="flex-1 p-5">
-      <Header />
+    <div className="flex-1">
+      <Header title={getTitle()} />
       {renderContent()}
     </div>
   );

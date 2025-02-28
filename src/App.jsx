@@ -15,7 +15,6 @@ function App() {
         <Routes>
           {/* Login routes */}
           <Route path="/login" element={<Login />} />
-
           {/* Define routes */}
           <Route path="/" element={<Onboarding1 />} />
           <Route path="/onboarding2" element={<Onboarding2 />} />

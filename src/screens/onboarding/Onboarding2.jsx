@@ -22,6 +22,7 @@ import wechatIcon from "../../assets/social-icons/Icon-left (17).png";
 import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 // import skypeIcon from "../../assets/social-icons/Icon-left (19).png";
 // import viberIcon from "../../assets/social-icons/Icon-left (20).png";
+import Logo from "../../assets/svgs/logo.svg";
 
 const Onboarding2 = () => {
   const [formData, setFormData] = useState({
@@ -65,32 +66,28 @@ const Onboarding2 = () => {
   ];
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section */}
-      <div className="w-2/5 p-8 flex flex-col justify-between bg-primary">
+      <div className="w-full md:w-2/5 px-6 xl:px-24 py-8 flex flex-col justify-between bg-primary">
         {/* Logo */}
-        <div>
-          <img
-            src="../../src/assets/images/logo.png"
-            alt="Company Logo"
-            className="w-32 h-auto mb-8"
-          />
+        <div className="mb-8">
+          <img src={Logo} alt="Company Logo" className="w-32 h-auto" />
         </div>
 
         {/* Step Indicator and Heading */}
-        <div>
+        <div className="text-center md:text-left">
           <h3 className="text-lg font-semibold text-gray-500">Step 2 of 3</h3>
-          <h1 className="text-4xl font-bold mt-4">
+          <h1 className="text-2xl md:text-4xl font-bold mt-4">
             Which channel would you like to start with?
           </h1>
-          <p className="mt-4 text-sm">
+          <p className="mt-4 text-sm md:text-base">
             You can connect your other channels later. If you don’t see your
             tools listed here, we’ll add them for you — just let us know.
           </p>
         </div>
 
         {/* Back Button */}
-        <div className="flex justify-start items-center space-x-4">
+        <div className="flex justify-center md:justify-start mt-8">
           <PrimaryBtn
             href="/"
             title="Back"
@@ -101,19 +98,20 @@ const Onboarding2 = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-3/5 px-24 py-8 gap-6 flex flex-col justify-between">
+      <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 gap-6 flex flex-col justify-between">
         {/* Login */}
-        <div className="flex gap-4 justify-end">
+        <div className="flex gap-4 justify-center md:justify-end mb-8">
           <PrimaryBtn title="Get help" />
           <PrimaryBtn title="Login" />
         </div>
 
         {/* Social Platform Selection */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
           {socialPlatforms.map((platform) => (
             <SocialCards
               key={platform.name}
-              platform={platform} // Pass the entire platform object
+              platform={platform}
+              linkText={false}
               onClick={() => handleInputChange("socialPlatform", platform.name)}
               isSelected={formData.socialPlatform === platform.name}
             />
@@ -121,7 +119,7 @@ const Onboarding2 = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-between mt-8">
           <PrimaryBtn
             title="Skip"
             className="text-gray-500"

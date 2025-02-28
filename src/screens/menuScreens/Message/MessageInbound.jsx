@@ -2,10 +2,11 @@ import React from "react";
 import SearchMessageInbound from "./SearchMessageInbound";
 import MessageInboundConv from "./MessageInboundConv";
 import MessageDetail from "./MessageInboundDetails";
+import ChatUI from "../../ChatUI/ChatUI";
 
 const MessageInbound = () => {
   return (
-    <div className="flex flex-col h-screen w-full">
+    <div className="flex flex-col w-full">
       {/* Search Bar & Filters */}
       <div className="p-2 border-b border-gray">
         <SearchMessageInbound />
@@ -19,12 +20,12 @@ const MessageInbound = () => {
         </div>
 
         {/* Center Section (Placeholder for Chat UI) */}
-        <div className="flex-1 flex items-center justify-center text-gray-400">
-          Chat UI goes here (To be implemented)
+        <div className="w-2/4 flex-1 overflow-y-auto">
+          <ChatUI/>
         </div>
 
         {/* Right Sidebar - Message Details */}
-        <div className="w-1/4 border-l border-gray overflow-y-auto">
+        <div className="w-1/4 border-gray overflow-y-auto">
           <MessageDetail />
         </div>
       </div>

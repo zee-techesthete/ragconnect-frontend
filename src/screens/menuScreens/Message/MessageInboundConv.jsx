@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Badge } from "antd";
-import { ShoppingCartOutlined, GiftOutlined, MessageOutlined, PhoneOutlined, LinkOutlined } from "@ant-design/icons";
+import {
+  ShoppingCartOutlined,
+  GiftOutlined,
+  MessageOutlined,
+  PhoneOutlined,
+  LinkOutlined,
+} from "@ant-design/icons";
 
 const messages = [
   { id: 1, name: "Dave O.", message: "Where is my order?", time: "1h", icon: <ShoppingCartOutlined /> },
@@ -13,36 +19,41 @@ const messages = [
 ];
 
 const MessageInboundConv = () => {
+  const [selectedId, setSelectedId] = useState(1);
+
   return (
-    <div className="w-full max-w-sm bg-white shadow-md rounded-lg">
+    <div className="w-full bg-white shadow-md rounded-lg">
       {/* Header */}
       <div className="p-4 border-b border-gray flex items-center justify-between">
-        <h2 className="font-semibold text-lg"> All Conversations</h2>
-        <Badge count={20} className="text-gray" />
+        <h2 className="font-semibold text-lg">All Conversations</h2>
+        <Badge count={20} className="text-gray bg-color-none" />
       </div>
 
       {/* Conversations List */}
-      <div className="divide-y ">
-        {messages.map((msg, index) => (
+      <div className="divide-y">
+        {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`p-4 flex items-center gap-3 cursor-pointer border-gray hover:bg-gray-100 ${
-              index === 0 ? "bg-gray-100" : ""
-            }`}
+            className={`p-3 px-6 flex flex-col gap-1 cursor-pointer border-gray 
+              ${selectedId === msg.id ? " border-l-4 border-darkGray bg-lightGray" : "hover:bg-gray200"}`}
+            onClick={() => setSelectedId(msg.id)}
           >
-            {/* Avatar (Initials if no image) */}
-            <Avatar className="bg-gray-300 text-black">{msg.name[0]}</Avatar>
-
-            {/* Message Content */}
-            <div className="flex-1">
-              <p className="font-medium">{msg.name}</p>
-              <p className="text-gray-500 text-sm">{msg.message}</p>
+            {/* Message Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar className="bg-gray text-black me-2">{msg.name[0]}</Avatar>
+                <p className="font-medium">{msg.name}</p>
+              </div>
+              <div>
+              <span className="text-darkGray font-bold pe-2 text-lg">{msg.icon}</span>
+              <span className="text-darkGray font-bold">{msg.icon}</span>
+              </div>
             </div>
 
-            {/* Right Side (Icon + Time) */}
-            <div className="flex flex-col items-center text-gray">
-              {msg.icon}
-              <span className="text-xs">{msg.time}</span>
+            {/* Message Content */}
+            <div className="flex items-center justify-between">
+              <p className="text-gray">{msg.message}</p>
+              <span className="text-black font-medium">{msg.time}</span>
             </div>
           </div>
         ))}

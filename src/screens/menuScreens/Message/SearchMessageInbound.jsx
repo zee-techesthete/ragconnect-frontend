@@ -98,7 +98,8 @@ const SearchMessageInbound = () => {
           ))}
         </div>
       </div>
-      <Button icon={<ExportOutlined />} className="border border-gray bg-white hover:bg-gray-100">
+      
+      <Button icon={<ExportOutlined />} className="p-5 border border-gray bg-white hover:bg-gray">
         Export
       </Button>
     </div>
