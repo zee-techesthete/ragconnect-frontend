@@ -11,7 +11,7 @@ const MainScreen = () => {
 
   return (
     <div className="flex">
-      <Sidebar onSelectMenu={handleSelectMenu} className="w-1/3" />
+      {/* <Sidebar onSelectMenu={handleSelectMenu} className="w-1/3" /> */}
       <MenuSide selectedMenu={selectedMenu} className="w-2/3" />
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Connector from "./menuScreens/Connector";
 import Header from "../components/Header";
 import MessageInbound from "./menuScreens/Message/MessageInbound";
@@ -12,6 +12,8 @@ const rootUrl = import.meta.env.VITE_ROOT_URL;
 const MenuSide = ({ selectedMenu }) => {
   const [emails, setEmails] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
+
 
   const getQueryParams = () => {
     const params = new URLSearchParams(location.search);
@@ -31,7 +33,7 @@ const MenuSide = ({ selectedMenu }) => {
       case "trainingHub":
         return <div>Training Hub Content</div>;
       case "connector":
-        return <Connector />;
+        return navigate("/connector");
       case "agentSetting":
         return <div>Agent Settings Content</div>;
       default:
@@ -76,7 +78,7 @@ const MenuSide = ({ selectedMenu }) => {
       case "trainingHub":
         return "Training Hub";
       case "connector":
-        return "Connector";
+        return "connector";
       case "agentSetting":
         return "Agent Settings";
       default:

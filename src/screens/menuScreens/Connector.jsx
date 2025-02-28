@@ -21,6 +21,7 @@ import twitchIcon from "../../assets/social-icons/Icon-left (16).png";
 import wechatIcon from "../../assets/social-icons/Icon-left (17).png";
 import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 import PrimaryBtn from "../../components/PrimaryBtn";
+import { useDispatch, useSelector } from "react-redux";
 
 const rootUrl = import.meta.env.VITE_ROOT_URL;
 
@@ -29,30 +30,36 @@ const Connector = () => {
     socialPlatform: "", // Store the selected platform
     selectedMenu: "channels", // Store selected menu item
   });
+  const dispatch = useDispatch();
+  const { isLoading, isConnected } = useSelector((state) => state.googleAuth);
 
-  const handleInputChange = async (field, value) => {
-    console.log("*field: ", field, value);
-
-    try {
-      // Send a request to the backend to initiate the Google OAuth flow
-      if (value === "Google") {
-        const response = await axios.get(`${rootUrl}/api/auth/google`);
-        if (response.data && response.data.url) {
-          window.location.href = response.data.url;
-        }
-      }
-    } catch (error) {
-      console.error("Error initiating authentication:", error);
-    }
-
-    setFormData((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+  const handleGoogleAuth = () => {
+    dispatch(authenticateGoogle());
   };
 
+  // const handleInputChange = async (field, value) => {
+  //   console.log("*field: ", field, value);
+
+  //   try {
+  //     // Send a request to the backend to initiate the Google OAuth flow
+  //     if (value === "Google") {
+  //       const response = await axios.get(`${rootUrl}/api/auth/google`);
+  //       if (response.data && response.data.url) {
+  //         window.location.href = response.data.url;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error initiating authentication:", error);
+  //   }
+
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     [field]: value,
+  //   }));
+  // };
+
   const socialPlatforms = [
-    { name: "Google", url: googleIcon, connected: true },
+    { name: "Google", url: googleIcon, connected: isConnected },
     { name: "Slack", url: slackIcon },
     { name: "Instagram", url: instagramIcon },
     { name: "Outlook", url: telegramIcon },
