@@ -37,31 +37,45 @@ const Connector = () => {
     dispatch(authenticateGoogle());
   };
 
-  // const handleInputChange = async (field, value) => {
-  //   console.log("*field: ", field, value);
+  const handleInputChange = async (field, value) => {
+    try {
+      // Send a request to the backend to initiate the Google OAuth flow
+      if (value === "Google") {
+        const response = await axios.get(`${rootUrl}/api/auth/google`);
+        if (response.data && response.data.url) {
+          window.location.href = response.data.url;
+        }
+      }
 
-  //   try {
-  //     // Send a request to the backend to initiate the Google OAuth flow
-  //     if (value === "Google") {
-  //       const response = await axios.get(`${rootUrl}/api/auth/google`);
-  //       if (response.data && response.data.url) {
-  //         window.location.href = response.data.url;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error initiating authentication:", error);
-  //   }
+      if (value === "Outlook") {
+        const response = await axios.get(`${rootUrl}/api/auth/outlook`);
+        if (response.data && response.data.url) {
+          console.log("*response: ", response.data.url);
+          window.location.href = response.data.url;
+        }
+      }
 
-  //   setFormData((prevState) => ({
-  //     ...prevState,
-  //     [field]: value,
-  //   }));
-  // };
+      if (value === "Smtp") {
+        const response = await axios.get(`${rootUrl}/api/auth/smtp`);
+        if (response.data && response.data.url) {
+          console.log("*response: ", response.data.url);
+          window.location.href = response.data.url;
+        }
+      }
+    } catch (error) {
+      console.error("Error initiating authentication:", error);
+    }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
 
   const socialPlatforms = [
     { name: "Google", url: googleIcon, connected: isConnected },
     { name: "Slack", url: slackIcon },
-    { name: "Instagram", url: instagramIcon },
+    { name: "Smtp", url: instagramIcon },
     { name: "Outlook", url: telegramIcon },
     { name: "Facebook", url: facebookIcon },
     { name: "TripAdvisor", url: tripadvisorIcon },
@@ -81,6 +95,7 @@ const Connector = () => {
   ];
 
   const handleMenuClick = (menu) => {
+    console.log("*menu: ", menu);
     setFormData((prevState) => ({
       ...prevState,
       selectedMenu: menu, // Set selected menu
