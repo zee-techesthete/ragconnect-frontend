@@ -6,7 +6,7 @@ const UserBubble = ({ message, userAvatar }) => {
       <div className="bg-gray300 text-black p-3  rounded-t-2xl rounded-bl-2xl  shadow-sm max-w-[75%]">
         {message}
       </div>
-      {userAvatar && <div className="p-2 bg-white rounded-md">me</div>}
+      {/* {userAvatar && <div className="p-2 bg-white rounded-md">me</div>} */}
     </div>
   );
 };

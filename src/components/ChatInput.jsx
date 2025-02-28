@@ -1,43 +1,37 @@
 import React, { useState } from "react";
-import PrimaryBtn from "./PrimaryBtn";
+import { Button, Segmented } from "antd";
+import { LikeOutlined, DislikeOutlined, PauseOutlined } from "@ant-design/icons";
 
-const ChatInput = ({ suggestions, data }) => {
-  const [formData, setFormData] = useState({
-    companySize: "",
-  });
+const ChatInput = () => {
+  const [selectedMode, setSelectedMode] = useState("Hands-on");
 
   return (
-    <div className="flex items-start p-3 bg-gray300 rounded-xl max-h-96 overflow-y-auto">
-      {suggestions ? (
-        <div className="flex flex-wrap items-start p-3 bg-gray-300 rounded-xl gap-4">
-          {data.map((size) => (
-            <PrimaryBtn
-              key={size}
-              title={size}
-              onClick={() =>
-                setFormData((prevData) => ({
-                  ...prevData,
-                  companySize: size,
-                }))
-              }
-              className={
-                formData.companySize === size ? "border-black" : "bg-white"
-              }
-            />
-          ))}
-        </div>
-      ) : (
-        <>
-          <textarea
-            className="flex-grow p-2 focus:outline-none resize-none min-h-12 max-h-40 bg-transparent"
-            placeholder="Enter your company website or social media link"
-          ></textarea>
-          <PrimaryBtn
-            icon="arrow_upward"
-            className="py-2 px-0 pl-2 rounded-xl bg-white"
-          />
-        </>
-      )}
+    <div className="flex items-center p-5 bg-gray-200 rounded-xl border border-gray bg-gray800">
+      {/* Mode Selection */}
+      <span className="pe-2">Hands-on</span>
+      <Segmented
+        options={["Hands-free"]}
+        value={selectedMode}
+        onChange={setSelectedMode}
+        className="bg-white font-medium"
+      />
+
+      {/* Divider */}
+      <div className="border-l border-gray-black h-6 mx-3"></div>
+
+      {/* Like & Dislike Icons */}
+      <div className="flex gap-3">
+        <LikeOutlined className="text-xl cursor-pointer" />
+        <DislikeOutlined className="text-xl cursor-pointer" />
+      </div>
+
+      {/* Pause Button */}
+      <Button
+        icon={<PauseOutlined />}
+        className="ml-auto px-4 py-1 bg-white border border-gray-300 rounded-full"
+      >
+        Pause
+      </Button>
     </div>
   );
 };

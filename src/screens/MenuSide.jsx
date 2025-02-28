@@ -44,7 +44,7 @@ const MenuSide = ({ selectedMenu }) => {
   };
 
   return (
-    <div className="flex-1 p-5">
+    <div className="flex-1">
       <Header title={getTitle()} />
       {renderContent()}
     </div>
