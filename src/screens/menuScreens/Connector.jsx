@@ -62,7 +62,7 @@ const Connector = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center my-6">
+      <div className="flex justify-between items-center p-4">
         <h2 className="font-semibold tetx-xl"> All Channels</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 p-2 rounded-lg border border-gray300 ">
@@ -79,7 +79,7 @@ const Connector = () => {
       </div>
 
       {/* Social Platform Selection */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 p-3">
         {socialPlatforms.map((platform) => (
           <SocialCards
             key={platform.name}
