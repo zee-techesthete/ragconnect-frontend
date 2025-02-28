@@ -1,7 +1,14 @@
 import React from "react";
 import PrimaryBtn from "./PrimaryBtn";
 
-const SocialCards = ({ platform, onClick, isSelected, connect, connected }) => {
+const SocialCards = ({
+  platform,
+  onClick,
+  isSelected,
+  connect,
+  connected,
+  linkText,
+}) => {
   return (
     <div
       onClick={onClick}
@@ -9,18 +16,24 @@ const SocialCards = ({ platform, onClick, isSelected, connect, connected }) => {
         isSelected ? "border-black" : "bg-white"
       }`}
     >
-      <div className="flex items-center justify-between ">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row items-center gap-4">
           <img src={platform.url} alt={platform.name} className="w-8 h-8" />
-          <span>{platform.name}</span>
+          <span className="text-sm md:text-base">{platform.name}</span>
         </div>
         {connected ? (
-          <span className="material-icons ">{"settings"}</span>
+          <span className="material-icons text-sm md:text-base">
+            {"settings"}
+          </span>
         ) : (
           <div>{connect && <PrimaryBtn title={"Connect"} />}</div>
         )}
       </div>
-      <p className="text-xs"> Link your agent to this channel to...</p>
+      {linkText && (
+        <p className="text-xs md:text-sm">
+          Link your agent to this channel to...
+        </p>
+      )}
     </div>
   );
 };
