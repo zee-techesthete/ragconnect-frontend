@@ -6,7 +6,7 @@ const ChatInput = () => {
   const [selectedMode, setSelectedMode] = useState("Hands-on");
 
   return (
-    <div className="flex items-center p-5 bg-gray-200 rounded-xl border border-gray bg-gray800">
+    <div className="flex items-center p-5 rounded-xl border border-gray bg-gray800 mt-2">
       {/* Mode Selection */}
       <span className="pe-2">Hands-on</span>
       <Segmented
@@ -28,7 +28,7 @@ const ChatInput = () => {
       {/* Pause Button */}
       <Button
         icon={<PauseOutlined />}
-        className="ml-auto px-4 py-1 bg-white border border-gray-300 rounded-full"
+        className="ml-auto px-4 py-1 bg-white border border-gray200 rounded-lg"
       >
         Pause
       </Button>

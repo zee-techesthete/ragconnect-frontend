@@ -16,7 +16,7 @@ const ChatUI = () => {
   return (
     <div className="flex flex-col bg-primary">
       {/* Top Navbar */}
-      <div className="flex justify-between items-center p-3 px-6 bg-white border-b border-gray">
+      <div className="flex justify-between items-center min-h-14 px-6 bg-white border-b border-gray">
         {/* User Info Section */}
         <div className="flex items-center">
           <Avatar
@@ -41,7 +41,7 @@ const ChatUI = () => {
 
       {/* Chat Container */}
       <div className="flex-grow flex justify-center items-center bg-white">
-        <div className="w-full p-5 flex flex-col h-full">
+        <div className="w-full p-5 flex flex-col ">
           {/* Chat Messages */}
           <div
             className="flex flex-col space-y-4 overflow-y-auto flex-grow p-2 max-h-[70vh] scrollbar-hide"
@@ -100,7 +100,7 @@ const ChatUI = () => {
             />
 
             {/* User Message */}
-            <UserBubble message={"XYZ Store"} userAvatar={true} />
+            <UserBubble message={"abc Store"} userAvatar={true} />
 
             {/* Another AI Message */}
             <AiBubble
