@@ -9,11 +9,11 @@ const SocialCards = ({
   linkText,
   isSelected,
   isLoading
-}) => {
+}) => {  
   return (
     <div
-      className={`flex flex-col border border-gray p-4 rounded-md cursor-pointer gap-2 hover:border-black ${
-        isSelected ? "border-black" : "bg-white"
+      className={`flex flex-col border p-4 rounded-md cursor-pointer gap-2 hover:border-black ${
+        isConnected ? "border-black" : "bg-white border-gray"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -33,11 +33,9 @@ const SocialCards = ({
       />
         )}
       </div>
-      {linkText && (
-        <p className="text-xs md:text-sm">
+        <p className="text-xs md:text-sm mt-2">
           Link your agent to this channel to...
         </p>
-      )}
     </div>
   );
 };

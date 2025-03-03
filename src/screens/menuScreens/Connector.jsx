@@ -88,6 +88,7 @@ const Connector = () => {
             isConnecting={isLoading && selectedPlatform === platform.name}
             isConnected={platform.connected}
             isSelected={selectedPlatform === platform.name}
+            linkText={true}
           />
         ))}
       </div>

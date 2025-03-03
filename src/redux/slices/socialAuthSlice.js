@@ -22,6 +22,8 @@ const socialAuthSlice = createSlice({
     isLoading: false,
     isConnected: {},
     authUrls: {},
+    clientIds: {},    
+    clientInfos: {}, 
     errors: {},
   },
   reducers: {},
@@ -33,9 +35,21 @@ const socialAuthSlice = createSlice({
       })
       .addCase(authenticateSocial.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.authUrls[action.payload.platform] = action.payload.url;
-        state.isConnected[action.payload.platform] = true;
-        window.location.href = action.payload.url; // 🔴 Redirect happens here
+        const { platform, url } = action.payload;
+
+        // Extract client_id and client_info from the URL
+        const urlParams = new URL(url).searchParams;
+        const clientId = urlParams.get("client_id") || "";
+        const clientInfo = urlParams.get("client_info") || "";
+
+        // Store values dynamically per platform
+        state.authUrls[platform] = url;
+        state.clientIds[platform] = clientId;
+        state.clientInfos[platform] = clientInfo;
+        state.isConnected[platform] = true;
+
+        // Redirect to the authentication URL
+        window.location.href = url;
 
       })
       .addCase(authenticateSocial.rejected, (state, action) => {

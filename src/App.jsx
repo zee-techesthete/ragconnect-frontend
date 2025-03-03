@@ -15,11 +15,15 @@ import Sidebar from "./screens/Sidebar";
 const AppContent = () => {
   const location = useLocation(); // Get current route
 
+  // Hide Sidebar on "/", "/onboarding2", and "/onboarding3"
+  const hideSidebarRoutes = ["/", "/onboarding2", "/onboarding3"];
+  const showSidebar = !hideSidebarRoutes.includes(location.pathname);
+
   return (
     <div className="App flex">
-      {/* ✅ Show Sidebar only if the path is NOT `/` */}
-      {location.pathname !== "/" && <Sidebar />}
-      
+      {/* ✅ Conditionally render Sidebar */}
+      {showSidebar && <Sidebar />}
+
       {/* Main Content Area */}
       <div className="flex-1">
         <Routes>
@@ -40,6 +44,7 @@ const AppContent = () => {
     </div>
   );
 };
+
 
 const App = () => (
   <Router>
