@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Connector from "./menuScreens/Connector";
 import Header from "../components/Header";
 import MessageInbound from "./menuScreens/Message/MessageInbound";
 import EmailList from "./Emails/EmailList";
@@ -13,7 +12,6 @@ const MenuSide = ({ selectedMenu }) => {
   const [emails, setEmails] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-
 
   const getQueryParams = () => {
     const params = new URLSearchParams(location.search);
@@ -31,7 +29,7 @@ const MenuSide = ({ selectedMenu }) => {
       case "customerHub":
         return <div>Customer Hub Content</div>;
       case "trainingHub":
-        return <div>Training Hub Content</div>;
+        return navigate("/training-hub");
       case "connector":
         return navigate("/connector");
       case "agentSetting":

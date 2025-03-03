@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "../assets/svgs/userLogo.svg";
-
+import ProgressBar from "../components/Progress";
 const Sidebar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -32,10 +32,16 @@ const Sidebar = () => {
 
         {isDropdownOpen && (
           <div className="absolute bg-gray-100 rounded-md p-2 mt-2 b-0">
-            <div onClick={() => alert("Opening Settings")} className="cursor-pointer p-2 hover:bg-gray-600">
+            <div
+              onClick={() => alert("Opening Settings")}
+              className="cursor-pointer p-2 hover:bg-gray-600"
+            >
               Settings
             </div>
-            <div onClick={() => alert("Logging Out")} className="cursor-pointer p-2 hover:bg-gray-600">
+            <div
+              onClick={() => alert("Logging Out")}
+              className="cursor-pointer p-2 hover:bg-gray-600"
+            >
               Logout
             </div>
           </div>
@@ -49,7 +55,9 @@ const Sidebar = () => {
             key={item.name}
             onClick={() => navigate(item.path)}
             className={`flex items-center space-x-2 cursor-pointer p-2 rounded-md ${
-              location.pathname === item.path ? "bg-gray-700 text-white" : "hover:bg-gray-700"
+              location.pathname === item.path
+                ? "bg-gray-700 text-white"
+                : "hover:bg-gray-700"
             }`}
           >
             <span className="p-4 rounded-lg bg-gray"></span>
@@ -64,9 +72,7 @@ const Sidebar = () => {
           <span>Agent Memory</span>
           <span className="underline pb-1 cursor-pointer">Upgrade</span>
         </div>
-        <div className="bg-primary h-2 rounded-full w-full mb-2">
-          <div className="bg-black h-2 rounded-full" style={{ width: "14%" }}></div>
-        </div>
+        <ProgressBar value={75} />
         <div className="text-sm text-gray-400">1.4 GB of 10 GB used</div>
       </div>
     </div>

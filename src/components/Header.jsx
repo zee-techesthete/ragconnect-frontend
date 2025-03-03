@@ -1,7 +1,7 @@
 import React from "react";
 import PrimaryBtn from "./PrimaryBtn";
 import user from "../assets/svgs/userLogo.svg";
-const Header = ({ title }) => {
+const Header = ({ title, headerText }) => {
   return (
     <>
       <div className="flex items-center justify-between p-4">
@@ -12,14 +12,16 @@ const Header = ({ title }) => {
           <img className="h-8 w-8 rounded-full" src={user} alt="" />
         </div>
       </div>
-      {/* <div className="flex justify-between gap-8 items-center my-6">
-        <p className="w-3/4">
-          Train your Agent by adding resources directly to its brain. Simply
-          drop your content to enhance its knowledge and capabilities, making it
-          smarter and better equipped to meet your unique needs.
-        </p>
-        <PrimaryBtn title={"Connect Other"} icon2={"bolt"} />
-      </div> */}
+      {headerText && (
+        <div className="flex justify-between gap-8 items-center my-6">
+          <p className="w-3/4">
+            Train your Agent by adding resources directly to its brain. Simply
+            drop your content to enhance its knowledge and capabilities, making
+            it smarter and better equipped to meet your unique needs.
+          </p>
+          <PrimaryBtn title={"Connect Other"} icon2={"bolt"} />
+        </div>
+      )}
     </>
   );
 };
