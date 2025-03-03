@@ -1,28 +1,29 @@
 import googleIcon from "../assets/social-icons/Icon-left.png";
-import slackIcon from "../assets/social-icons/Icon-left (1).png";
-import instagramIcon from "../assets/social-icons/Icon-left (2).png";
-import telegramIcon from "../assets/social-icons/Icon-left (3).png";
-import facebookIcon from "../assets/social-icons/Icon-left (4).png";
-import tripadvisorIcon from "../assets/social-icons/Icon-left (5).png";
-import pinterestIcon from "../assets/social-icons/Icon-left (6).png";
+import slackIcon from "../assets/social-icons/Icon-left.svg";
+import outlookIcon from "../assets/social-icons/Icon-left (1).png";
+import facebookIcon from "../assets/social-icons/Icon-left (2).png";
+import instagramIcon from "../assets/social-icons/Icon-left (3).png";
+import whatsappIcon from "../assets/social-icons/Icon-left (4).png";
+import tripadvisorIcon from "../assets/social-icons/tripad.svg";
+import pinterestIcon from "../assets/social-icons/pinterest.svg";
+import twitterIcon from "../assets/social-icons/Icon-left (5).png";
 import discordIcon from "../assets/social-icons/Icon-left (7).png";
-import yahooIcon from "../assets/social-icons/Icon-left (8).png";
-import twitterIcon from "../assets/social-icons/Icon-left (9).png";
-import linkedinIcon from "../assets/social-icons/Icon-left (10).png";
-import snapchatIcon from "../assets/social-icons/Icon-left (11).png";
-import redditIcon from "../assets/social-icons/Icon-left (12).png";
-import youtubeIcon from "../assets/social-icons/Icon-left (13).png";
-import whatsappIcon from "../assets/social-icons/Icon-left (14).png";
-import tiktokIcon from "../assets/social-icons/Icon-left (15).png";
-import twitchIcon from "../assets/social-icons/Icon-left (16).png";
-import wechatIcon from "../assets/social-icons/Icon-left (17).png";
-import messengerIcon from "../assets/social-icons/Icon-left (18).png";
+import yahooIcon from "../assets/social-icons/yahoo.svg";
+import messengerIcon from "../assets/social-icons/Icon-left (8).png";
+import snapchatIcon from "../assets/social-icons/snapchat.svg";
+import linkedinIcon from "../assets/social-icons/Icon-left (12).png";
+import redditIcon from "../assets/social-icons/reddit.svg";
+import youtubeIcon from "../assets/social-icons/youtube.svg";
+import tiktokIcon from "../assets/social-icons/tictok.svg";
+import twitchIcon from "../assets/social-icons/twitch.svg";
+import wechatIcon from "../assets/social-icons/wechat.svg";
+import smptIcon from "../assets/social-icons/smpt.svg";
 
 const socialIcons = {
   google: googleIcon,
   slack: slackIcon,
   instagram: instagramIcon,
-  outlook: telegramIcon,
+  outlook: outlookIcon,
   facebook: facebookIcon,
   tripadvisor: tripadvisorIcon,
   pinterest: pinterestIcon,
@@ -38,6 +39,7 @@ const socialIcons = {
   twitch: twitchIcon,
   wechat: wechatIcon,
   messenger: messengerIcon,
+  smtp: smptIcon,
 };
 
 export default socialIcons;
