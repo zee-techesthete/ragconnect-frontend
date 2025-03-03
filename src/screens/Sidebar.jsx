@@ -43,13 +43,13 @@ const Sidebar = () => {
       </div>
 
       {/* Menu Items */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         {menuItems.map((item) => (
           <div
             key={item.name}
             onClick={() => navigate(item.path)}
             className={`flex items-center space-x-2 cursor-pointer p-2 rounded-md ${
-              location.pathname === item.path ? "bg-gray200" : "hover:bg-gray-700"
+              location.pathname === item.path ? "bg-gray200" : "hover:bg-gray200"
             }`}
           >
             <span className="p-4 rounded-lg bg-gray"></span>
