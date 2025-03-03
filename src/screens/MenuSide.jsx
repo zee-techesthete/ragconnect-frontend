@@ -48,9 +48,15 @@ const MenuSide = ({ selectedMenu }) => {
     const fetchEmails = async (userId) => {
       console.log("*userId: ", userId);
       try {
-        const response = await axios.get(`${rootUrl}/api/emails/fetch`, {
-          params: { user_id: userId }, // replace with actual user_id
-        });
+        // const response = await axios.get(`${rootUrl}/api/emails/google/fetch`, {
+        //   params: { user_id: userId }, // replace with actual user_id
+        // });
+        const response = await axios.get(
+          `${rootUrl}/api/emails/outlook/fetch`,
+          {
+            params: { user_id: userId }, // replace with actual user_id
+          }
+        );
 
         if (response.data.success) {
           setEmails(response.data.emails);
