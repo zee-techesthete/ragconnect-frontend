@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage"; // Uses localStorage for persis
 import authReducer from "./slices/authSlice";
 import googleAuthSlice from "./slices/googleAuthSlice";
 import socialAuthReducer from "./slices/socialAuthSlice";
+import emailReducer from "./slices/emailSlice";
 
 // Persist config for social authentication
 const socialAuthPersistConfig = {
@@ -18,6 +19,7 @@ const store = configureStore({
     auth: authReducer,
     googleAuth: googleAuthSlice,
     socialAuth: persistedSocialAuthReducer, // Use the persisted reducer
+    emails: emailReducer,
   },
 });
 

@@ -58,7 +58,7 @@ const Sidebar = () => {
               location.pathname === item.path ? "bg-gray200" : "hover:bg-gray200"
             }`}
           >
-            <span className="p-4 rounded-lg bg-gray"></span>
+            <span className="p-4 rounded-md bg-gray"></span>
             <span>{item.name}</span>
           </div>
         ))}

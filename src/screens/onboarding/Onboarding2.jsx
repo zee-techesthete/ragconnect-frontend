@@ -23,6 +23,8 @@ import messengerIcon from "../../assets/social-icons/Icon-left (18).png";
 // import skypeIcon from "../../assets/social-icons/Icon-left (19).png";
 // import viberIcon from "../../assets/social-icons/Icon-left (20).png";
 import Logo from "../../assets/svgs/logo.svg";
+import SocialIconCard from "../../components/socialIconsCard";
+import socialIcons from "../../utils/socialIcons";
 
 const Onboarding2 = () => {
   const [formData, setFormData] = useState({
@@ -41,29 +43,10 @@ const Onboarding2 = () => {
     }));
   };
 
-  const socialPlatforms = [
-    { name: "Google", url: googleIcon },
-    { name: "Slack", url: slackIcon },
-    { name: "Instagram", url: instagramIcon },
-    { name: "Telegram", url: telegramIcon },
-    { name: "Facebook", url: facebookIcon },
-    { name: "TripAdvisor", url: tripadvisorIcon },
-    { name: "Pinterest", url: pinterestIcon },
-    { name: "Discord", url: discordIcon },
-    { name: "Yahoo", url: yahooIcon },
-    { name: "Twitter", url: twitterIcon },
-    { name: "LinkedIn", url: linkedinIcon },
-    { name: "Snapchat", url: snapchatIcon },
-    { name: "Reddit", url: redditIcon },
-    { name: "YouTube", url: youtubeIcon },
-    { name: "WhatsApp", url: whatsappIcon },
-    { name: "TikTok", url: tiktokIcon },
-    { name: "Twitch", url: twitchIcon },
-    { name: "WeChat", url: wechatIcon },
-    { name: "Messenger", url: messengerIcon },
-    // { name: "Skype", url: skypeIcon },
-    // { name: "Viber", url: viberIcon },
-  ];
+  const socialPlatforms = Object.keys(socialIcons).map((key) => ({
+    name: key.charAt(0).toUpperCase() + key.slice(1),
+    url: socialIcons[key],
+  }));
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
@@ -91,7 +74,7 @@ const Onboarding2 = () => {
           <PrimaryBtn
             href="/"
             title="Back"
-            className="text-black"
+            className="text-black font-semibold"
             icon="arrow_back"
           />
         </div>
@@ -101,20 +84,14 @@ const Onboarding2 = () => {
       <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 gap-6 flex flex-col justify-between">
         {/* Login */}
         <div className="flex gap-4 justify-center md:justify-end mb-8">
-          <PrimaryBtn title="Get help" />
-          <PrimaryBtn title="Login" />
+          <PrimaryBtn title="Get help" className="font-semibold" />
+          <PrimaryBtn title="Login" className="font-semibold" />
         </div>
 
         {/* Social Platform Selection */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {socialPlatforms.map((platform) => (
-            <SocialCards
-              key={platform.name}
-              platform={platform}
-              linkText={false}
-              onClick={() => handleInputChange("socialPlatform", platform.name)}
-              isSelected={formData.socialPlatform === platform.name}
-            />
+            <SocialIconCard key={platform.name} platform={platform} />
           ))}
         </div>
 
@@ -122,11 +99,11 @@ const Onboarding2 = () => {
         <div className="flex justify-between mt-8">
           <PrimaryBtn
             title="Skip"
-            className="text-gray-500"
+            className="text-gray-500 font-semibold"
             href="/onboarding3"
           />
           <PrimaryBtn
-            title="Next"
+            title="Next: Workspace & Agent"
             className="bg-black text-white"
             icon2="arrow_forward"
             href="/onboarding3"

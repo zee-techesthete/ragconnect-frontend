@@ -12,7 +12,8 @@ const filterOptions = [
 ];
 
 const filterCategories = [
-  { label: "Automation" },
+  { label: "Automation", hasSubFilters: true,
+    subFilters: filterOptions, },
   { label: "Status" },
   {
     label: "Category",

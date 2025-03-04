@@ -44,32 +44,32 @@ const MenuSide = ({ selectedMenu }) => {
   //   setEmails(dummyEmails);
   // }, []);
 
-  useEffect(() => {
-    const fetchEmails = async (userId) => {
-      console.log("*userId: ", userId);
-      try {
-        // const response = await axios.get(`${rootUrl}/api/emails/google/fetch`, {
-        //   params: { user_id: userId }, // replace with actual user_id
-        // });
-        const response = await axios.get(
-          `${rootUrl}/api/emails/outlook/fetch`,
-          {
-            params: { user_id: userId }, // replace with actual user_id
-          }
-        );
+  // useEffect(() => {
+  //   const fetchEmails = async (userId) => {
+  //     console.log("*userId: ", userId);
+  //     try {
+  //       // const response = await axios.get(`${rootUrl}/api/emails/google/fetch`, {
+  //       //   params: { user_id: userId }, // replace with actual user_id
+  //       // });
+  //       const response = await axios.get(
+  //         `${rootUrl}/api/emails/outlook/fetch`,
+  //         {
+  //           params: { user_id: userId }, // replace with actual user_id
+  //         }
+  //       );
 
-        if (response.data.success) {
-          setEmails(response.data.emails);
-        } else {
-          console.error("Failed to fetch emails:", response.data.error);
-        }
-      } catch (error) {
-        console.error("Error fetching emails:", error);
-      }
-    };
+  //       if (response.data.success) {
+  //         setEmails(response.data.emails);
+  //       } else {
+  //         console.error("Failed to fetch emails:", response.data.error);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching emails:", error);
+  //     }
+  //   };
 
-    if (userId) fetchEmails(userId);
-  }, [userId]);
+  //   if (userId) fetchEmails(userId);
+  // }, [userId]);
   // Dynamic title based on the selected menu
   const getTitle = () => {
     switch (selectedMenu) {

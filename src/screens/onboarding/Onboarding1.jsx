@@ -54,7 +54,7 @@ const Onboarding1 = () => {
       {/* Right Section */}
       <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 flex flex-col justify-between">
         {/* Login */}
-        <div className="flex gap-4 justify-center md:justify-end mb-8">
+        <div className="flex gap-4 justify-center md:justify-end mb-8 font-semibold">
           <PrimaryBtn title={"Get help"} />
           <PrimaryBtn title={"Login"} />
         </div>
@@ -62,7 +62,7 @@ const Onboarding1 = () => {
         {/* Form Questions */}
         <div className="space-y-6">
           <div>
-            <p className="mb-2">
+            <p className="mb-2 font-semibold">
               Are you part of a business or working independently?
             </p>
             <div className="flex space-x-4 flex-wrap justify-center md:justify-start">
@@ -98,7 +98,7 @@ const Onboarding1 = () => {
           </div>
 
           <div>
-            <p className="mb-2">What is your company?</p>
+            <p className="mb-2 font-semibold">What is your company?</p>
             <input
               type="text"
               name="companyName"
@@ -110,7 +110,7 @@ const Onboarding1 = () => {
           </div>
 
           <div>
-            <p className="mb-2">
+            <p className="mb-2 font-semibold">
               What is your company website or social media link?
             </p>
             <input
@@ -124,7 +124,7 @@ const Onboarding1 = () => {
           </div>
 
           <div>
-            <p className="mb-2">What is the size of your company?</p>
+            <p className="mb-2 font-semibold">What is the size of your company?</p>
             <div className="flex gap-4 flex-wrap justify-center md:justify-start">
               {[
                 "Small (1-9)",
@@ -152,7 +152,7 @@ const Onboarding1 = () => {
           </div>
 
           <div>
-            <p className="mb-2">What is your industry?</p>
+            <p className="mb-2 font-semibold">What is your industry?</p>
             <div className="flex gap-4 flex-wrap justify-center md:justify-start">
               {[
                 "Health",
@@ -190,11 +190,11 @@ const Onboarding1 = () => {
         <div className="flex justify-between mt-8">
           <PrimaryBtn
             title="Skip"
-            className="text-gray-500"
+            className="text-gray-500 font-semibold"
             href="/onboarding2"
           />
           <PrimaryBtn
-            title="Next"
+            title="Next: Channels"
             className="bg-black text-white"
             icon2="arrow_forward"
             href="/onboarding2"
