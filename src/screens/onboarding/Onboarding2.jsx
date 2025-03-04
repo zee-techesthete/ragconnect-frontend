@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
 import SocialIcons from "../../utils/SocialIcons";
-import SocialIconCard from "../../components/socialIconsCard";
+import IconCard from "../../components/IconsCards";
 
 const Onboarding2 = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +69,7 @@ const Onboarding2 = () => {
         {/* Social Platform Selection */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {socialPlatforms.map((platform) => (
-            <SocialIconCard key={platform.name} platform={platform} />
+            <IconCard key={platform.name} platform={platform} />
           ))}
         </div>
 
