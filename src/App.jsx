@@ -22,7 +22,7 @@ const AppContent = () => {
   const location = useLocation(); // Get current route
 
   // Hide Sidebar on "/", "/onboarding2", and "/onboarding3"
-  const hideSidebarRoutes = ["/", "/onboarding2", "/onboarding3"];
+  const hideSidebarRoutes = ["/", "/onboarding-step2", "/onboarding-step3"];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
@@ -35,8 +35,8 @@ const AppContent = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Onboarding1 />} />
-          <Route path="/onboarding2" element={<Onboarding2 />} />
-          <Route path="/onboarding3" element={<Onboarding3 />} />
+          <Route path="/onboarding-step2" element={<Onboarding2 />} />
+          <Route path="/onboarding-step3" element={<Onboarding3 />} />
           <Route path="/chatui" element={<ChatUI />} />
           <Route path="/main" element={<MainScreen />} />
           <Route path="/inbound" element={<MessageInbound />} />
