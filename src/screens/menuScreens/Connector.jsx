@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SocialCards from "../../components/SocialCard";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { useDispatch, useSelector } from "react-redux";
-import socialIcons from "../../utils/socialIcons";
+import socialIcons from "../../utils/SocialIcons";
 import {
   authenticateSocial,
   setAuthData,
