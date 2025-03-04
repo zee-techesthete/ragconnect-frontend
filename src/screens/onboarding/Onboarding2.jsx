@@ -13,6 +13,8 @@ const Onboarding2 = () => {
     industry: "",
     socialPlatform: "",
   });
+  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+
 
   // const handleInputChange = (name, value) => {
   //   setFormData((prevData) => ({
@@ -26,6 +28,16 @@ const Onboarding2 = () => {
     url: SocialIcons[key],
   }));
 
+  const handlePlatformSelect = (platform) => {
+    setSelectedPlatforms((prevSelected) =>
+      prevSelected.includes(platform)
+        ? prevSelected.filter((item) => item !== platform) // Deselect
+        : [...prevSelected, platform] // Select
+    );
+  };
+
+  // console.log("selectedPlatforms", selectedPlatforms);
+  
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section */}
@@ -69,7 +81,17 @@ const Onboarding2 = () => {
         {/* Social Platform Selection */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {socialPlatforms.map((platform) => (
-            <IconCard key={platform.name} platform={platform} />
+            <div
+              key={platform.name}
+              onClick={() => handlePlatformSelect(platform.name)}
+              className={`cursor-pointer transition-all ${
+                selectedPlatforms.includes(platform.name)
+                  ? "border border-black rounded-md"
+                  : "border-gray"
+              }`}
+            >
+              <IconCard platform={platform} />
+            </div>
           ))}
         </div>
 
@@ -78,7 +100,7 @@ const Onboarding2 = () => {
           <PrimaryBtn
             title="Skip"
             className="text-gray-500 font-semibold"
-            href="/onboardingstep-3"
+            href="/onboarding-step3"
           />
           <PrimaryBtn
             title="Next: Workspace & Agent"

@@ -64,32 +64,32 @@ const Connector = () => {
     dispatch(authenticateSocial(platformKey));
   };
 
-  const handlePlatformClick = (platform) => {
-    console.log("workkkkk");
+  // const handlePlatformClick = (platform) => {
+  //   console.log("workkkkk");
 
-    const platformKey = platform.toLowerCase();
-    if (!isConnected[platformKey]) return;
+  //   const platformKey = platform.toLowerCase();
+  //   if (!isConnected[platformKey]) return;
 
-    const userId = userIds[platformKey];
-    const token = tokens[platformKey];
+  //   const userId = userIds[platformKey];
+  //   const token = tokens[platformKey];
 
-    console.log("User ID:", userId);
-    console.log("Token:", token);
+  //   console.log("User ID:", userId);
+  //   console.log("Token:", token);
 
-    if (userId && token) {
-      console.log("Dispatching fetchEmails...");
-      dispatch(
-        fetchEmails({
-          platform: platformKey,
-          userId,
-          token,
-        })
-      );
-      navigate(`/inbound`);
-    } else {
-      console.warn("Missing userId or token!");
-    }
-  };
+  //   if (userId && token) {
+  //     console.log("Dispatching fetchEmails...");
+  //     dispatch(
+  //       fetchEmails({
+  //         platform: platformKey,
+  //         userId,
+  //         token,
+  //       })
+  //     );
+  //     navigate(`/inbound`);
+  //   } else {
+  //     console.warn("Missing userId or token!");
+  //   }
+  // };
 
   const filterOptions = [
     { label: "Order status", value: "order_status" },
@@ -205,11 +205,6 @@ const Connector = () => {
               key={platform.name}
               platform={platform}
               onConnect={() => handleSocialAuth(platformKey)}
-              onClick={() => {
-                if (isConnected[platformKey]) {
-                  handlePlatformClick(platformKey);
-                }
-              }}
               isConnecting={isLoading[platformKey] || false}
               isConnected={isConnected[platformKey] || false}
               isVerifying={isVerifying[platformKey]}
