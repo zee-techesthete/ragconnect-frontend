@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
-import SocialIcons from "../../utils/SocialIcons";
+import SocialIcons from "../../utils/Icons";
 import IconCard from "../../components/IconsCards";
 
 const Onboarding2 = () => {
@@ -78,13 +78,13 @@ const Onboarding2 = () => {
           <PrimaryBtn
             title="Skip"
             className="text-gray-500 font-semibold"
-            href="/onboarding3"
+            href="/onboardingstep-3"
           />
           <PrimaryBtn
             title="Next: Workspace & Agent"
             className="bg-black text-white"
             icon2="arrow_forward"
-            href="/onboarding3"
+            href="/onboarding-step3"
           />
         </div>
       </div>

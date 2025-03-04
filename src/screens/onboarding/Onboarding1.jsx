@@ -191,13 +191,13 @@ const Onboarding1 = () => {
           <PrimaryBtn
             title="Skip"
             className="text-gray-500 font-semibold"
-            href="/onboarding2"
+            href="/onboarding-step2"
           />
           <PrimaryBtn
             title="Next: Channels"
             className="bg-black text-white"
             icon2="arrow_forward"
-            href="/onboarding2"
+            href="/onboarding-step2"
           />
         </div>
       </div>

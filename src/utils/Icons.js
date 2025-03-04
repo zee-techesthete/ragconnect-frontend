@@ -19,7 +19,7 @@ import twitchIcon from "../assets/social-icons/twitch.svg";
 import wechatIcon from "../assets/social-icons/wechat.svg";
 import smptIcon from "../assets/social-icons/smpt.svg";
 
-const socialIcons = {
+const Icons = {
   google: googleIcon,
   slack: slackIcon,
   instagram: instagramIcon,
@@ -42,4 +42,4 @@ const socialIcons = {
   smtp: smptIcon,
 };
 
-export default socialIcons;
+export default Icons;

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SocialCards from "../../components/SocialCard";
-import PrimaryBtn from "../../components/PrimaryBtn";
 import { useDispatch, useSelector } from "react-redux";
-import socialIcons from "../../utils/SocialIcons";
+import SoIcons from "../../utils/Icons";
 import {
   authenticateSocial,
   setAuthData,
@@ -46,9 +45,9 @@ const Connector = () => {
     }
   }, [dispatch]);
 
-  const socialPlatforms = Object.keys(socialIcons).map((key) => ({
+  const socialPlatforms = Object.keys(SoIcons).map((key) => ({
     name: key.charAt(0).toUpperCase() + key.slice(1),
-    url: socialIcons[key],
+    url: SoIcons[key],
     connected: isConnected[key.toLowerCase()] || false,
   }));
 
