@@ -20,6 +20,21 @@ export const authenticateSocial = createAsyncThunk(
   }
 );
 
+export const authenticateSmtp = createAsyncThunk(
+  "auth/authenticateSmtp",
+  async (smtpData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${rootUrl}/api/auth/smtp`, smtpData);
+      return { platform: "smtp", data: response.data };
+    } catch (error) {
+      return rejectWithValue({
+        platform: "smtp",
+        error: error.response?.data || "SMTP authentication failed",
+      });
+    }
+  }
+);
+
 const socialAuthSlice = createSlice({
   name: "socialAuth",
   initialState: {
@@ -70,6 +85,21 @@ const socialAuthSlice = createSlice({
         state.isVerifying[platform] = false;
         state.errors[platform] =
           action.payload?.error || "Something went wrong";
+      })
+
+       // Handle SMTP Authentication
+       .addCase(authenticateSmtp.pending, (state) => {
+        state.isLoading["smtp"] = true;
+        state.errors["smtp"] = null;
+      })
+      .addCase(authenticateSmtp.fulfilled, (state, action) => {
+        state.isLoading["smtp"] = false;
+        state.isConnected["smtp"] = true;
+        state.tokens["smtp"] = action.payload.data.token;
+      })
+      .addCase(authenticateSmtp.rejected, (state, action) => {
+        state.isLoading["smtp"] = false;
+        state.errors["smtp"] = action.payload.error;
       });
   },
 });

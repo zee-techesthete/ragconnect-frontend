@@ -6,10 +6,10 @@ import {
   authenticateSocial,
   setAuthData,
 } from "../../redux/slices/socialAuthSlice";
-import { fetchEmails } from "../../redux/slices/emailSlice";
 import ConnectorHeader from "./ConnectorHeader";
 import { Button, Checkbox, Dropdown, Menu } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
+import SmtpModal from "../../utils/SmptModal";
 
 const Connector = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +20,8 @@ const Connector = () => {
   const [activeSubFilter, setActiveSubFilter] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [isSmtpModalOpen, setIsSmtpModalOpen] = useState(false);
+
 
   const dispatch = useDispatch();
   const {
@@ -59,10 +61,21 @@ const Connector = () => {
   };
 
   const handleSocialAuth = (platform) => {
-    const platformKey = platform.toLowerCase();
+    let platformKey = platform.toLowerCase();
+    if (platformKey === "email") {
+      platformKey = "smpt";
+    }
+    if (platformKey === "email" || platformKey === "smpt") {
+      setSelectedPlatform(platformKey);
+      setIsSmtpModalOpen(true);
+      return;
+    }
     localStorage.setItem("selectedPlatform", platformKey);
+    console.log("======>>>>",platformKey);
     dispatch(authenticateSocial(platformKey));
   };
+
+  
 
   // const handlePlatformClick = (platform) => {
   //   console.log("workkkkk");
@@ -214,6 +227,11 @@ const Connector = () => {
           );
         })}
       </div>
+      <SmtpModal
+      isOpen={isSmtpModalOpen}
+      onClose={() => setIsSmtpModalOpen(false)}
+      platform={selectedPlatform}
+    />
     </div>
   );
 };
