@@ -39,7 +39,7 @@ const Icons = {
   twitch: twitchIcon,
   wechat: wechatIcon,
   messenger: messengerIcon,
-  smtp: smptIcon,
+  email: smptIcon,
 };
 
 export default Icons;
