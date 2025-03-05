@@ -16,6 +16,7 @@ export default {
         gray800: "#D6DFDF",
         darkGray: "#D3D3D3",
         lightGray: "#EBEFEF80",
+        dullGray: "#404040",
       },
       spacing: {
         12: "3rem",

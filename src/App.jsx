@@ -17,12 +17,17 @@ import Connector from "./screens/menuScreens/Connector";
 import EmailList from "./screens/Emails/EmailList";
 import Sidebar from "./screens/Sidebar";
 import TrainingHub from "./screens/menuScreens/trainingHub/TrainingHub";
+import AuthScreen from "./screens/Registration/AuthScreen";
+import AccountCreated from "./screens/Registration/AccountCreated";
+import EmailConfirmed from "./screens/Registration/EmailConfirmed";
+import ResetPassword from "./screens/Login/ResetPassword";
+import EnterPassword from "./screens/Login/EnterPassword";
 
 const AppContent = () => {
   const location = useLocation(); // Get current route
 
   // Hide Sidebar on "/", "/onboarding2", and "/onboarding3"
-  const hideSidebarRoutes = ["/", "/onboarding-step2", "/onboarding-step3"];
+  const hideSidebarRoutes = ["/", "/signup","/account-created","/email-confirmed",  "/login",  "/reset-password", "/reset-password:", "/onboarding-step2", "/onboarding-step3"];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
@@ -33,7 +38,12 @@ const AppContent = () => {
       {/* Main Content Area */}
       <div className="flex-1">
         <Routes>
+          <Route path="/signup" element={<AuthScreen />} />
+          <Route path="/account-created" element={<AccountCreated />} />
+          <Route path="/email-confirmed" element={<EmailConfirmed />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password:" element={<EnterPassword />} />
           <Route path="/" element={<Onboarding1 />} />
           <Route path="/onboarding-step2" element={<Onboarding2 />} />
           <Route path="/onboarding-step3" element={<Onboarding3 />} />

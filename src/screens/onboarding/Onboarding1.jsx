@@ -56,7 +56,7 @@ const Onboarding1 = () => {
         {/* Login */}
         <div className="flex gap-4 justify-center md:justify-end mb-8 font-semibold">
           <PrimaryBtn title={"Get help"} />
-          <PrimaryBtn title={"Login"} />
+          <PrimaryBtn title={"Login"} href="/login" />
         </div>
 
         {/* Form Questions */}
