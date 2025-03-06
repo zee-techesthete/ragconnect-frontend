@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { FcGoogle } from "react-icons/fc";
@@ -18,42 +18,93 @@ const AuthScreen = () => {
     email: "zeeshanshafique.te@gmail.com",
     firstName: "Zeeshan",
     lastName: "Shafique",
-    password: "123456",
-    confirmPassword: "123456",
+    password: "123@Abcd",
+    confirmPassword: "123@Abcd",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { loading, error } = useSelector((state) => state.auth);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Real-time validation
+    let newErrors = { ...errors };
+    switch (name) {
+      case 'email':
+        if (!validateEmail(value)) {
+          newErrors.email = "Please enter a valid email address";
+        } else {
+          delete newErrors.email;
+        }
+        break;
+      case 'firstName':
+        if (value.trim().length < 2) {
+          newErrors.firstName = "First name must be at least 2 characters";
+        } else {
+          delete newErrors.firstName;
+        }
+        break;
+      case 'lastName':
+        if (value.trim().length < 2) {
+          newErrors.lastName = "Last name must be at least 2 characters";
+        } else {
+          delete newErrors.lastName;
+        }
+        break;
+      case 'password':
+        if (!validatePassword(value)) {
+          newErrors.password = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
+        } else {
+          delete newErrors.password;
+        }
+        break;
+      case 'confirmPassword':
+        if (value !== formData.password) {
+          newErrors.confirmPassword = "Passwords do not match";
+        } else {
+          delete newErrors.confirmPassword;
+        }
+        break;
+    }
+    setErrors(newErrors);
   };
 
   const validateStep = () => {
     let newErrors = {};
 
     if (step === 1) {
-      if (!formData.email.includes("@")) {
-        newErrors.email = "Invalid email address";
+      if (!validateEmail(formData.email)) {
+        newErrors.email = "Please enter a valid email address";
       }
     }
 
     if (step === 2) {
-      if (!formData.firstName.trim()) {
-        newErrors.firstName = "First name is required";
+      if (formData.firstName.trim().length < 2) {
+        newErrors.firstName = "First name must be at least 2 characters";
       }
-      if (!formData.lastName.trim()) {
-        newErrors.lastName = "Last name is required";
+      if (formData.lastName.trim().length < 2) {
+        newErrors.lastName = "Last name must be at least 2 characters";
       }
     }
 
     if (step === 3) {
-      if (formData.password.length < 8) {
-        newErrors.password = "Password must be at least 8 characters";
+      if (!validatePassword(formData.password)) {
+        newErrors.password = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
       }
       if (formData.confirmPassword !== formData.password) {
         newErrors.confirmPassword = "Passwords do not match";
@@ -76,14 +127,20 @@ const AuthScreen = () => {
     }
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (validateStep()) {
-      const { confirmPassword, ...signupData } = formData;
-      dispatch(signupUser(signupData)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
+      setIsSubmitting(true);
+      try {
+        const { confirmPassword, ...signupData } = formData;
+        const result = await dispatch(signupUser(signupData));
+        if (result.meta.requestStatus === "fulfilled") {
           navigate("/account-created");
         }
-      });
+      } catch (error) {
+        setErrors({ submit: "An error occurred during signup. Please try again." });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -128,9 +185,14 @@ const AuthScreen = () => {
           <PrimaryBtn title={"Get help"} />
           <PrimaryBtn  title={"Login"} href="/login" />
         </div>
+        {error && (
+          <div className="w-full max-w-md mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
         {step === 1 && (
           <div className="w-full max-w-md">
-            <label htmlFor="email" className="font-medium ">
+            <label htmlFor="email" className="font-medium">
               Email Address
             </label>
             <input
@@ -138,14 +200,18 @@ const AuthScreen = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder={errors.email || "Email address"}
-              className={`w-full border p-2 rounded-md mb-4 mt-2 ${
-                errors.email ? "border-red-500 bg-red-100" : "border-gray"
+              placeholder="Enter your email"
+              className={`w-full border p-2 rounded-md mb-1 mt-2 ${
+                errors.email ? "border-red-500 bg-red-50" : "border-gray"
               }`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mb-4">{errors.email}</p>
+            )}
             <button
               onClick={nextStep}
-              className="w-full bg-black text-white p-2 rounded-md"
+              className="w-full bg-black text-white p-2 mt-3 rounded-md hover:bg-gray-800 transition-colors"
+              disabled={!!errors.email}
             >
               Continue
             </button>
@@ -174,7 +240,7 @@ const AuthScreen = () => {
         )}
         {step === 2 && (
           <div className="w-full max-w-md">
-            <label htmlFor="email" className="font-medium ">
+            <label htmlFor="firstName" className="font-medium">
               First Name
             </label>
             <input
@@ -182,31 +248,37 @@ const AuthScreen = () => {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              placeholder={errors.firstName || "First Name"}
-              className={`w-full border p-2 rounded-md mb-3 mt-2 ${
-                errors.firstName ? "border-red-500 bg-red-100" : "border-gray"
+              placeholder="Enter your first name"
+              className={`w-full border p-2 rounded-md mb-1 mt-2 ${
+                errors.firstName ? "border-red-500 bg-red-50" : "border-gray"
               }`}
             />
+            {errors.firstName && (
+              <p className="text-red-500 text-sm mb-3">{errors.firstName}</p>
+            )}
 
-            <label htmlFor="email" className="font-medium">
+            <label htmlFor="lastName" className="font-medium">
               Last Name
             </label>
-
             <input
               type="text"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder={errors.lastName || "Last Name"}
-              className={`w-full border p-2 rounded-md mb-3 mt-2 ${
-                errors.lastName ? "border-red-500 bg-red-100" : "border-gray"
+              placeholder="Enter your last name"
+              className={`w-full border p-2 rounded-md mb-1 mt-2 ${
+                errors.lastName ? "border-red-500 bg-red-50" : "border-gray"
               }`}
             />
+            {errors.lastName && (
+              <p className="text-red-500 text-sm mb-4">{errors.lastName}</p>
+            )}
 
             <div className="flex absolute bottom-8 right-20">
               <button
                 onClick={nextStep}
-                className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2"
+                className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 transition-colors"
+                disabled={!!errors.firstName || !!errors.lastName}
               >
                 Continue <FaArrowRightLong className="text-lg" />
               </button>
@@ -225,9 +297,9 @@ const AuthScreen = () => {
                name="password"
                value={formData.password}
                onChange={handleChange}
-               placeholder={errors.password || "Password"}
-               className={`w-full border p-2 rounded-md mb-3 mt-2 pr-10 ${
-                 errors.password ? "border-red-500 bg-red-100" : "border-gray"
+               placeholder="Enter your password"
+               className={`w-full border p-2 rounded-md mb-1 mt-2 pr-10 ${
+                 errors.password ? "border-red-500 bg-red-50" : "border-gray"
                }`}
              />
              <span
@@ -248,9 +320,9 @@ const AuthScreen = () => {
                name="confirmPassword"
                value={formData.confirmPassword}
                onChange={handleChange}
-               placeholder={errors.confirmPassword || "Confirm Password"}
-               className={`w-full border p-2 rounded-md mb-4 mt-2 pr-10 ${
-                 errors.confirmPassword ? "border-red-500 bg-red-100" : "border-gray"
+               placeholder="Confirm your password"
+               className={`w-full border p-2 rounded-md mb-1 mt-2 pr-10 ${
+                 errors.confirmPassword ? "border-red-500 bg-red-50" : "border-gray"
                }`}
              />
              <span
@@ -262,22 +334,26 @@ const AuthScreen = () => {
            </div>
    
            {/* Continue Button */}
-           {/* <div className="flex absolute bottom-8 right-20">
-             <button className="bg-black text-white px-4 py-2 rounded flex items-center gap-2" onClick={()=>navigate("/account-created")}>
-               Continue <FaArrowRightLong className="text-lg" />
-             </button>
-           </div> */}
            <div className="flex absolute bottom-8 right-20">
               <button
-                className="bg-black text-white px-4 py-2 rounded flex items-center gap-2"
+                className="bg-black text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleSignup}
-                disabled={loading}
+                disabled={loading || isSubmitting || !!errors.password || !!errors.confirmPassword}
               >
-                {loading ? "Processing..." : "Continue"} <FaArrowRightLong className="text-lg" />
+                {loading || isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin">⌛</span> Processing...
+                  </span>
+                ) : (
+                  <>
+                    Continue <FaArrowRightLong className="text-lg" />
+                  </>
+                )}
               </button>
             </div>
 
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password}</p>}
+            {errors.confirmPassword && <p className="text-red-500 text-sm mt-2">{errors.confirmPassword}</p>}
          </div>
         )}
       </div>

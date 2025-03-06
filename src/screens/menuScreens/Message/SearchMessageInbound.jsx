@@ -67,7 +67,7 @@ const SearchMessageInbound = () => {
   );
 
   return (
-    <div className="flex justify-between items-center p-4 ">
+    <div className="flex justify-between items-center pb-4 ">
       {filterOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 z-10"></div>
       )}
@@ -89,7 +89,7 @@ const SearchMessageInbound = () => {
           trigger={["click"]}
           open={filterOpen}
           onOpenChange={toggleFilter}
-          overlayStyle={{ position: "absolute", left: "15%" }}
+          overlayStyle={{ position: "absolute", left: "280px" }}
         >
           <Button
             icon={<FilterOutlined />}

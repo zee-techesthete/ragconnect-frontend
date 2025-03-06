@@ -7,11 +7,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/slices/loginSlice";
+import { message, Form, Input } from "antd";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,19 +22,24 @@ const Login = () => {
 
   const { loading, error, success } = useSelector((state) => state.login);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    dispatch(loginUser({ email, password })).then((result) => {
+  const handleLogin = async (values) => {
+    try {
+      const result = await dispatch(loginUser(values));
       if (result.meta.requestStatus === "fulfilled") {
-        setEmail("");
-        setPassword("");
-        navigate("/"); // Redirect on success
+        messageApi.success("Login successful!");
+        form.resetFields();
+        navigate("/");
+      } else if (result.meta.requestStatus === "rejected") {
+        messageApi.error(result.error.message || "Login failed. Please try again.");
       }
-    });
+    } catch (err) {
+      messageApi.error("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
     <div className="flex flex-col  min-h-screen bg-primary px-4 sm:px-6 lg:px-8">
+      {contextHolder}
       <div className="w-full flex flex-wrap items-center mt-5 justify-between px-4 md:px-8 lg:px-20 py-4">
         <img src={Logo} alt="Company Logo" className="w-24 lg:w-32 h-auto" />
         <div className="flex gap-2 md:gap-4 flex-wrap">
@@ -56,10 +62,10 @@ const Login = () => {
             Welcome
           </h2>
           {successMessage && (
-            <div className="bg-gray text-gray-700 p-3 rounded-lg flex justify-between items-center mb-4 max-w-md mx-auto">
+            <div className="bg-green-100 text-green-700 p-3 rounded-lg flex justify-between items-center mb-4 max-w-md mx-auto">
               <span>{successMessage}</span>
               <button
-                className="text-gray-500"
+                className="text-green-500 hover:text-green-700"
                 onClick={() => setSuccessMessage("")}
               >
                 ✖
@@ -67,48 +73,47 @@ const Login = () => {
             </div>
           )}
 
-          {error && (
-            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
-          )}
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+          <Form
+            form={form}
+            name="login"
+            onFinish={handleLogin}
+            layout="vertical"
+          >
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                { required: true, message: "Please input your email!" },
+                { type: "email", message: "Please enter a valid email!" }
+              ]}
+            >
+              <Input
                 placeholder="Enter email address"
-                className="w-full px-4 py-2 border border-gray rounded-md focus:outline-none text-sm sm:text-base"
+                size="large"
               />
-            </div>
+            </Form.Item>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="**********"
-                  className="w-full px-4 py-2 border border-gray rounded-md focus:outline-none text-sm sm:text-base"
-                />
-                <span
-                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <AiOutlineEyeInvisible size={20} />
-                  ) : (
-                    <AiOutlineEye size={20} />
-                  )}
-                </span>
-              </div>
-            </div>
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                { required: true, message: "Please input your password!" },
+                { min: 6, message: "Password must be at least 6 characters!" }
+              ]}
+            >
+              <Input.Password
+                placeholder="**********"
+                size="large"
+                iconRender={(visible) => (
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {visible ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                  </span>
+                )}
+              />
+            </Form.Item>
 
             {/* Keep me signed in & Forgot password */}
             <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-2">
@@ -125,16 +130,18 @@ const Login = () => {
             </div>
 
             {/* Login Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full bg-black text-white py-2 rounded-md font-semibold text-sm sm:text-base ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
-          </form>
+            <Form.Item>
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full bg-black text-white py-2 rounded-md font-semibold text-sm sm:text-base ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </Form.Item>
+          </Form>
 
           {/* Divider */}
           <div className="flex items-center my-6">

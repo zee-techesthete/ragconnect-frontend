@@ -27,16 +27,16 @@ const MessageDetail = () => {
   };
 
   return (
-    <div className="w-full bg-white border-l border-gray overflow-hidden flex flex-col">
+    <div className="w-full bg-white border-l border-gray overflow-hidden flex flex-col h-full">
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
-        className=" px-4"
-        style={{ borderBottom: "none" }} // Removes Ant Design's default border
-        tabBarStyle={{ borderBottom: "none", paddingBottom: "10px"  }}
+        className="px-4"
+        style={{ borderBottom: "none" }}
+        tabBarStyle={{ borderBottom: "none", paddingBottom: "10px" }}
       >
         <TabPane tab="Details" key="details">
-          <div className="space-y-3 text-sm">
+          <div className="space-y-3 text-sm overflow-y-auto max-h-[calc(100vh-200px)]">
             {[
               { label: "Assigned to", value: "User Name" },
               { label: "Automation", value: "Hands-on" },
@@ -44,48 +44,48 @@ const MessageDetail = () => {
               {
                 label: "Category",
                 value: (
-                  <>
+                  <span className="flex items-center gap-2">
                     <FolderOutlined /> Order Status
-                  </>
+                  </span>
                 ),
               },
               {
                 label: "Channel",
                 value: (
-                  <>
+                  <span className="flex items-center gap-2">
                     <InstagramOutlined /> Instagram
-                  </>
+                  </span>
                 ),
               },
               {
                 label: "Tags",
                 value: (
-                  <>
+                  <div className="flex flex-wrap gap-2">
                     <Tag>Stock</Tag> <Tag>Shipping</Tag>
-                  </>
+                  </div>
                 ),
               },
               { label: "Messages", value: "4" },
               {
                 label: "Sentiment",
                 value: (
-                  <>
+                  <span className="flex items-center gap-2">
                     <SmileOutlined /> Positive
-                  </>
+                  </span>
                 ),
               },
               { label: "Conversation ID", value: "INST-2025-00123" },
               { label: "Customer ID", value: "INST-2025-00123" },
               { label: "Language", value: "English" },
             ].map((item, index) => (
-              <div key={index} className="flex justify-between pb-1">
-                <span className="font-medium text-darkGray">{item.label}</span>
-                <span className="text-black">{item.value}</span>
+              <div key={index} className="flex flex-col sm:flex-row sm:justify-between gap-1 pb-2">
+                <span className="font-medium text-gray-700">{item.label}</span>
+                <span className="text-gray-900">{item.value}</span>
               </div>
             ))}
 
-            <hr className="border-gray my-2" />
-            <h2 className="font-bold mt-2">Agent’s Summary</h2>
+            <hr className="border-gray-200 my-4" />
+            <h2 className="font-bold mt-2">Agent's Summary</h2>
             <p className="text-gray-600">
               Customer asked about AJ 9 Golf Low Charcoal in size 10. They chose
               black with standard delivery. Reservation confirmed; order details
@@ -150,12 +150,9 @@ const MessageDetail = () => {
     </div>
           </div>
         </TabPane>
-
         <TabPane tab="Training" key="training">
-          <div className="border-b border-gray w-full"></div>
-
           <div className="p-4 text-sm">
-            <p>
+            <p className="text-gray-600">
               This case has been marked as an example for training purposes due
               to the nature of customer queries.
             </p>
