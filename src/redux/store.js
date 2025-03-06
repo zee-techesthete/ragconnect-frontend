@@ -11,19 +11,32 @@ import resetPasswordSlice from "./slices/resetPasswordSlice";
 const socialAuthPersistConfig = {
   key: "root",
   storage,
+  whitelist: ["userIds", "tokens", "isConnected"], // Only persist these fields
 };
 
-const persistedSocialAuthReducer = persistReducer(socialAuthPersistConfig, socialAuthReducer);
+const persistedSocialAuthReducer = persistReducer(
+  socialAuthPersistConfig,
+  socialAuthReducer
+);
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     googleAuth: googleAuthSlice,
-    socialAuth: persistedSocialAuthReducer, // Use the persisted reducer
+    socialAuth: persistedSocialAuthReducer,
     emails: emailReducer,
     login: loginSlice,
     resetPassword: resetPasswordSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ["payload.register", "payload.rehydrate"],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);

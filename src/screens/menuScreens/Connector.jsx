@@ -22,7 +22,6 @@ const Connector = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [isSmtpModalOpen, setIsSmtpModalOpen] = useState(false);
 
-
   const dispatch = useDispatch();
   const {
     isConnected = {},
@@ -71,11 +70,9 @@ const Connector = () => {
       return;
     }
     localStorage.setItem("selectedPlatform", platformKey);
-    console.log("======>>>>",platformKey);
+    console.log("======>>>>", platformKey);
     dispatch(authenticateSocial(platformKey));
   };
-
-  
 
   // const handlePlatformClick = (platform) => {
   //   console.log("workkkkk");
@@ -193,7 +190,7 @@ const Connector = () => {
           </div>
 
           <Dropdown
-            overlay={menu}
+            menu={{ items: menu }}
             trigger={["click"]}
             open={filterOpen}
             onOpenChange={toggleFilter}
@@ -227,10 +224,10 @@ const Connector = () => {
         })}
       </div>
       <SmtpModal
-      isOpen={isSmtpModalOpen}
-      onClose={() => setIsSmtpModalOpen(false)}
-      platform={selectedPlatform}
-    />
+        isOpen={isSmtpModalOpen}
+        onClose={() => setIsSmtpModalOpen(false)}
+        platform={selectedPlatform}
+      />
     </div>
   );
 };

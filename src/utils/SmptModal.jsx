@@ -7,7 +7,9 @@ import { authenticateSmtp } from "../redux/slices/socialAuthSlice"; // Import ac
 
 const SmtpModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const { isLoading, isConnected, errors } = useSelector((state) => state.socialAuth);
+  const { isLoading, isConnected, errors } = useSelector(
+    (state) => state.socialAuth
+  );
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -18,9 +20,14 @@ const SmtpModal = ({ isOpen, onClose }) => {
   });
 
   return (
-    <Modal title="SMTP Configuration" open={isOpen} onCancel={onClose} footer={null}>
+    <Modal
+      title="Email Connection"
+      open={isOpen}
+      onCancel={onClose}
+      footer={null}
+    >
       <Formik
-        initialValues={{ email: "", password: "", host: "", port: "" }}
+        initialValues={{ email: "", password: "", host: "", port: 993 }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           dispatch(authenticateSmtp(values)); // ✅ Dispatch SMTP authentication action
@@ -32,33 +39,56 @@ const SmtpModal = ({ isOpen, onClose }) => {
             <div>
               <label className="block text-sm font-medium">Email</label>
               <Field name="email" as={Input} />
-              <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-red-500 text-xs"
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium">Password</label>
               <Field name="password" type="password" as={Input} />
-              <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="text-red-500 text-xs"
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium">Host</label>
               <Field name="host" as={Input} />
-              <ErrorMessage name="host" component="div" className="text-red-500 text-xs" />
+              <ErrorMessage
+                name="host"
+                component="div"
+                className="text-red-500 text-xs"
+              />
             </div>
 
             <div>
               <label className="block text-sm font-medium">Port</label>
               <Field name="port" type="number" as={Input} />
-              <ErrorMessage name="port" component="div" className="text-red-500 text-xs" />
+              <ErrorMessage
+                name="port"
+                component="div"
+                className="text-red-500 text-xs"
+              />
             </div>
 
             {/* Display Errors */}
-            {errors.smtp && <p className="text-red-500 text-xs">{errors.smtp}</p>}
+            {errors.smtp && (
+              <p className="text-red-500 text-xs">{errors.smtp}</p>
+            )}
 
             <div className="flex justify-end gap-2 mt-4">
               <Button onClick={onClose}>Cancel</Button>
-              <Button type="primary" htmlType="submit" disabled={isConnected.smtp} loading={isSubmitting || isLoading.smtp}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={isConnected.smtp}
+                loading={isSubmitting || isLoading.smtp}
+              >
                 {isConnected.smtp ? "Connected" : "Connect"}
               </Button>
             </div>

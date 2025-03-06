@@ -1,10 +1,10 @@
-import React from "react";
 import "./App.css";
 import {
-  BrowserRouter as Router,
   Route,
   Routes,
   useLocation,
+  createBrowserRouter,
+  RouterProvider,
 } from "react-router-dom";
 import Onboarding1 from "./screens/onboarding/Onboarding1";
 import Onboarding2 from "./screens/onboarding/Onboarding2";
@@ -24,18 +24,25 @@ import ResetPassword from "./screens/Login/ResetPassword";
 import EnterPassword from "./screens/Login/EnterPassword";
 
 const AppContent = () => {
-  const location = useLocation(); // Get current route
+  const location = useLocation();
 
   // Hide Sidebar on "/", "/onboarding2", and "/onboarding3"
-  const hideSidebarRoutes = ["/", "/signup","/account-created","/email-confirmed",  "/login",  "/reset-password", "/reset-password:", "/onboarding-step2", "/onboarding-step3"];
+  const hideSidebarRoutes = [
+    "/",
+    "/signup",
+    "/account-created",
+    "/email-confirmed",
+    "/login",
+    "/reset-password",
+    "/reset-password:",
+    "/onboarding-step2",
+    "/onboarding-step3",
+  ];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
     <div className="App flex">
-      {/* ✅ Conditionally render Sidebar */}
       {showSidebar && <Sidebar />}
-
-      {/* Main Content Area */}
       <div className="flex-1">
         <Routes>
           <Route path="/signup" element={<AuthScreen />} />
@@ -70,11 +77,40 @@ const AppContent = () => {
   );
 };
 
-
-const App = () => (
-  <Router>
-    <AppContent />
-  </Router>
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <AppContent />,
+      children: [
+        { path: "/signup", element: <AuthScreen /> },
+        { path: "/account-created", element: <AccountCreated /> },
+        { path: "/email-confirmed", element: <EmailConfirmed /> },
+        { path: "/login", element: <Login /> },
+        { path: "/reset-password", element: <ResetPassword /> },
+        { path: "/reset-password:", element: <EnterPassword /> },
+        { path: "/", element: <Onboarding1 /> },
+        { path: "/onboarding-step2", element: <Onboarding2 /> },
+        { path: "/onboarding-step3", element: <Onboarding3 /> },
+        { path: "/chatui", element: <ChatUI /> },
+        { path: "/main", element: <MainScreen /> },
+        { path: "/inbound", element: <MessageInbound /> },
+        { path: "/customer-hub", element: <div>Customer Hub Content</div> },
+        { path: "/training-hub", element: <TrainingHub headerText={true} /> },
+        { path: "/connector", element: <Connector /> },
+        { path: "/agent-setting", element: <div>Agent Settings Content</div> },
+        { path: "/emails", element: <EmailList /> },
+      ],
+    },
+  ],
+  {
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    },
+  }
 );
+
+const App = () => <RouterProvider router={router} />;
 
 export default App;
