@@ -2,22 +2,31 @@ import { useState } from "react";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { FcGoogle } from "react-icons/fc";
-import { FaMicrosoft } from "react-icons/fa"; // Microsoft logo
+import { FaInstagram, FaMicrosoft } from "react-icons/fa"; // Microsoft logo
 import { FaArrowRightLong } from "react-icons/fa6";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signupUser } from "../../redux/slices/authSlice";
 
 const AuthScreen = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirmPassword: "",
+    email: "zeeshanshafique.te@gmail.com",
+    firstName: "Zeeshan",
+    lastName: "Shafique",
+    password: "123456",
+    confirmPassword: "123456",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const { loading, error } = useSelector((state) => state.auth);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,8 +64,6 @@ const AuthScreen = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  console.log("formData", formData);
-
   const nextStep = () => {
     if (validateStep()) {
       setStep(step + 1);
@@ -66,6 +73,17 @@ const AuthScreen = () => {
   const prevStep = () => {
     if (step > 1) {
       setStep(step - 1);
+    }
+  };
+
+  const handleSignup = () => {
+    if (validateStep()) {
+      const { confirmPassword, ...signupData } = formData;
+      dispatch(signupUser(signupData)).then((res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          navigate("/account-created");
+        }
+      });
     }
   };
 
@@ -103,7 +121,7 @@ const AuthScreen = () => {
       </div>
       {/* Right Side */}
       <div
-        className="w-1/2 flex flex-col justify-center items-center p-10"
+        className="w-1/2 flex flex-col justify-center items-center p-10 "
         style={{ width: "80%" }}
       >
         <div className="absolute top-8 right-20 flex gap-4">
@@ -138,14 +156,18 @@ const AuthScreen = () => {
               </span>
               <div className="flex-1 border-t border-gray200"></div>
             </div>
-            <div className="flex flex-col gap-3 w-full max-w-md">
+            <div className="flex  gap-3 w-full max-w-md">
               <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
                 <FcGoogle className="mr-2 text-xl" />
-                Sign Up with Google
+                 Google
               </button>
               <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
                 <FaMicrosoft className="mr-2 text-xl text-blue-600" />
-                Sign Up with Outlook
+                 Outlook
+              </button>
+              <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
+                <FaInstagram className="mr-2 text-xl text-blue-600" />
+                 Instagram
               </button>
             </div>
           </div>
@@ -240,11 +262,22 @@ const AuthScreen = () => {
            </div>
    
            {/* Continue Button */}
-           <div className="flex absolute bottom-8 right-20">
-             <button className="bg-black text-white px-4 py-2 rounded flex items-center gap-2">
+           {/* <div className="flex absolute bottom-8 right-20">
+             <button className="bg-black text-white px-4 py-2 rounded flex items-center gap-2" onClick={()=>navigate("/account-created")}>
                Continue <FaArrowRightLong className="text-lg" />
              </button>
-           </div>
+           </div> */}
+           <div className="flex absolute bottom-8 right-20">
+              <button
+                className="bg-black text-white px-4 py-2 rounded flex items-center gap-2"
+                onClick={handleSignup}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Continue"} <FaArrowRightLong className="text-lg" />
+              </button>
+            </div>
+
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
          </div>
         )}
       </div>

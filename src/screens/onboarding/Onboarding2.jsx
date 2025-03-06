@@ -15,7 +15,6 @@ const Onboarding2 = () => {
   });
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
 
-
   // const handleInputChange = (name, value) => {
   //   setFormData((prevData) => ({
   //     ...prevData,
@@ -29,15 +28,16 @@ const Onboarding2 = () => {
   }));
 
   const handlePlatformSelect = (platform) => {
-    setSelectedPlatforms((prevSelected) =>
-      prevSelected.includes(platform)
-        ? prevSelected.filter((item) => item !== platform) // Deselect
-        : [...prevSelected, platform] // Select
+    setSelectedPlatforms(
+      (prevSelected) =>
+        prevSelected.includes(platform)
+          ? prevSelected.filter((item) => item !== platform) // Deselect
+          : [...prevSelected, platform] // Select
     );
   };
 
   // console.log("selectedPlatforms", selectedPlatforms);
-  
+
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section */}
@@ -103,8 +103,15 @@ const Onboarding2 = () => {
             href="/onboarding-step3"
           />
           <PrimaryBtn
-            title="Next: Workspace & Agent"
-            className="bg-black text-white"
+            title={
+              <>
+                <span className="sm:inline hidden">
+                  Next: Workspace & Agent
+                </span>
+                <span className="inline sm:hidden">Next</span>
+              </>
+            }
+            className="bg-black text-white w-full sm:w-auto py-2 px-4 sm:px-6 text-sm sm:text-base flex items-center justify-center gap-2"
             icon2="arrow_forward"
             href="/onboarding-step3"
           />

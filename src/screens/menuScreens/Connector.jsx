@@ -161,7 +161,7 @@ const Connector = () => {
     <div>
       <ConnectorHeader />
       {/* Menu Selection with Dynamic Styles */}
-      <div className="my-6 border border-t-gray border-b-gray border-l-0 border-r-0 flex gap-4">
+      <div className="my-3 border border-t-gray border-b-gray border-l-0 border-r-0 flex gap-4">
         {menuItems.map((menu) => (
           <div
             key={menu}
@@ -191,7 +191,6 @@ const Connector = () => {
               placeholder="Search..."
             />
           </div>
-          <label className="text-sm font-medium text-gray-600">Filters</label>
 
           <Dropdown
             overlay={menu}
@@ -209,7 +208,7 @@ const Connector = () => {
       </div>
 
       {/* Social Platform Selection */}
-      <div className="grid grid-cols-3 gap-4 p-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
         {socialPlatforms.map((platform) => {
           const platformKey = platform.name.toLowerCase(); // ✅ Ensure lowercase key
 

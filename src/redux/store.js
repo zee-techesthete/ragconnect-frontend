@@ -5,7 +5,8 @@ import authReducer from "./slices/authSlice";
 import googleAuthSlice from "./slices/googleAuthSlice";
 import socialAuthReducer from "./slices/socialAuthSlice";
 import emailReducer from "./slices/emailSlice";
-
+import loginSlice from "./slices/loginSlice";
+import resetPasswordSlice from "./slices/resetPasswordSlice";
 // Persist config for social authentication
 const socialAuthPersistConfig = {
   key: "root",
@@ -20,6 +21,8 @@ const store = configureStore({
     googleAuth: googleAuthSlice,
     socialAuth: persistedSocialAuthReducer, // Use the persisted reducer
     emails: emailReducer,
+    login: loginSlice,
+    resetPassword: resetPasswordSlice,
   },
 });
 

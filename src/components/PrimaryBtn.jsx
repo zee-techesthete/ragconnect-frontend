@@ -9,7 +9,7 @@ export default function PrimaryBtn({
   icon = null,
   icon2 = null,
   href,
-  iconSize = 18,
+  iconSize = 16,
 }) {
   return (
     <Link to={href}>
