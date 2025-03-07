@@ -14,6 +14,19 @@ export const loginUser = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
+      if (
+        error.response?.status === 403 &&
+        error.response?.data?.needsVerification
+      ) {
+        // If email needs verification, redirect to verification page
+        window.location.href = `/verify-email?email=${encodeURIComponent(
+          credentials.email
+        )}`;
+        return rejectWithValue({
+          error: "Please verify your email before logging in.",
+          needsVerification: true,
+        });
+      }
       return rejectWithValue(
         error.response?.data?.error || "Login failed. Please try again."
       );
@@ -37,6 +50,11 @@ const loginSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    clearState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,10 +70,10 @@ const loginSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.error || "Login failed";
       });
   },
 });
 
-export const { logout, clearError } = loginSlice.actions;
+export const { logout, clearError, clearState } = loginSlice.actions;
 export default loginSlice.reducer;

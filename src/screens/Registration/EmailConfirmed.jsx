@@ -11,6 +11,7 @@ const EmailConfirmed = () => {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
   const [verificationStatus, setVerificationStatus] = useState("verifying");
+  const [email, setEmail] = useState(searchParams.get("email"));
 
   useEffect(() => {
     const verifyEmailToken = async () => {
@@ -25,6 +26,12 @@ const EmailConfirmed = () => {
         const result = await dispatch(verifyEmail(token)).unwrap();
         if (result.success) {
           setVerificationStatus("success");
+          // If we have an email, redirect to login after a short delay
+          if (email) {
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+          }
         } else {
           setVerificationStatus("error");
         }
@@ -35,7 +42,7 @@ const EmailConfirmed = () => {
     };
 
     verifyEmailToken();
-  }, [dispatch, searchParams]);
+  }, [dispatch, searchParams, email, navigate]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -47,82 +54,54 @@ const EmailConfirmed = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-primary px-4">
-      {/* Header: Logo & Buttons */}
-      <div className="w-full flex flex-wrap items-center justify-between mt-5 px-4 md:px-8 lg:px-20 py-4">
-        <img src={Logo} alt="Company Logo" className="w-24 lg:w-32 h-auto" />
-        <div className="flex gap-2 md:gap-4">
-          <PrimaryBtn
-            title="Get help"
-            className="bg-white text-sm md:text-base"
-            onClick={handleGetHelp}
-          />
-          <PrimaryBtn
-            title="Login"
-            className="bg-white text-sm md:text-base"
-            onClick={handleLogin}
-          />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div className="flex flex-col items-center">
+          <img className="h-12 w-auto" src={Logo} alt="Logo" />
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            {verificationStatus === "verifying" && "Verifying your email..."}
+            {verificationStatus === "success" && "Email verified successfully!"}
+            {verificationStatus === "error" && "Verification failed"}
+          </h2>
         </div>
-      </div>
 
-      {/* Content Section */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center max-w-xs md:max-w-sm mt-12">
-          {loading ? (
-            // Loading state
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold">
-                Verifying Email
-              </h2>
-              <p className="text-gray-600 mt-2 text-sm md:text-base">
-                Please wait while we verify your email...
-              </p>
-              <div className="mt-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto"></div>
-              </div>
-            </div>
-          ) : verificationStatus === "success" ? (
-            // Success state
-            <>
-              <h2 className="text-2xl md:text-3xl font-bold">
-                Email Confirmed
-              </h2>
-              <p className="text-gray-600 mt-2 text-sm md:text-base">
-                Your email has been confirmed, you can now log in and start
-                using your account!
-              </p>
-              <div className="mt-4 flex justify-center">
-                <PrimaryBtn
-                  title="Login"
-                  onClick={handleLogin}
-                  className="bg-black text-white px-6 py-3 text-sm md:text-base"
-                />
-              </div>
-            </>
-          ) : (
-            // Error state
-            <>
-              <h2 className="text-2xl md:text-3xl font-bold text-red-600">
-                Verification Failed
-              </h2>
-              <p className="text-gray-600 mt-2 text-sm md:text-base">
-                {error || "Email verification failed. Please try again."}
-              </p>
-              {/* <div className="mt-4 flex justify-center gap-4">
-                <PrimaryBtn
-                  title="Try Again"
-                  onClick={() => window.location.reload()}
-                  className="bg-black text-white px-6 py-3 text-sm md:text-base"
-                />
-                <PrimaryBtn
-                  title="Contact Support"
-                  onClick={handleGetHelp}
-                  className="bg-white text-black px-6 py-3 text-sm md:text-base"
-                />
-              </div> */}
-            </>
-          )}
-        </div>
+        {verificationStatus === "verifying" && (
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+            <p className="mt-4 text-gray-600">
+              Please wait while we verify your email...
+            </p>
+          </div>
+        )}
+
+        {verificationStatus === "success" && (
+          <div className="text-center">
+            <p className="text-green-600 mb-4">
+              Your email has been verified successfully!
+            </p>
+            {email ? (
+              <p className="text-gray-600">Redirecting you to login...</p>
+            ) : (
+              <PrimaryBtn onClick={handleLogin}>Go to Login</PrimaryBtn>
+            )}
+          </div>
+        )}
+
+        {verificationStatus === "error" && (
+          <div className="text-center">
+            <p className="text-red-600 mb-4">
+              {error || "Email is not verified. Please try again."}
+            </p>
+            {/* <div className="space-y-4">
+              <button
+                onClick={handleGetHelp}
+                className="w-full text-sm text-gray-600 hover:text-gray-900"
+              >
+                Need help? Contact support
+              </button>
+            </div> */}
+          </div>
+        )}
       </div>
     </div>
   );
