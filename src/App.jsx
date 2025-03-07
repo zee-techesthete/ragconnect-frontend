@@ -22,6 +22,7 @@ import AccountCreated from "./screens/Registration/AccountCreated";
 import EmailConfirmed from "./screens/Registration/EmailConfirmed";
 import ResetPassword from "./screens/Login/ResetPassword";
 import EnterPassword from "./screens/Login/EnterPassword";
+import AccountSetting from "./screens/menuScreens/AccountSetting/AccountSetting";
 
 const AppContent = () => {
   const location = useLocation();
@@ -70,6 +71,7 @@ const AppContent = () => {
             path="/agent-setting"
             element={<div>Agent Settings Content</div>}
           />
+          <Route path="/account-setting" element={<AccountSetting />} />
           <Route path="/emails" element={<EmailList />} />
         </Routes>
       </div>
@@ -99,6 +101,7 @@ const router = createBrowserRouter(
         { path: "/training-hub", element: <TrainingHub headerText={true} /> },
         { path: "/connector", element: <Connector /> },
         { path: "/agent-setting", element: <div>Agent Settings Content</div> },
+        { path: "/account-setting", element: <AccountSetting /> },
         { path: "/emails", element: <EmailList /> },
       ],
     },
