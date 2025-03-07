@@ -32,6 +32,8 @@ const MenuSide = ({ selectedMenu }) => {
         return navigate("/training-hub");
       case "connector":
         return navigate("/connector");
+      case "accountSetting":
+        return navigate("/account-setting");
       case "agentSetting":
         return <div>Agent Settings Content</div>;
       default:
@@ -85,6 +87,8 @@ const MenuSide = ({ selectedMenu }) => {
         return "connector";
       case "agentSetting":
         return "Agent Settings";
+      case "accountSetting":
+        return "Account Settings";
       default:
         return "Select a menu";
     }

@@ -34,6 +34,7 @@ const Sidebar = () => {
     { name: "Training Hub", path: "/training-hub", icon: <AiOutlineBook size={20} /> },
     { name: "Connector", path: "/connector", icon: <AiOutlineLink size={20} /> },
     { name: "Agent Setting", path: "/agent-setting", icon: <AiOutlineSetting size={20} /> },
+    { name: "Account Setting", path: "/account-setting", icon: <AiOutlineSetting size={20} /> },
   ];
 
   return (
