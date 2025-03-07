@@ -8,11 +8,14 @@ export const signupUser = createAsyncThunk(
   "auth/signupUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${rootUrl}/api/auth/signup`, userData);
+      const response = await axios.post(
+        `${rootUrl}/api/auth/register`,
+        userData
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Signup failed. Please try again."
+        error.response?.data?.error || "Signup failed. Please try again."
       );
     }
   }
@@ -23,11 +26,14 @@ export const verifyEmail = createAsyncThunk(
   "auth/verifyEmail",
   async (token, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${rootUrl}/api/auth/verify-email?token=${token}`);
+      const response = await axios.post(`${rootUrl}/api/auth/verify-email`, {
+        token: token,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Email verification failed. Please try again."
+        error.response?.data?.error ||
+          "Email verification failed. Please try again."
       );
     }
   }
@@ -64,7 +70,7 @@ const authSlice = createSlice({
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.signupSuccess = true;
       })
       .addCase(signupUser.rejected, (state, action) => {

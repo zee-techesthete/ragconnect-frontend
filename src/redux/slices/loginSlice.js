@@ -1,26 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const rootUrl = import.meta.env.VITE_ROOT_URL;
 
 // Async action for login
-export const loginUser = createAsyncThunk("auth/login", async (credentials, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`${rootUrl}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || "Login failed");
+export const loginUser = createAsyncThunk(
+  "auth/login",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${rootUrl}/api/auth/login`,
+        credentials
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Login failed. Please try again."
+      );
     }
-
-    return data; // Successful login response
-  } catch (error) {
-    return rejectWithValue(error.message);
   }
-});
+);
 
 const loginSlice = createSlice({
   name: "login",
@@ -35,6 +34,9 @@ const loginSlice = createSlice({
       state.user = null;
       state.success = false;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -45,7 +47,7 @@ const loginSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.success = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -55,5 +57,5 @@ const loginSlice = createSlice({
   },
 });
 
-export const { logout } = loginSlice.actions;
+export const { logout, clearError } = loginSlice.actions;
 export default loginSlice.reducer;

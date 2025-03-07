@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // API Base URL
 const rootUrl = import.meta.env.VITE_ROOT_URL;
@@ -8,17 +9,14 @@ export const requestPasswordReset = createAsyncThunk(
   "resetPassword/request",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${rootUrl}/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const response = await axios.post(`${rootUrl}/api/auth/forgot-password`, {
+        email,
       });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Something went wrong");
-      return data.message;
+      return response.data.message;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to send reset instructions"
+      );
     }
   }
 );
@@ -28,17 +26,15 @@ export const resetPassword = createAsyncThunk(
   "resetPassword/confirm",
   async ({ token, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${rootUrl}/auth/reset-password-confirm`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+      const response = await axios.post(`${rootUrl}/api/auth/reset-password`, {
+        token,
+        password,
       });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Reset failed");
-      return data.message;
+      return response.data.message;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to reset password"
+      );
     }
   }
 );
@@ -47,12 +43,13 @@ const resetPasswordSlice = createSlice({
   name: "resetPassword",
   initialState: {
     loading: false,
-    message: null,
+    success: false,
     error: null,
   },
   reducers: {
-    clearMessage: (state) => {
-      state.message = null;
+    clearState: (state) => {
+      state.loading = false;
+      state.success = false;
       state.error = null;
     },
   },
@@ -61,12 +58,12 @@ const resetPasswordSlice = createSlice({
       // Request Password Reset
       .addCase(requestPasswordReset.pending, (state) => {
         state.loading = true;
-        state.message = null;
+        state.success = false;
         state.error = null;
       })
-      .addCase(requestPasswordReset.fulfilled, (state, action) => {
+      .addCase(requestPasswordReset.fulfilled, (state) => {
         state.loading = false;
-        state.message = action.payload;
+        state.success = true;
       })
       .addCase(requestPasswordReset.rejected, (state, action) => {
         state.loading = false;
@@ -76,12 +73,12 @@ const resetPasswordSlice = createSlice({
       // Confirm Password Reset
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
-        state.message = null;
+        state.success = false;
         state.error = null;
       })
-      .addCase(resetPassword.fulfilled, (state, action) => {
+      .addCase(resetPassword.fulfilled, (state) => {
         state.loading = false;
-        state.message = action.payload;
+        state.success = true;
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
@@ -90,5 +87,5 @@ const resetPasswordSlice = createSlice({
   },
 });
 
-export const { clearMessage } = resetPasswordSlice.actions;
+export const { clearState } = resetPasswordSlice.actions;
 export default resetPasswordSlice.reducer;

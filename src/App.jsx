@@ -31,7 +31,7 @@ const AppContent = () => {
     "/",
     "/signup",
     "/account-created",
-    "/email-confirmed",
+    "/verify-email",
     "/login",
     "/reset-password",
     "/reset-password:",
@@ -47,7 +47,7 @@ const AppContent = () => {
         <Routes>
           <Route path="/signup" element={<AuthScreen />} />
           <Route path="/account-created" element={<AccountCreated />} />
-          <Route path="/email-confirmed" element={<EmailConfirmed />} />
+          <Route path="/verify-email" element={<EmailConfirmed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password:" element={<EnterPassword />} />
@@ -85,7 +85,7 @@ const router = createBrowserRouter(
       children: [
         { path: "/signup", element: <AuthScreen /> },
         { path: "/account-created", element: <AccountCreated /> },
-        { path: "/email-confirmed", element: <EmailConfirmed /> },
+        { path: "/verify-email", element: <EmailConfirmed /> },
         { path: "/login", element: <Login /> },
         { path: "/reset-password", element: <ResetPassword /> },
         { path: "/reset-password:", element: <EnterPassword /> },

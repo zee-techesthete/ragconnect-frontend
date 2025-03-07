@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { requestPasswordReset } from "../../redux/slices/resetPasswordSlice";
+import {
+  requestPasswordReset,
+  clearState,
+} from "../../redux/slices/resetPasswordSlice";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, success, error } = useSelector(
     (state) => state.resetPassword
   );
 
-  const handleResetPassword = () => {
+  useEffect(() => {
+    return () => {
+      dispatch(clearState());
+    };
+  }, [dispatch]);
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
     dispatch(requestPasswordReset(email));
   };
 
@@ -46,36 +58,45 @@ const ResetPassword = () => {
             </div>
           )}
           {success && (
-            <p className="bg-green text-green-500 p-3 rounded-lg mb-4 text-center">
+            <div className="bg-green-100 text-green-700 p-3 rounded-lg mb-4 text-center">
               {success}
-            </p>
+            </div>
           )}
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              placeholder="Enter email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray rounded-md focus:outline-none text-sm sm:text-base"
-            />
+          <form onSubmit={handleResetPassword}>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="Enter email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray rounded-md focus:outline-none text-sm sm:text-base"
+              />
+            </div>
+
+            {/* Reset Button */}
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 rounded-md text-sm sm:text-base"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send reset instructions"}
+            </button>
+          </form>
+
+          {/* Back to Login */}
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => navigate("/login")}
+              className="text-gray-600 hover:text-gray-800 text-sm"
+            >
+              Back to Login
+            </button>
           </div>
-
-          {/* Error Message */}
-
-          {/* Success Message */}
-
-          {/* Reset Button */}
-          <button
-            className="w-full bg-black text-white py-2 rounded-md text-sm sm:text-base"
-            onClick={handleResetPassword}
-            disabled={loading}
-          >
-            {loading ? "Sending..." : "Send reset instructions"}
-          </button>
         </div>
       </div>
     </div>

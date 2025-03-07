@@ -10,16 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../../redux/slices/authSlice";
 
 const AuthScreen = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    email: "zeeshanshafique.te@gmail.com",
-    firstName: "Zeeshan",
-    lastName: "Shafique",
-    password: "123@Abcd",
-    confirmPassword: "123@Abcd",
+    email: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -34,46 +34,48 @@ const AuthScreen = () => {
   };
 
   const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Real-time validation
     let newErrors = { ...errors };
     switch (name) {
-      case 'email':
+      case "email":
         if (!validateEmail(value)) {
           newErrors.email = "Please enter a valid email address";
         } else {
           delete newErrors.email;
         }
         break;
-      case 'firstName':
+      case "firstName":
         if (value.trim().length < 2) {
           newErrors.firstName = "First name must be at least 2 characters";
         } else {
           delete newErrors.firstName;
         }
         break;
-      case 'lastName':
+      case "lastName":
         if (value.trim().length < 2) {
           newErrors.lastName = "Last name must be at least 2 characters";
         } else {
           delete newErrors.lastName;
         }
         break;
-      case 'password':
+      case "password":
         if (!validatePassword(value)) {
-          newErrors.password = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
+          newErrors.password =
+            "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
         } else {
           delete newErrors.password;
         }
         break;
-      case 'confirmPassword':
+      case "confirmPassword":
         if (value !== formData.password) {
           newErrors.confirmPassword = "Passwords do not match";
         } else {
@@ -104,7 +106,8 @@ const AuthScreen = () => {
 
     if (step === 3) {
       if (!validatePassword(formData.password)) {
-        newErrors.password = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
+        newErrors.password =
+          "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character";
       }
       if (formData.confirmPassword !== formData.password) {
         newErrors.confirmPassword = "Passwords do not match";
@@ -136,8 +139,10 @@ const AuthScreen = () => {
         if (result.meta.requestStatus === "fulfilled") {
           navigate("/account-created");
         }
-      } catch (error) {
-        setErrors({ submit: "An error occurred during signup. Please try again." });
+      } catch {
+        setErrors({
+          submit: "An error occurred during signup. Please try again.",
+        });
       } finally {
         setIsSubmitting(false);
       }
@@ -183,7 +188,7 @@ const AuthScreen = () => {
       >
         <div className="absolute top-8 right-20 flex gap-4">
           <PrimaryBtn title={"Get help"} />
-          <PrimaryBtn  title={"Login"} href="/login" />
+          <PrimaryBtn title={"Login"} href="/login" />
         </div>
         {error && (
           <div className="w-full max-w-md mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -225,15 +230,15 @@ const AuthScreen = () => {
             <div className="flex  gap-3 w-full max-w-md">
               <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
                 <FcGoogle className="mr-2 text-xl" />
-                 Google
+                Google
               </button>
               <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
                 <FaMicrosoft className="mr-2 text-xl text-blue-600" />
-                 Outlook
+                Outlook
               </button>
               <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
                 <FaInstagram className="mr-2 text-xl text-blue-600" />
-                 Instagram
+                Instagram
               </button>
             </div>
           </div>
@@ -286,75 +291,87 @@ const AuthScreen = () => {
           </div>
         )}
         {step === 3 && (
-           <div className="w-full max-w-md">
-           {/* Password Field */}
-           <label htmlFor="password" className="font-medium">
-             Password
-           </label>
-           <div className="relative">
-             <input
-               type={showPassword ? "text" : "password"}
-               name="password"
-               value={formData.password}
-               onChange={handleChange}
-               placeholder="Enter your password"
-               className={`w-full border p-2 rounded-md mb-1 mt-2 pr-10 ${
-                 errors.password ? "border-red-500 bg-red-50" : "border-gray"
-               }`}
-             />
-             <span
-               className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-               onClick={() => setShowPassword(!showPassword)}
-             >
-               {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-             </span>
-           </div>
-   
-           {/* Confirm Password Field */}
-           <label htmlFor="confirmPassword" className="font-medium">
-             Confirm Password
-           </label>
-           <div className="relative">
-             <input
-               type={showConfirmPassword ? "text" : "password"}
-               name="confirmPassword"
-               value={formData.confirmPassword}
-               onChange={handleChange}
-               placeholder="Confirm your password"
-               className={`w-full border p-2 rounded-md mb-1 mt-2 pr-10 ${
-                 errors.confirmPassword ? "border-red-500 bg-red-50" : "border-gray"
-               }`}
-             />
-             <span
-               className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-             >
-               {showConfirmPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-             </span>
-           </div>
-   
-           {/* Continue Button */}
-           <div className="flex absolute bottom-8 right-20">
+          <div className="w-full max-w-md">
+            {/* Password Field */}
+            <label htmlFor="password" className="font-medium">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={errors.password || "Password"}
+                className={`w-full border p-2 rounded-md mb-3 mt-2 pr-10 ${
+                  errors.password ? "border-red-500 bg-red-100" : "border-gray"
+                }`}
+              />
+              <span
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </span>
+            </div>
+
+            {/* Confirm Password Field */}
+            <label htmlFor="confirmPassword" className="font-medium">
+              Confirm Password
+            </label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder={errors.confirmPassword || "Confirm Password"}
+                className={`w-full border p-2 rounded-md mb-4 mt-2 pr-10 ${
+                  errors.confirmPassword
+                    ? "border-red-500 bg-red-100"
+                    : "border-gray"
+                }`}
+              />
+              <span
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </span>
+            </div>
+
+            {/* Continue Button */}
+            {/* <div className="flex absolute bottom-8 right-20">
+             <button className="bg-black text-white px-4 py-2 rounded flex items-center gap-2" onClick={()=>navigate("/account-created")}>
+               Continue <FaArrowRightLong className="text-lg" />
+             </button>
+           </div> */}
+            <div className="flex absolute bottom-8 right-20">
               <button
                 className="bg-black text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleSignup}
-                disabled={loading || isSubmitting || !!errors.password || !!errors.confirmPassword}
+                disabled={
+                  loading ||
+                  isSubmitting ||
+                  !!errors.password ||
+                  !!errors.confirmPassword
+                }
               >
-                {loading || isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="animate-spin">⌛</span> Processing...
-                  </span>
-                ) : (
-                  <>
-                    Continue <FaArrowRightLong className="text-lg" />
-                  </>
-                )}
+                {loading ? "Processing..." : "Continue"}{" "}
+                <FaArrowRightLong className="text-lg" />
               </button>
             </div>
 
-            {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password}</p>}
-            {errors.confirmPassword && <p className="text-red-500 text-sm mt-2">{errors.confirmPassword}</p>}
-         </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          </div>
         )}
       </div>
     </div>
