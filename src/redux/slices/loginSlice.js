@@ -18,10 +18,6 @@ export const loginUser = createAsyncThunk(
         error.response?.status === 403 &&
         error.response?.data?.needsVerification
       ) {
-        // If email needs verification, redirect to verification page
-        window.location.href = `/verify-email?email=${encodeURIComponent(
-          credentials.email
-        )}`;
         return rejectWithValue({
           error: "Please verify your email before logging in.",
           needsVerification: true,

@@ -11,7 +11,6 @@ const EmailConfirmed = () => {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
   const [verificationStatus, setVerificationStatus] = useState("verifying");
-  const [email, setEmail] = useState(searchParams.get("email"));
 
   useEffect(() => {
     const verifyEmailToken = async () => {
@@ -27,7 +26,7 @@ const EmailConfirmed = () => {
         if (result.success) {
           setVerificationStatus("success");
           // If we have an email, redirect to login after a short delay
-          if (email) {
+          if (!token) {
             setTimeout(() => {
               navigate("/login");
             }, 2000);
@@ -42,7 +41,7 @@ const EmailConfirmed = () => {
     };
 
     verifyEmailToken();
-  }, [dispatch, searchParams, email, navigate]);
+  }, [dispatch, searchParams, navigate]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -79,11 +78,9 @@ const EmailConfirmed = () => {
             <p className="text-green-600 mb-4">
               Your email has been verified successfully!
             </p>
-            {email ? (
-              <p className="text-gray-600">Redirecting you to login...</p>
-            ) : (
-              <PrimaryBtn onClick={handleLogin}>Go to Login</PrimaryBtn>
-            )}
+            <button type="button" onClick={handleLogin}>
+              Go to Login
+            </button>
           </div>
         )}
 
