@@ -129,7 +129,7 @@ const Sidebar = () => {
         {/* Agent Memory */}
         <div className="mt-auto bg-gray p-4 rounded-lg border border-gray-100">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-normal text-gray-700">Agent;s memory</span>
+            <span className="font-normal text-gray-700">Agent's memory</span>
             <span className="text-sm text-primary hover:underline cursor-pointer">Upgrade</span>
           </div>
           <ProgressBar value={25} />

@@ -21,7 +21,7 @@ const ProfileView = () => {
   ];
 
   return (
-    <div className=" border-l border-gray ">
+    <div className="h-[calc(95vh-120px)] overflow-y-auto custom-scrollbar  border-l border-gray ">
       {/* Tabs Section */}
       <Tabs activeKey={activeTab} onChange={setActiveTab} className="px-2 text-gray">
         <Tabs.TabPane tab="Profile View" key="profile"  />

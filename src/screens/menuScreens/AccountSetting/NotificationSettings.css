@@ -1,0 +1,37 @@
+/* Override Ant Design checkbox and radio colors */
+.notification-settings .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: black !important;
+  border-color: black !important;
+}
+
+.notification-settings .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: black !important;
+}
+
+/* Radio button styles */
+.notification-settings .ant-radio .ant-radio-inner {
+  border-color: black !important;
+  background-color: white !important;
+}
+
+.notification-settings .ant-radio-checked .ant-radio-inner {
+  border-color: black !important;
+  background-color: white !important;
+}
+
+.notification-settings .ant-radio-checked .ant-radio-inner::after {
+  background-color: black !important;
+}
+
+.notification-settings .ant-radio:hover .ant-radio-inner {
+  border-color: black !important;
+}
+
+/* Override Switch colors */
+.notification-settings .ant-switch.ant-switch-checked {
+  background-color: black !important;
+}
+
+.notification-settings .ant-switch:hover:not(.ant-switch-disabled) {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+} 

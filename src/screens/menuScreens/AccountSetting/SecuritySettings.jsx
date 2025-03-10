@@ -88,7 +88,7 @@ const SecuritySettings = () => {
   ];
 
   return (
-    <div className="security-settings-container h-[calc(100vh-64px)] overflow-y-auto bg-white">
+    <div className="security-settings-container h-[calc(85vh-120px)] overflow-y-auto bg-white px-2 custom-scrollbar">
       <div className="security-settings-content max-w-[1200px] mx-auto p-4 md:p-0">
         {/* Password Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray pb-4">
@@ -109,7 +109,7 @@ const SecuritySettings = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray py-4 gap-4">
           <div className="w-full md:w-auto">
             <Title level={5}>Two-Step Verification</Title>
-            <div className="flex items-center">
+            <div className="flex items-center notification-settings">
               <Switch className="px-2 me-2 bg-gray" />
               <Text className="text-normal">Enable two-step verification</Text>
             </div>
