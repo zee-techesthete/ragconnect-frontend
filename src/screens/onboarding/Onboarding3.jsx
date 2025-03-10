@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/loginSlice";
+import { useNavigate } from "react-router-dom";
 
 const Onboarding3 = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +14,21 @@ const Onboarding3 = () => {
     industry: "",
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, token } = useSelector((state) => state.login);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
   };
 
   return (
@@ -34,7 +46,7 @@ const Onboarding3 = () => {
           <h1 className="text-2xl md:text-4xl font-bold mt-4">
             Ready to set up your workspace and agent?
           </h1>
-          <p className="mt-4 text-sm">Don’t worry – you can change it later.</p>
+          <p className="mt-4 text-sm">Don't worry – you can change it later.</p>
         </div>
 
         {/* Back Button */}
@@ -50,10 +62,18 @@ const Onboarding3 = () => {
 
       {/* Right Section */}
       <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 flex flex-col justify-between">
-        {/* Login */}
-        <div className="flex gap-4 justify-end mb-6 md:mb-0">
-          <PrimaryBtn title={"Get help"} className="font-semibold" />
-          <PrimaryBtn title={"Login"} className="font-semibold" />
+        {/* Login/Logout */}
+        <div className="flex gap-4 justify-center md:justify-end mb-8 font-semibold">
+          <PrimaryBtn title={"Get help"} />
+          {user && token ? (
+            <PrimaryBtn 
+              title={"Logout"} 
+              onClick={handleLogout}
+              className="bg-red-500 text-white hover:bg-red-600"
+            />
+          ) : (
+            <PrimaryBtn title={"Login"} href="/login" />
+          )}
         </div>
 
         {/* Form Questions */}

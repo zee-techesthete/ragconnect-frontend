@@ -385,6 +385,9 @@ const AuthScreen = () => {
                 )}
               </span>
             </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mb-3">{errors.password}</p>
+            )}
 
             {/* Confirm Password Field */}
             <label htmlFor="confirmPassword" className="font-medium">
@@ -414,13 +417,11 @@ const AuthScreen = () => {
                 )}
               </span>
             </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mb-3">{errors.confirmPassword}</p>
+            )}
 
             {/* Continue Button */}
-            {/* <div className="flex absolute bottom-8 right-20">
-             <button className="bg-black text-white px-4 py-2 rounded flex items-center gap-2" onClick={()=>navigate("/account-created")}>
-               Continue <FaArrowRightLong className="text-lg" />
-             </button>
-           </div> */}
             <div className="flex absolute bottom-8 right-20">
               <button
                 className="bg-black text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

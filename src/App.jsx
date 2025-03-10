@@ -23,11 +23,18 @@ import EmailConfirmed from "./screens/Registration/EmailConfirmed";
 import ResetPassword from "./screens/Login/ResetPassword";
 import EnterPassword from "./screens/Login/EnterPassword";
 import AccountSetting from "./screens/menuScreens/AccountSetting/AccountSetting";
+import ProtectedRoute from "./components/ProtectedRoute";
+import setupAxiosInterceptors from "./utils/axiosConfig";
+import { useEffect } from "react";
+import HomeScreen from "./screens/menuScreens/HomeScreen/HomeScreen";
+
+// Initialize axios interceptors
+setupAxiosInterceptors();
 
 const AppContent = () => {
   const location = useLocation();
 
-  // Hide Sidebar on "/", "/onboarding2", and "/onboarding3"
+  // Hide Sidebar on public routes only
   const hideSidebarRoutes = [
     "/",
     "/signup",
@@ -37,7 +44,7 @@ const AppContent = () => {
     "/reset-password",
     "/reset-password:",
     "/onboarding-step2",
-    "/onboarding-step3",
+    "/onboarding-step3"
   ];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
@@ -46,33 +53,119 @@ const AppContent = () => {
       {showSidebar && <Sidebar />}
       <div className="flex-1">
         <Routes>
+          {/* Public Routes */}
           <Route path="/signup" element={<AuthScreen />} />
-          <Route path="/account-created" element={<AccountCreated />} />
+          <Route 
+            path="/account-created" 
+            element={
+              <ProtectedRoute requireSignup={true}>
+                <AccountCreated />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/verify-email" element={<EmailConfirmed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password:" element={<EnterPassword />} />
           <Route path="/" element={<Onboarding1 />} />
-          <Route path="/onboarding-step2" element={<Onboarding2 />} />
-          <Route path="/onboarding-step3" element={<Onboarding3 />} />
-          <Route path="/chatui" element={<ChatUI />} />
-          <Route path="/main" element={<MainScreen />} />
-          <Route path="/inbound" element={<MessageInbound />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/onboarding-step2"
+            element={
+              <ProtectedRoute>
+                <Onboarding2 />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/onboarding-step3"
+            element={
+              <ProtectedRoute>
+                <Onboarding3 />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomeScreen />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chatui"
+            element={
+              <ProtectedRoute>
+                <ChatUI />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/main"
+            element={
+              <ProtectedRoute>
+                <MainScreen />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbound"
+            element={
+              <ProtectedRoute>
+                <MessageInbound />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/customer-hub"
-            element={<div>Customer Hub Content</div>}
+            element={
+              <ProtectedRoute>
+                <div>Customer Hub Content</div>
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/training-hub"
-            element={<TrainingHub headerText={true} />}
+            element={
+              <ProtectedRoute>
+                <TrainingHub headerText={true} />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/connector" element={<Connector />} />
+          <Route
+            path="/connector"
+            element={
+              <ProtectedRoute>
+                <Connector />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/agent-setting"
-            element={<div>Agent Settings Content</div>}
+            element={
+              <ProtectedRoute>
+                <div>Agent Settings Content</div>
+              </ProtectedRoute>
+            }
           />
-          <Route path="/account-setting" element={<AccountSetting />} />
-          <Route path="/emails" element={<EmailList />} />
+          <Route
+            path="/account-setting"
+            element={
+              <ProtectedRoute>
+                <AccountSetting />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emails"
+            element={
+              <ProtectedRoute>
+                <EmailList />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </div>
@@ -85,24 +178,119 @@ const router = createBrowserRouter(
       path: "/",
       element: <AppContent />,
       children: [
+        // Public Routes
         { path: "/signup", element: <AuthScreen /> },
-        { path: "/account-created", element: <AccountCreated /> },
+        { 
+          path: "/account-created", 
+          element: (
+            <ProtectedRoute requireSignup={true}>
+              <AccountCreated />
+            </ProtectedRoute>
+          )
+        },
         { path: "/verify-email", element: <EmailConfirmed /> },
         { path: "/login", element: <Login /> },
         { path: "/reset-password", element: <ResetPassword /> },
         { path: "/reset-password:", element: <EnterPassword /> },
         { path: "/", element: <Onboarding1 /> },
-        { path: "/onboarding-step2", element: <Onboarding2 /> },
-        { path: "/onboarding-step3", element: <Onboarding3 /> },
-        { path: "/chatui", element: <ChatUI /> },
-        { path: "/main", element: <MainScreen /> },
-        { path: "/inbound", element: <MessageInbound /> },
-        { path: "/customer-hub", element: <div>Customer Hub Content</div> },
-        { path: "/training-hub", element: <TrainingHub headerText={true} /> },
-        { path: "/connector", element: <Connector /> },
-        { path: "/agent-setting", element: <div>Agent Settings Content</div> },
-        { path: "/account-setting", element: <AccountSetting /> },
-        { path: "/emails", element: <EmailList /> },
+
+        // Protected Routes
+        {
+          path: "/onboarding-step2",
+          element: (
+            <ProtectedRoute>
+              <Onboarding2 />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/onboarding-step3",
+          element: (
+            <ProtectedRoute>
+              <Onboarding3 />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/home",
+          element: (
+            <ProtectedRoute>
+              <HomeScreen />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/chatui",
+          element: (
+            <ProtectedRoute>
+              <ChatUI />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/main",
+          element: (
+            <ProtectedRoute>
+              <MainScreen />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/inbound",
+          element: (
+            <ProtectedRoute>
+              <MessageInbound />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/customer-hub",
+          element: (
+            <ProtectedRoute>
+              <div>Customer Hub Content</div>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/training-hub",
+          element: (
+            <ProtectedRoute>
+              <TrainingHub headerText={true} />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/connector",
+          element: (
+            <ProtectedRoute>
+              <Connector />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/agent-setting",
+          element: (
+            <ProtectedRoute>
+              <div>Agent Settings Content</div>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/account-setting",
+          element: (
+            <ProtectedRoute>
+              <AccountSetting />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/emails",
+          element: (
+            <ProtectedRoute>
+              <EmailList />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
   ],

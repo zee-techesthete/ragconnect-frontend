@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/loginSlice";
+import { useNavigate } from "react-router-dom";
 
 const Onboarding1 = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +14,21 @@ const Onboarding1 = () => {
     industry: "",
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, token } = useSelector((state) => state.login);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
   };
 
   return (
@@ -32,11 +44,11 @@ const Onboarding1 = () => {
         <div className="text-center md:text-left">
           <h3 className="text-lg font-semibold text-gray-500">Step 1 of 3</h3>
           <h1 className="text-2xl md:text-4xl font-bold mt-4">
-            We’d love to get to know you better!
+            We'd love to get to know you better!
           </h1>
           <p className="mt-4 text-sm md:text-base">
-            We’re excited to help you get solutions that align with your goals.
-            It’ll take six quick questions to configure everything, this won’t
+            We're excited to help you get solutions that align with your goals.
+            It'll take six quick questions to configure everything, this won't
             take more than a minute!
           </p>
         </div>
@@ -53,10 +65,18 @@ const Onboarding1 = () => {
 
       {/* Right Section */}
       <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 flex flex-col justify-between">
-        {/* Login */}
+        {/* Login/Logout */}
         <div className="flex gap-4 justify-center md:justify-end mb-8 font-semibold">
           <PrimaryBtn title={"Get help"} />
-          <PrimaryBtn title={"Login"} href="/login" />
+          {user && token ? (
+            <PrimaryBtn 
+              title={"Logout"} 
+              onClick={handleLogout}
+              className="bg-red-500 text-white hover:bg-red-600"
+            />
+          ) : (
+            <PrimaryBtn title={"Login"} href="/login" />
+          )}
         </div>
 
         {/* Form Questions */}

@@ -3,6 +3,9 @@ import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
 import SocialIcons from "../../utils/Icons";
 import IconCard from "../../components/IconsCards";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/loginSlice";
+import { useNavigate } from "react-router-dom";
 
 const Onboarding2 = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +17,15 @@ const Onboarding2 = () => {
     socialPlatform: "",
   });
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, token } = useSelector((state) => state.login);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   // const handleInputChange = (name, value) => {
   //   setFormData((prevData) => ({
@@ -54,8 +66,8 @@ const Onboarding2 = () => {
             Which channel would you like to start with?
           </h1>
           <p className="mt-4 text-sm md:text-base">
-            You can connect your other channels later. If you don’t see your
-            tools listed here, we’ll add them for you — just let us know.
+            You can connect your other channels later. If you don't see your
+            tools listed here, we'll add them for you — just let us know.
           </p>
         </div>
 
@@ -72,10 +84,18 @@ const Onboarding2 = () => {
 
       {/* Right Section */}
       <div className="w-full md:w-3/5 px-6 xl:px-24 py-8 gap-6 flex flex-col justify-between">
-        {/* Login */}
-        <div className="flex gap-4 justify-center md:justify-end mb-8">
-          <PrimaryBtn title="Get help" className="font-semibold" />
-          <PrimaryBtn title="Login" className="font-semibold" />
+        {/* Login/Logout */}
+        <div className="flex gap-4 justify-center md:justify-end mb-8 font-semibold">
+          <PrimaryBtn title={"Get help"} />
+          {user && token ? (
+            <PrimaryBtn 
+              title={"Logout"} 
+              onClick={handleLogout}
+              className="bg-red-500 text-white hover:bg-red-600"
+            />
+          ) : (
+            <PrimaryBtn title={"Login"} href="/login" />
+          )}
         </div>
 
         {/* Social Platform Selection */}
