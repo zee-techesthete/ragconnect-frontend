@@ -7,7 +7,12 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../../redux/slices/authSlice";
+import {
+  signupUser,
+  googleSSO,
+  outlookSSO,
+  instagramSSO,
+} from "../../redux/slices/authSlice";
 
 const AuthScreen = () => {
   const navigate = useNavigate();
@@ -25,6 +30,7 @@ const AuthScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ssoLoading, setSSOLoading] = useState(false);
 
   const { loading, error } = useSelector((state) => state.auth);
 
@@ -149,6 +155,55 @@ const AuthScreen = () => {
     }
   };
 
+  const handleGoogleSSO = async () => {
+    console.log("*here");
+    try {
+      setSSOLoading(true);
+      const result = await dispatch(googleSSO());
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate("/account-created");
+      }
+    } catch (error) {
+      setErrors({
+        submit: "Google SSO failed. Please try again.",
+      });
+    } finally {
+      setSSOLoading(false);
+    }
+  };
+
+  const handleOutlookSSO = async () => {
+    try {
+      setSSOLoading(true);
+      const result = await dispatch(outlookSSO());
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate("/account-created");
+      }
+    } catch (error) {
+      setErrors({
+        submit: "Outlook SSO failed. Please try again.",
+      });
+    } finally {
+      setSSOLoading(false);
+    }
+  };
+
+  const handleInstagramSSO = async () => {
+    try {
+      setSSOLoading(true);
+      const result = await dispatch(instagramSSO());
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate("/account-created");
+      }
+    } catch (error) {
+      setErrors({
+        submit: "Instagram SSO failed. Please try again.",
+      });
+    } finally {
+      setSSOLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen w-full">
       {/* Left Side */}
@@ -228,15 +283,27 @@ const AuthScreen = () => {
               <div className="flex-1 border-t border-gray200"></div>
             </div>
             <div className="flex  gap-3 w-full max-w-md">
-              <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
+              <button
+                className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition"
+                onClick={handleGoogleSSO}
+                disabled={loading || ssoLoading}
+              >
                 <FcGoogle className="mr-2 text-xl" />
                 Google
               </button>
-              <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
+              <button
+                className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition"
+                onClick={handleOutlookSSO}
+                disabled={loading || ssoLoading}
+              >
                 <FaMicrosoft className="mr-2 text-xl text-blue-600" />
                 Outlook
               </button>
-              <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition">
+              <button
+                className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition"
+                onClick={handleInstagramSSO}
+                disabled={loading || ssoLoading}
+              >
                 <FaInstagram className="mr-2 text-xl text-blue-600" />
                 Instagram
               </button>

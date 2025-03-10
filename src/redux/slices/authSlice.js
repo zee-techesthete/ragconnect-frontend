@@ -39,6 +39,79 @@ export const verifyEmail = createAsyncThunk(
   }
 );
 
+// Async thunk for Gmail SSO
+export const googleSSO = createAsyncThunk(
+  "auth/googleSSO",
+  async (_, { rejectWithValue }) => {
+    try {
+      // Redirect to the backend SSO endpoint
+      const ssoUrl = `${rootUrl}/sso/google`;
+      console.log("Redirecting to SSO URL:", ssoUrl);
+      window.location.href = ssoUrl;
+      return null; // The actual response will be handled by the callback route
+    } catch (error) {
+      console.error("Google SSO error:", error);
+      return rejectWithValue(
+        error.response?.data?.error || "Google SSO failed. Please try again."
+      );
+    }
+  }
+);
+
+// Handle SSO callback
+export const handleSSOCallback = createAsyncThunk(
+  "auth/handleSSOCallback",
+  async (token, { rejectWithValue }) => {
+    try {
+      // Verify the token with your backend
+      const response = await axios.get(`${rootUrl}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to verify SSO login."
+      );
+    }
+  }
+);
+
+// Async thunk for Outlook SSO
+export const outlookSSO = createAsyncThunk(
+  "auth/outlookSSO",
+  async (_, { rejectWithValue }) => {
+    try {
+      // Redirect to the backend SSO endpoint
+      const ssoUrl = `${rootUrl}/sso/outlook`;
+      console.log("Redirecting to SSO URL:", ssoUrl);
+      window.location.href = ssoUrl;
+      return null; // The actual response will be handled by the callback route
+    } catch (error) {
+      console.error("Outlook SSO error:", error);
+      return rejectWithValue(
+        error.response?.data?.error || "Outlook SSO failed. Please try again."
+      );
+    }
+  }
+);
+
+// Async thunk for Instagram SSO
+export const instagramSSO = createAsyncThunk(
+  "auth/instagramSSO",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${rootUrl}/api/sso/instagram`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Instagram SSO failed. Please try again."
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -47,6 +120,7 @@ const authSlice = createSlice({
     signupSuccess: false,
     verificationSuccess: false,
     error: null,
+    ssoLoading: false,
   },
   reducers: {
     clearError: (state) => {
@@ -92,6 +166,65 @@ const authSlice = createSlice({
       .addCase(verifyEmail.rejected, (state, action) => {
         state.loading = false;
         state.verificationSuccess = false;
+        state.error = action.payload;
+      })
+
+      // Handle Google SSO
+      .addCase(googleSSO.pending, (state) => {
+        state.ssoLoading = true;
+        state.error = null;
+      })
+      .addCase(googleSSO.fulfilled, (state, action) => {
+        state.ssoLoading = false;
+        state.user = action.payload.user;
+        state.signupSuccess = true;
+      })
+      .addCase(googleSSO.rejected, (state, action) => {
+        state.ssoLoading = false;
+        state.error = action.payload;
+      })
+
+      // Handle Outlook SSO
+      .addCase(outlookSSO.pending, (state) => {
+        state.ssoLoading = true;
+        state.error = null;
+      })
+      .addCase(outlookSSO.fulfilled, (state) => {
+        state.ssoLoading = false;
+        // The actual user data will be handled by handleSSOCallback
+      })
+      .addCase(outlookSSO.rejected, (state, action) => {
+        state.ssoLoading = false;
+        state.error = action.payload;
+      })
+
+      // Handle Instagram SSO
+      .addCase(instagramSSO.pending, (state) => {
+        state.ssoLoading = true;
+        state.error = null;
+      })
+      .addCase(instagramSSO.fulfilled, (state, action) => {
+        state.ssoLoading = false;
+        state.user = action.payload.user;
+        state.signupSuccess = true;
+      })
+      .addCase(instagramSSO.rejected, (state, action) => {
+        state.ssoLoading = false;
+        state.error = action.payload;
+      })
+
+      // Handle SSO Callback
+      .addCase(handleSSOCallback.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(handleSSOCallback.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.signupSuccess = true;
+      })
+      .addCase(handleSSOCallback.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   },
