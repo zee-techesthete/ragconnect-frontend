@@ -19,28 +19,56 @@ import tiktokIcon from "../assets/social-icons/tictok.svg";
 import twitchIcon from "../assets/social-icons/twitch.svg";
 import wechatIcon from "../assets/social-icons/wechat.svg";
 import shopifyIcon from "../assets/social-icons/shopify.png";
+import mailchimpIcon from "../assets/social-icons/mailchimp.png";
+import salesforceIcon from "../assets/social-icons/salesforce.svg";
+import yelpIcon from "../assets/social-icons/yelp.svg";
+import trustpilotIcon from "../assets/social-icons/trustpilot.svg";
+import telegramIcon from "../assets/social-icons/telegram.svg";
+import airbnbIcon from "../assets/social-icons/airbnb.svg";
+import zendeskIcon from "../assets/social-icons/zendesk.svg";
+import wixIcon from "../assets/social-icons/wix.svg";
+import squarespaceIcon from "../assets/social-icons/squarespace.svg";
+import twilioIcon from "../assets/social-icons/twilio.svg";
+import quickbooksIcon from "../assets/social-icons/quickbooks.svg";
+import chaseIcon from "../assets/social-icons/chese.svg";
+import messageIcon from "../assets/social-icons/message.svg";
+import phoneIcon from "../assets/social-icons/phone.svg";
 
 const Icons = {
   google: googleIcon,
   outlook: outlookIcon,
   shopify: shopifyIcon,
   email: smptIcon,
+  salesforce: salesforceIcon,
   slack: slackIcon,
+  mailchimp: mailchimpIcon,
+  yelp: yelpIcon,
   instagram: instagramIcon,
   facebook: facebookIcon,
+  trustpilot: trustpilotIcon,
+  telegram: telegramIcon,
+  airbnb: airbnbIcon,
+  zendesk: zendeskIcon,
   tripadvisor: tripadvisorIcon,
-  pinterest: pinterestIcon,
+  wix: wixIcon,
+  squarespace: squarespaceIcon,
+  twilio: twilioIcon,
+  quickbooks: quickbooksIcon,
+  chase: chaseIcon,
+  message: messageIcon,
+  phone: phoneIcon,
+  // pinterest: pinterestIcon,
   discord: discordIcon,
-  yahoo: yahooIcon,
+  // yahoo: yahooIcon,
   twitter: twitterIcon,
   linkedin: linkedinIcon,
-  snapchat: snapchatIcon,
-  reddit: redditIcon,
-  youtube: youtubeIcon,
+  // snapchat: snapchatIcon,
+  // reddit: redditIcon,
+  // youtube: youtubeIcon,
   whatsapp: whatsappIcon,
-  tiktok: tiktokIcon,
-  twitch: twitchIcon,
-  wechat: wechatIcon,
+  // tiktok: tiktokIcon,
+  // twitch: twitchIcon,
+  // wechat: wechatIcon,
   messenger: messengerIcon,
 };
 

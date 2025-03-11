@@ -12,6 +12,7 @@ import {
   googleSSO,
   outlookSSO,
   instagramSSO,
+  clearError,
 } from "../../redux/slices/authSlice";
 
 const AuthScreen = () => {
@@ -33,6 +34,21 @@ const AuthScreen = () => {
   const [ssoLoading, setSSOLoading] = useState(false);
 
   const { loading, error } = useSelector((state) => state.auth);
+
+  // Add useEffect to clear error after 10 seconds
+  useEffect(() => {
+    let errorTimeout;
+    if (error) {
+      errorTimeout = setTimeout(() => {
+        dispatch(clearError());
+      }, 10000); // 10 seconds
+    }
+    return () => {
+      if (errorTimeout) {
+        clearTimeout(errorTimeout);
+      }
+    };
+  }, [error, dispatch]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -438,7 +454,6 @@ const AuthScreen = () => {
               </button>
             </div>
 
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         )}
       </div>

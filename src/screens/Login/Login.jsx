@@ -23,12 +23,21 @@ const Login = () => {
 
   const { loading, error, success, user, token, ssoLoading } = useSelector((state) => state.login);
 
-  // Clear error on unmount
+  // Clear error on unmount and after 10 seconds when error occurs
   useEffect(() => {
+    let errorTimeout;
+    if (error) {
+      errorTimeout = setTimeout(() => {
+        dispatch(clearError());
+      }, 10000); // 10 seconds
+    }
     return () => {
       dispatch(clearError());
+      if (errorTimeout) {
+        clearTimeout(errorTimeout);
+      }
     };
-  }, [dispatch]);
+  }, [dispatch, error]);
 
   // Redirect if already logged in
   useEffect(() => {
