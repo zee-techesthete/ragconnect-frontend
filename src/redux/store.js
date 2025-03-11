@@ -10,14 +10,26 @@ import resetPasswordSlice from "./slices/resetPasswordSlice";
 import profileSettingsReducer from "./slices/profileSettingsSlice";
 // Persist config for social authentication
 const socialAuthPersistConfig = {
-  key: "root",
+  key: "socialAuth",
   storage,
   whitelist: ["userIds", "tokens", "isConnected"], // Only persist these fields
+};
+
+// Persist config for login state
+const loginPersistConfig = {
+  key: "login",
+  storage,
+  whitelist: ["user", "token"],
 };
 
 const persistedSocialAuthReducer = persistReducer(
   socialAuthPersistConfig,
   socialAuthReducer
+);
+
+const persistedLoginReducer = persistReducer(
+  loginPersistConfig,
+  loginSlice
 );
 
 const store = configureStore({
@@ -26,7 +38,7 @@ const store = configureStore({
     googleAuth: googleAuthSlice,
     socialAuth: persistedSocialAuthReducer,
     emails: emailReducer,
-    login: loginSlice,
+    login: persistedLoginReducer,
     resetPassword: resetPasswordSlice,
     profileSettings: profileSettingsReducer,
   },

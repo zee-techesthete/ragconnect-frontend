@@ -4,7 +4,7 @@ import Logo from "../../assets/svgs/logo.svg";
 import SocialIcons from "../../utils/Icons";
 import IconCard from "../../components/IconsCards";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/loginSlice";
+import { logoutUser } from "../../redux/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
 
 const Onboarding2 = () => {
@@ -23,8 +23,9 @@ const Onboarding2 = () => {
   const { user, token } = useSelector((state) => state.login);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    dispatch(logoutUser()).then(() => {
+      navigate("/login");
+    });
   };
 
   // const handleInputChange = (name, value) => {
@@ -74,7 +75,7 @@ const Onboarding2 = () => {
         {/* Back Button */}
         <div className="flex justify-center md:justify-start mt-8">
           <PrimaryBtn
-            href="/"
+            href="/onboarding-step1"
             title="Back"
             className="text-black font-semibold"
             icon="arrow_back"

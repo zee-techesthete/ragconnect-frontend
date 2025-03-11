@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/loginSlice";
+import { logoutUser } from "../../redux/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
 
 const Onboarding1 = () => {
@@ -27,8 +27,9 @@ const Onboarding1 = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    dispatch(logoutUser()).then(() => {
+      navigate("/login");
+    });
   };
 
   return (
@@ -59,6 +60,7 @@ const Onboarding1 = () => {
             title="Back"
             className="text-black bg-white border-none"
             icon="arrow_back"
+            href="/"
           />
         </div>
       </div>
@@ -175,16 +177,16 @@ const Onboarding1 = () => {
             <p className="mb-2 font-semibold">What is your industry?</p>
             <div className="flex gap-4 flex-wrap justify-center md:justify-start">
               {[
-                "Health",
+                "Retail & E-commerce",
+                "Healthcare",
                 "Hospitality",
+                "Digital apps",
                 "Education",
+                "Service-based",
+                "Content Creation",
+                "Charities",
                 "Auto",
                 "Others",
-                "Real Estate",
-                "Digital App",
-                "Service Based",
-                "Content Creation",
-                "Charity",
               ].map((industry) => (
                 <PrimaryBtn
                   key={industry}

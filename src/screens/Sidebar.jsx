@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineHome, AiOutlineTeam, AiOutlineBook, AiOutlineLink, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineClose, AiOutlineTeam, AiOutlineBook, AiOutlineLink, AiOutlineSetting } from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import Logo from "../assets/svgs/userLogo.svg";
 import ProgressBar from "../components/Progress";
@@ -28,7 +28,7 @@ const Sidebar = () => {
   const closeSidebar = () => setSidebarOpen(false);
 
   const menuItems = [
-    { name: "Home", path: "/home", icon: <AiOutlineHome size={20} /> },
+    // { name: "Home", path: "/home", icon: <AiOutlineHome size={20} /> },
     { name: "Inbound", path: "/inbound", icon: <BiMessageSquareDetail size={20} /> },
     { name: "Customer Hub", path: "/customer-hub", icon: <AiOutlineTeam size={20} /> },
     { name: "Training Hub", path: "/training-hub", icon: <AiOutlineBook size={20} /> },

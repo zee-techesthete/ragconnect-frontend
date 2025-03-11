@@ -44,10 +44,10 @@ const ChatUI = () => {
         <div className="w-full p-5 flex flex-col ">
           {/* Chat Messages */}
           <div
-            className="flex flex-col space-y-4 overflow-y-auto flex-grow p-2 max-h-[70vh] scrollbar-hide"
+            className="flex flex-col space-y-4 overflow-y-auto flex-grow p-3 max-h-[70vh] scrollbar-hide"
             style={{
               overflowY: "auto",
-              maxHeight: "70vh",
+              maxHeight: "60vh",
               scrollbarWidth: "none", // Firefox
               msOverflowStyle: "none", // Internet Explorer/Edge
             }}

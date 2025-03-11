@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { FcGoogle } from "react-icons/fc";
 import { FaInstagram, FaMicrosoft } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/slices/loginSlice";
+import { loginUser, clearError, googleSSO, outlookSSO } from "../../redux/slices/loginSlice";
 import { message, Form, Input } from "antd";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
+  const location = useLocation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,21 +21,41 @@ const Login = () => {
     location.state?.successMessage || ""
   );
 
-  const { loading, error, success } = useSelector((state) => state.login);
+  const { loading, error, success, user, token, ssoLoading } = useSelector((state) => state.login);
+
+  // Clear error on unmount
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && token) {
+      navigate("/", { replace: true });
+    }
+  }, [user, token, navigate]);
 
   const handleLogin = async (values) => {
     try {
-      const result = await dispatch(loginUser(values));
-      if (result.meta.requestStatus === "fulfilled") {
-        messageApi.success("Login successful!");
+      const result = await dispatch(loginUser(values)).unwrap();
+      if (result.user && result.token) {
+        message.success("Login successful!");
         form.resetFields();
-        navigate("/");
-      } else if (result.meta.requestStatus === "rejected") {
-        messageApi.error(result.error.message || "Login failed. Please try again.");
+        navigate("/", { replace: true });
       }
     } catch (err) {
-      messageApi.error("An unexpected error occurred. Please try again.");
+      messageApi.error(err?.error || "Login failed. Please try again.");
     }
+  };
+
+  const handleGoogleSSO = () => {
+    dispatch(googleSSO());
+  };
+
+  const handleOutlookSSO = () => {
+    dispatch(outlookSSO());
   };
 
   return (
@@ -70,6 +91,12 @@ const Login = () => {
               >
                 ✖
               </button>
+            </div>
+          )}
+
+          {error && (
+            <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-center">
+              {error}
             </div>
           )}
 
@@ -152,13 +179,25 @@ const Login = () => {
 
           {/* Social Login Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 w-full">
-            <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition text-sm sm:text-base">
+            <button 
+              onClick={handleGoogleSSO}
+              disabled={ssoLoading}
+              className={`flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition text-sm sm:text-base ${
+                ssoLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
               <FcGoogle className="mr-2 text-xl" />
-              Google
+              {ssoLoading ? "Connecting..." : "Google"}
             </button>
-            <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition text-sm sm:text-base">
+            <button 
+              onClick={handleOutlookSSO}
+              disabled={ssoLoading}
+              className={`flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition text-sm sm:text-base ${
+                ssoLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
               <FaMicrosoft className="mr-2 text-xl text-blue-600" />
-              Outlook
+              {ssoLoading ? "Connecting..." : "Outlook"}
             </button>
             <button className="flex items-center justify-center w-full border border-gray rounded-lg py-2 text-black font-medium hover:bg-gray-100 transition text-sm sm:text-base">
               <FaInstagram className="mr-2 text-xl text-pink-600" />

@@ -155,7 +155,7 @@ const Connector = () => {
   const menuItems = ["Channels", "All Integrations", "Custom code", "GitHub"];
 
   return (
-    <div>
+    <div className="">
       <ConnectorHeader />
       {/* Menu Selection with Dynamic Styles */}
       <div className="my-3 border border-t-gray border-b-gray border-l-0 border-r-0 flex gap-4">
@@ -176,7 +176,7 @@ const Connector = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 ">
         <h2 className="font-semibold tetx-xl"> All Channels</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 p-2 rounded-lg border border-gray300 ">
