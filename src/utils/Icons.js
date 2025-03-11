@@ -1,6 +1,7 @@
 import googleIcon from "../assets/social-icons/Icon-left.png";
-import slackIcon from "../assets/social-icons/Icon-left.svg";
 import outlookIcon from "../assets/social-icons/Icon-left (1).png";
+import smptIcon from "../assets/social-icons/smpt.svg";
+import slackIcon from "../assets/social-icons/Icon-left.svg";
 import facebookIcon from "../assets/social-icons/Icon-left (2).png";
 import instagramIcon from "../assets/social-icons/Icon-left (3).png";
 import whatsappIcon from "../assets/social-icons/Icon-left (4).png";
@@ -17,13 +18,15 @@ import youtubeIcon from "../assets/social-icons/youtube.svg";
 import tiktokIcon from "../assets/social-icons/tictok.svg";
 import twitchIcon from "../assets/social-icons/twitch.svg";
 import wechatIcon from "../assets/social-icons/wechat.svg";
-import smptIcon from "../assets/social-icons/smpt.svg";
+import shopifyIcon from "../assets/social-icons/shopify.png";
 
 const Icons = {
   google: googleIcon,
+  outlook: outlookIcon,
+  shopify: shopifyIcon,
+  email: smptIcon,
   slack: slackIcon,
   instagram: instagramIcon,
-  outlook: outlookIcon,
   facebook: facebookIcon,
   tripadvisor: tripadvisorIcon,
   pinterest: pinterestIcon,
@@ -39,7 +42,6 @@ const Icons = {
   twitch: twitchIcon,
   wechat: wechatIcon,
   messenger: messengerIcon,
-  email: smptIcon,
 };
 
 export default Icons;

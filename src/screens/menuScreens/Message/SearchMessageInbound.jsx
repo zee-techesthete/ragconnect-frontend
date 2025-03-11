@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Input, Button, Dropdown, Checkbox, Menu } from "antd";
-import { FilterOutlined, ExportOutlined } from "@ant-design/icons";
+import { Input, Button, Dropdown, Checkbox, Menu, Badge} from "antd";
+import { FilterOutlined, ExportOutlined, DownOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 import PrimaryBtn from "../../../components/PrimaryBtn";
 
 const filterOptions = [
@@ -24,11 +25,43 @@ const filterCategories = [
   { label: "Assigned to..." },
 ];
 
+// Mock data for testing connected accounts
+const mockConnectedAccounts = {
+  instagram: {
+    user1: "instagram_user1",
+    user2: "instagram_user2"
+  },
+  whatsapp: {
+    user1: "whatsapp_user1",
+    user2: "whatsapp_user2",
+    user3: "whatsapp_user3"
+  },
+  email: {
+    user1: "email_user1"
+  }
+};
+
+const channels = [
+  { label: "Instagram", value: "instagram" },
+  { label: "WhatsApp", value: "whatsapp" },
+  { label: "SMS", value: "sms" },
+  { label: "Phone", value: "phone" },
+  { label: "Chatbot IP", value: "chatbot_ip" },
+  { label: "Email", value: "email" },
+];
+
 const SearchMessageInbound = () => {
   const [search, setSearch] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeSubFilter, setActiveSubFilter] = useState(null);
+  const [selectedChannels, setSelectedChannels] = useState([]);
+
+  // Instead of using Redux store, we'll use our mock data
+  const getChannelAccountCount = (channel) => {
+    const channelKey = channel.toLowerCase();
+    return mockConnectedAccounts[channelKey] ? Object.keys(mockConnectedAccounts[channelKey]).length : 0;
+  };
 
   const toggleFilter = (open) => {
     setFilterOpen(open);
@@ -38,6 +71,31 @@ const SearchMessageInbound = () => {
   const handleFilterChange = (checkedValues) => {
     setSelectedFilters(checkedValues);
   };
+
+  const handleChannelChange = (checkedValues) => {
+    setSelectedChannels(checkedValues);
+  };
+
+  const channelMenu = (
+    <Menu className="w-64 shadow-lg rounded-lg px-4">
+      <Checkbox.Group
+        options={channels.map(channel => ({
+          ...channel,
+          label: (
+            <div className="flex justify-between items-center w-48">
+              <span>{channel.label}</span>
+              {getChannelAccountCount(channel.value) > 0 && (
+                <span className="text-gray">{getChannelAccountCount(channel.value)}</span>
+              )}
+            </div>
+          )
+        }))}
+        value={selectedChannels}
+        onChange={handleChannelChange}
+        className="flex flex-col gap-2"
+      />
+    </Menu>
+  );
 
   const menu = (
     <Menu className="w-56 shadow-lg rounded-lg">
@@ -73,6 +131,13 @@ const SearchMessageInbound = () => {
       )}
 
       <div className="flex items-center gap-3 bg-white p-1">
+      <div className="">
+      <Dropdown overlay={channelMenu} trigger={["click"]} className="w-64 p-5 rounded-lg">
+          <Button className="border border-gray bg-white">
+            Channels ({selectedChannels.length}) <DownOutlined className="ml-32" />
+          </Button>
+        </Dropdown>
+        </div>
         <div className="flex items-center gap-2 p-2 rounded-lg border border-gray300 ">
           {/* Search input field */}
           <span className="material-icons text-gray">{"search"}</span>

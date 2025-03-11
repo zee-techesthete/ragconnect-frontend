@@ -216,6 +216,7 @@ const AppLayout = () => {
     "/onboarding-step1",
     "/onboarding-step2",
     "/onboarding-step3",
+    "/auth-callback",
   ];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
