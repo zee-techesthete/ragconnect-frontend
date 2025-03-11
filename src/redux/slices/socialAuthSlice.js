@@ -6,6 +6,7 @@ const rootUrl = import.meta.env.VITE_ROOT_URL;
 export const authenticateSocial = createAsyncThunk(
   "auth/authenticateSocial",
   async (platform, { rejectWithValue }) => {
+    console.log("platform in social auth slice: ", platform);
     try {
       const response = await axios.get(
         `${rootUrl}/api/auth/${platform.toLowerCase()}`
@@ -49,11 +50,11 @@ const socialAuthSlice = createSlice({
   reducers: {
     setAuthData: (state, action) => {
       const { platform, id, token } = action.payload;
-      state.userIds[platform] = id;
-      state.tokens[platform] = token;
-      state.isConnected[platform] = true;
-      state.isLoading[platform] = false;
-      state.isVerifying[platform] = false;
+      state.userIds[platform.toLowerCase()] = id;
+      state.tokens[platform.toLowerCase()] = token;
+      state.isConnected[platform.toLowerCase()] = true;
+      state.isLoading[platform.toLowerCase()] = false;
+      state.isVerifying[platform.toLowerCase()] = false;
     },
     setLoading: (state, action) => {
       const { platform, isLoading } = action.payload;
@@ -66,12 +67,12 @@ const socialAuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(authenticateSocial.pending, (state, action) => {
-      const platform = action.meta.arg;
-      state.isLoading[platform] = true;
-      state.isVerifying[platform] = false;
-      state.isConnected[platform] = false;
-    })
+      .addCase(authenticateSocial.pending, (state, action) => {
+        const platform = action.meta.arg;
+        state.isLoading[platform] = true;
+        state.isVerifying[platform] = false;
+        state.isConnected[platform] = false;
+      })
       .addCase(authenticateSocial.fulfilled, (state, action) => {
         const { platform, url } = action.payload;
         state.isLoading[platform] = false;
@@ -87,8 +88,8 @@ const socialAuthSlice = createSlice({
           action.payload?.error || "Something went wrong";
       })
 
-       // Handle SMTP Authentication
-       .addCase(authenticateSmtp.pending, (state) => {
+      // Handle SMTP Authentication
+      .addCase(authenticateSmtp.pending, (state) => {
         state.isLoading["smtp"] = true;
         state.errors["smtp"] = null;
       })
@@ -104,5 +105,6 @@ const socialAuthSlice = createSlice({
   },
 });
 
-export const { setAuthData, setLoading, setVerifying } = socialAuthSlice.actions;
+export const { setAuthData, setLoading, setVerifying } =
+  socialAuthSlice.actions;
 export default socialAuthSlice.reducer;

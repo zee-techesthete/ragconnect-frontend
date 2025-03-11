@@ -69,6 +69,7 @@ const Connector = () => {
       setIsSmtpModalOpen(true);
       return;
     }
+    console.log();
     localStorage.setItem("selectedPlatform", platformKey);
     console.log("======>>>>", platformKey);
     dispatch(authenticateSocial(platformKey));
