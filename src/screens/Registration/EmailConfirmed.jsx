@@ -59,8 +59,8 @@ const EmailConfirmed = () => {
           <img className="h-12 w-auto" src={Logo} alt="Logo" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {verificationStatus === "verifying" && "Verifying your email..."}
-            {verificationStatus === "success" && "Email verified successfully!"}
-            {verificationStatus === "error" && "Verification failed"}
+            {verificationStatus === "error" && "Email Confirmed"}
+            {verificationStatus === "success" && "Verification failed"}
           </h2>
         </div>
 
@@ -73,18 +73,23 @@ const EmailConfirmed = () => {
           </div>
         )}
 
-        {verificationStatus === "success" && (
+        {verificationStatus === "error" && (
           <div className="text-center">
-            <p className="text-green-600 mb-4">
-              Your email has been verified successfully!
+            <p className="text-dullGray mt-2 text-sm md:text-base">
+              Your email has been confirmed, you can now login and start your
+              account!
             </p>
-            <button type="button" onClick={handleLogin}>
-              Go to Login
-            </button>
+            <div className="flex justify-center mt-4">
+              <PrimaryBtn
+                title="Login"
+                className="bg-black text-white"
+                href="/login"
+              />
+            </div>
           </div>
         )}
 
-        {verificationStatus === "error" && (
+        {verificationStatus === "success" && (
           <div className="text-center">
             <p className="text-red-600 mb-4">
               {error || "Email is not verified. Please try again."}
