@@ -10,6 +10,7 @@ import "./App.css";
 import Sidebar from "./screens/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import setupAxiosInterceptors from "./utils/axiosConfig";
+import AuthCallback from "./components/AuthCallback";
 
 // Screens
 import OnBoarding from "./screens/onboarding/OnBoarding";
@@ -37,6 +38,10 @@ setupAxiosInterceptors();
 // Public Routes
 // Public Routes (redirect logged-in users to /home)
 const publicRoutes = [
+  {
+    path: "/auth-callback",
+    element: <AuthCallback />,
+  },
   {
     path: "/signup",
     element: (
