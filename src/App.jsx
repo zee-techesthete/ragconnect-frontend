@@ -1,5 +1,10 @@
 import { Suspense, useMemo } from "react";
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 
 import "./App.css";
 import Sidebar from "./screens/Sidebar";
@@ -32,37 +37,181 @@ setupAxiosInterceptors();
 // Public Routes
 // Public Routes (redirect logged-in users to /home)
 const publicRoutes = [
-  { path: "/signup", element: <ProtectedRoute isPublic><AuthScreen /></ProtectedRoute> },
-  { path: "/account-created", element: <ProtectedRoute requireSignup><AccountCreated /></ProtectedRoute> },
-  { path: "/verify-email", element: <ProtectedRoute isPublic><EmailConfirmed /></ProtectedRoute> },
-  { path: "/login", element: <ProtectedRoute isPublic><Login /></ProtectedRoute> },
-  { path: "/reset-password", element: <ProtectedRoute isPublic><ResetPassword /></ProtectedRoute> },
-  { path: "/reset-password:", element: <ProtectedRoute isPublic><EnterPassword /></ProtectedRoute> },
+  {
+    path: "/signup",
+    element: (
+      <ProtectedRoute isPublic>
+        <AuthScreen />
+      </ProtectedRoute>
+    ),
+  },
+  // {
+  //   path: "/account-created",
+  //   element: (
+  //     <ProtectedRoute requireSignup>
+  //       <AccountCreated />
+  //     </ProtectedRoute>
+  //   ),
+  // },
+  { path: "/account-created", element: <AccountCreated /> },
+  {
+    path: "/verify-email",
+    element: (
+      <ProtectedRoute isPublic>
+        <EmailConfirmed />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <ProtectedRoute isPublic>
+        <Login />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <ProtectedRoute isPublic>
+        <ResetPassword />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/reset-password:",
+    element: (
+      <ProtectedRoute isPublic>
+        <EnterPassword />
+      </ProtectedRoute>
+    ),
+  },
 ];
-
 
 // Protected Routes
 const protectedRoutes = [
-  { path: "/", element: <ProtectedRoute><OnBoarding /></ProtectedRoute> },
-  { path: "/onboarding-step1", element: <ProtectedRoute><Onboarding1 /></ProtectedRoute> },
-  { path: "/onboarding-step2", element: <ProtectedRoute><Onboarding2 /></ProtectedRoute> },
-  { path: "/onboarding-step3", element: <ProtectedRoute><Onboarding3 /></ProtectedRoute> },
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <OnBoarding />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/onboarding-step1",
+    element: (
+      <ProtectedRoute>
+        <Onboarding1 />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/onboarding-step2",
+    element: (
+      <ProtectedRoute>
+        <Onboarding2 />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/onboarding-step3",
+    element: (
+      <ProtectedRoute>
+        <Onboarding3 />
+      </ProtectedRoute>
+    ),
+  },
   // { path: "/home", element: <ProtectedRoute><HomeScreen /></ProtectedRoute> },
-  { path: "/chatui", element: <ProtectedRoute><ChatUI /></ProtectedRoute> },
-  { path: "/main", element: <ProtectedRoute><MainScreen /></ProtectedRoute> },
-  { path: "/inbound", element: <ProtectedRoute><MessageInbound /></ProtectedRoute> },
-  { path: "/customer-hub", element: <ProtectedRoute><div>Customer Hub Content</div></ProtectedRoute> },
-  { path: "/training-hub", element: <ProtectedRoute><TrainingHub headerText={true} /></ProtectedRoute> },
-  { path: "/connector", element: <ProtectedRoute><Connector /></ProtectedRoute> },
-  { path: "/agent-setting", element: <ProtectedRoute><div>Agent Settings Content</div></ProtectedRoute> },
-  { path: "/account-setting", element: <ProtectedRoute><AccountSetting /></ProtectedRoute> },
-  { path: "/emails", element: <ProtectedRoute><EmailList /></ProtectedRoute> },
+  {
+    path: "/chatui",
+    element: (
+      <ProtectedRoute>
+        <ChatUI />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/main",
+    element: (
+      <ProtectedRoute>
+        <MainScreen />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/inbound",
+    element: (
+      <ProtectedRoute>
+        <MessageInbound />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/customer-hub",
+    element: (
+      <ProtectedRoute>
+        <div>Customer Hub Content</div>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/training-hub",
+    element: (
+      <ProtectedRoute>
+        <TrainingHub headerText={true} />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/connector",
+    element: (
+      <ProtectedRoute>
+        <Connector />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/agent-setting",
+    element: (
+      <ProtectedRoute>
+        <div>Agent Settings Content</div>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/account-setting",
+    element: (
+      <ProtectedRoute>
+        <AccountSetting />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/emails",
+    element: (
+      <ProtectedRoute>
+        <EmailList />
+      </ProtectedRoute>
+    ),
+  },
 ];
 
 // Layout Component to Manage Sidebar Visibility
 const AppLayout = () => {
   const location = useLocation();
-  const hideSidebarRoutes = ["/", "/signup", "/account-created", "/verify-email", "/login", "/reset-password", "/reset-password:","/onboarding-step1", "/onboarding-step2", "/onboarding-step3"];
+  const hideSidebarRoutes = [
+    "/",
+    "/signup",
+    "/account-created",
+    "/verify-email",
+    "/login",
+    "/reset-password",
+    "/reset-password:",
+    "/onboarding-step1",
+    "/onboarding-step2",
+    "/onboarding-step3",
+  ];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
@@ -96,6 +245,5 @@ const router = createBrowserRouter(
 
 // Root App Component
 const App = () => <RouterProvider router={router} />;
-
 
 export default App;

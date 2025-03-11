@@ -14,20 +14,20 @@ const AccountCreated = () => {
     (state) => state.auth
   );
 
-  useEffect(() => {
-    // If accessed directly without signup, redirect to signup page
-    if (!signupSuccess) {
-      navigate("/signup");
-      return;
-    }
+  // useEffect(() => {
+  //   // If accessed directly without signup, redirect to signup page
+  //   if (!signupSuccess) {
+  //     navigate("/signup");
+  //     return;
+  //   }
 
-    const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get("token");
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const token = queryParams.get("token");
 
-    if (token) {
-      dispatch(verifyEmail(token));
-    }
-  }, [dispatch, location, navigate, signupSuccess]);
+  //   if (token) {
+  //     dispatch(verifyEmail(token));
+  //   }
+  // }, [dispatch, location, navigate, signupSuccess]);
 
   useEffect(() => {
     if (verificationSuccess) {
