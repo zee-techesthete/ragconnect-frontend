@@ -7,14 +7,13 @@ export const authenticateSocial = createAsyncThunk(
   "auth/authenticateSocial",
   async (platform, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       const url = `${rootUrl}/api/auth/${platform.toLowerCase()}`;
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { platform, url: response.data.url };
     } catch (error) {
       return rejectWithValue({
@@ -29,16 +28,12 @@ export const authenticateSmtp = createAsyncThunk(
   "auth/authenticateSmtp",
   async (smtpData, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await axios.post(
-        `${rootUrl}/api/auth/smtp`, 
-        smtpData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const token = localStorage.getItem("authToken");
+      const response = await axios.post(`${rootUrl}/api/auth/smtp`, smtpData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { platform: "smtp", data: response.data };
     } catch (error) {
       return rejectWithValue({
@@ -73,9 +68,8 @@ export const authenticateOutlook = createAsyncThunk(
   "auth/authenticateOutlook",
   async (_, { rejectWithValue, getState }) => {
     try {
-      // Get the logged-in user's ID from auth state
       const loggedInUserId = getState().login.user?.id;
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
 
       if (!loggedInUserId) {
         throw new Error("No logged in user found");
@@ -85,8 +79,8 @@ export const authenticateOutlook = createAsyncThunk(
         `${rootUrl}/api/auth/outlook?userId=${loggedInUserId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
