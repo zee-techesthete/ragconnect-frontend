@@ -1,9 +1,9 @@
 import React from 'react';
-
+import HomeHeader from './HomeHeader';
 const HomeScreen = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1>Home Screen</h1>  
+    <div className="">
+      <HomeHeader />
     </div>
   );
 };

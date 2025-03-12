@@ -55,7 +55,7 @@ const SearchMessageInbound = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeSubFilter, setActiveSubFilter] = useState(null);
-  const [selectedChannels, setSelectedChannels] = useState([]);
+  const [selectedChannels, setSelectedChannels] = useState(channels.map(channel => channel.value));
 
   // Instead of using Redux store, we'll use our mock data
   const getChannelAccountCount = (channel) => {

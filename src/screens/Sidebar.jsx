@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineTeam, AiOutlineBook, AiOutlineLink, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineClose, AiOutlineTeam, AiOutlineBook, AiOutlineLink, AiOutlineSetting, AiOutlineHome } from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import Logo from "../assets/svgs/userLogo.svg";
 import ProgressBar from "../components/Progress";
+import { Button, Input } from "antd";
+import { FaSearch } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,7 +31,7 @@ const Sidebar = () => {
   const closeSidebar = () => setSidebarOpen(false);
 
   const menuItems = [
-    // { name: "Home", path: "/home", icon: <AiOutlineHome size={20} /> },
+    { name: "Home", path: "/home", icon: <AiOutlineHome size={20} /> },
     { name: "Inbound", path: "/inbound", icon: <BiMessageSquareDetail size={20} /> },
     { name: "Customer Hub", path: "/customer-hub", icon: <AiOutlineTeam size={20} /> },
     { name: "Training Hub", path: "/training-hub", icon: <AiOutlineBook size={20} /> },
@@ -102,6 +105,16 @@ const Sidebar = () => {
             </div>
           )}
         </div>
+        <div className="flex items-center gap-2 p-2 rounded-lg border border-gray300 bg-white mb-2">
+          {/* Search input field */}
+          <span className="material-icons">{"search"}</span>
+          <input
+            type="search"
+            className="focus:outline-none focus:ring-0 w-36"
+            placeholder="Search..."
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
         {/* Menu Items */}
         <div className="space-y-1">
@@ -127,10 +140,10 @@ const Sidebar = () => {
         </div>
 
         {/* Agent Memory */}
-        <div className="mt-auto bg-gray p-4 rounded-lg border border-gray-100">
+        <div className="mt-auto bg-gray p-4 rounded-lg border border-gray">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-normal text-gray-700">Agent's memory</span>
-            <span className="text-sm text-primary hover:underline cursor-pointer">Upgrade</span>
+            <span className="font-normal text-gray-700">Storage</span>
+            <span className="text-sm underline cursor-pointer">Upgrade</span>
           </div>
           <ProgressBar value={25} />
           <div className="text-sm text-gray-500 mt-2">1.4 GB of 10 GB used</div>

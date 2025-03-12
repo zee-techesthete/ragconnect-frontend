@@ -17,7 +17,7 @@ import OnBoarding from "./screens/onboarding/OnBoarding";
 import Onboarding1 from "./screens/onboarding/Onboarding1";
 import Onboarding2 from "./screens/onboarding/Onboarding2";
 import Onboarding3 from "./screens/onboarding/Onboarding3";
-// import HomeScreen from "./screens/menuScreens/HomeScreen/HomeScreen";
+import HomeScreen from "./screens/menuScreens/HomeScreen/HomeScreen";
 import ChatUI from "./screens/ChatUI/ChatUI";
 import MainScreen from "./screens/MainScreen";
 import Login from "./screens/Login/Login";
@@ -84,12 +84,25 @@ const publicRoutes = [
     ),
   },
   {
-    path: "/reset-password:",
-    element: (
-      <ProtectedRoute isPublic>
-        <EnterPassword />
-      </ProtectedRoute>
-    ),
+    path: "/reset-password",
+    children: [
+      {
+        path: "",
+        element: (
+          <ProtectedRoute isPublic>
+            <ResetPassword />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "reset",
+        element: (
+          <ProtectedRoute isPublic>
+            <EnterPassword />
+          </ProtectedRoute>
+        ),
+      }
+    ]
   },
 ];
 
@@ -127,7 +140,7 @@ const protectedRoutes = [
       </ProtectedRoute>
     ),
   },
-  // { path: "/home", element: <ProtectedRoute><HomeScreen /></ProtectedRoute> },
+  { path: "/home", element: <ProtectedRoute><HomeScreen /></ProtectedRoute> },
   {
     path: "/chatui",
     element: (
@@ -212,7 +225,7 @@ const AppLayout = () => {
     "/verify-email",
     "/login",
     "/reset-password",
-    "/reset-password:",
+    "/reset-password/reset",
     "/onboarding-step1",
     "/onboarding-step2",
     "/onboarding-step3",

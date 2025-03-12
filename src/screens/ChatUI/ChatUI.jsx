@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
 import AiBubble from "../../components/AiBubble";
@@ -13,9 +14,28 @@ import {
 } from "@ant-design/icons";
 
 const ChatUI = () => {
+  const selectedConversation = useSelector((state) => state.conversation.selectedConversation);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [selectedConversation?.messages]);
+
+  if (!selectedConversation) {
+    return (
+      <div className="flex flex-col bg-primary h-full items-center justify-center">
+        <p className="text-gray-500">Select a conversation to start chatting</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col bg-primary">
-      {/* Top Navbar */}
+    <div className="flex flex-col bg-primary h-full">
+      {/* Top Navbar - Fixed */}
       <div className="flex justify-between items-center min-h-14 px-6 bg-white border-b border-gray">
         {/* User Info Section */}
         <div className="flex items-center">
@@ -25,110 +45,56 @@ const ChatUI = () => {
             className="me-2"
           />
           <div className="flex">
-            <p className="font-medium underline me-2">Dave Osborn</p>
-            <span className="font-medium">• Instagram</span>
+            <p className="font-medium underline me-2">{selectedConversation.name}</p>
+            <span className="font-medium">• {selectedConversation.app}</span>
           </div>
         </div>
 
         {/* Action Icons */}
         <div className="flex gap-2">
-          <StarOutlined className="text-xl cursor-pointer " />
+          <StarOutlined className="text-xl cursor-pointer" />
           <MoreOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
           <UserAddOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
           <FolderOpenOutlined className="text-xl cursor-pointer bg-gray800 p-2 rounded-md" />
         </div>
       </div>
 
-      {/* Chat Container */}
-      <div className="flex-grow flex justify-center items-center bg-white">
-        <div className="w-full p-5 flex flex-col ">
-          {/* Chat Messages */}
-          <div
-            className="flex flex-col space-y-4 overflow-y-auto flex-grow p-3 max-h-[70vh] scrollbar-hide"
+      {/* Main Container with Fixed Header and Footer */}
+      <div className="flex flex-col flex-grow bg-white relative">
+        {/* Scrollable Messages Container */}
+        <div className="absolute inset-0 flex flex-col">
+          <div 
+            className="flex-grow overflow-y-auto px-5 py-3 space-y-4"
             style={{
-              overflowY: "auto",
-              maxHeight: "60vh",
-              scrollbarWidth: "none", // Firefox
-              msOverflowStyle: "none", // Internet Explorer/Edge
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              "&::-webkit-scrollbar": {
+                display: "none"
+              }
             }}
           >
-            {/* AI Message */}
-            <UserBubble
-              message={
-                "Thank you! Let me check that for you. One moment, please..."
-              }
-              userAvatar={true}
-            />
-
-            <AiBubble
-              message={
-                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
-              }
-              botAvatar={true}
-            />
-            <UserBubble
-              message={
-                "Thank you! Let me check that for you. One moment, please..."
-              }
-              userAvatar={true}
-            />
-
-            <AiBubble
-              message={
-                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
-              }
-              botAvatar={true}
-            />
-            <UserBubble
-              message={
-                "Thank you! Let me check that for you. One moment, please..."
-              }
-              userAvatar={true}
-            />
-
-            <AiBubble
-              message={
-                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
-              }
-              botAvatar={true}
-            />
-            <UserBubble
-              message={
-                "Thank you! Let me check that for you. One moment, please..."
-              }
-              userAvatar={true}
-            />
-
-            {/* User Message */}
-            <UserBubble message={"abc Store"} userAvatar={true} />
-
-            {/* Another AI Message */}
-            <AiBubble
-              message={
-                "Welcome to IntellMark 👋 We're excited to get you started. Let's tailor your experience to match your goals"
-              }
-              botAvatar={true}
-            />
-            <UserBubble
-              message={
-                "Thank you! Let me check that for you. One moment, please..."
-              }
-              userAvatar={true}
-            />
+            {selectedConversation.messages.map((msg, index) => (
+              msg.sender === "user" ? (
+                <UserBubble
+                  key={index}
+                  message={msg.text}
+                  userAvatar={true}
+                />
+              ) : (
+                <AiBubble
+                  key={index}
+                  message={msg.text}
+                  botAvatar={true}
+                />
+              )
+            ))}
+            <div ref={messagesEndRef} /> {/* Scroll anchor */}
           </div>
-
-          {/* Chat Input Box */}
-          <ChatInput
-            suggestions={false}
-            data={[
-              "Small (1-9)",
-              "Medium (10-49)",
-              "Large (50-249)",
-              "Enterprise (250+)",
-              "Enterprise (250+)",
-              "Enterprise (250+)",
-            ]}
-          />
+          
+          {/* Fixed Chat Input at Bottom */}
+          <div className="px-5 py-4 bg-white border-t border-gray">
+            <ChatInput />
+          </div>
         </div>
       </div>
     </div>

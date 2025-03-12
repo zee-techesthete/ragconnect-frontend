@@ -57,18 +57,10 @@ const Icons = {
   chase: chaseIcon,
   message: messageIcon,
   phone: phoneIcon,
-  // pinterest: pinterestIcon,
   discord: discordIcon,
-  // yahoo: yahooIcon,
   twitter: twitterIcon,
   linkedin: linkedinIcon,
-  // snapchat: snapchatIcon,
-  // reddit: redditIcon,
-  // youtube: youtubeIcon,
   whatsapp: whatsappIcon,
-  // tiktok: tiktokIcon,
-  // twitch: twitchIcon,
-  // wechat: wechatIcon,
   messenger: messengerIcon,
 };
 

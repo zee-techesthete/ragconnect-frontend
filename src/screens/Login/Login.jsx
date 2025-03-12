@@ -92,10 +92,10 @@ const Login = () => {
             Welcome
           </h2>
           {successMessage && (
-            <div className="bg-green-100 text-green-700 p-3 rounded-lg flex justify-between items-center mb-4 max-w-md mx-auto">
+            <div className="bg-silver text-green-700 p-3 rounded-lg flex justify-between items-center mb-4 max-w-md mx-auto">
               <span>{successMessage}</span>
               <button
-                className="text-green-500 hover:text-green-700"
+                className="text-darkGray hover:text-green-700"
                 onClick={() => setSuccessMessage("")}
               >
                 ✖

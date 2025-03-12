@@ -7,7 +7,7 @@ import MessageHeader from "./MessageHeader";
 const MessageInbound = () => {
   return (
     <div className="flex flex-col w-full h-screen">
-      <div className="px-4 py-2">
+      <div className="">
       <MessageHeader/>
       </div>
       {/* Search Bar & Filters */}

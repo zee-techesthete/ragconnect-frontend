@@ -1,16 +1,16 @@
 import React from "react";
 import SharedHeader from "../../../components/SharedHeader";
 
-const MessageHeader = () => {
+const TrainingHubHeader = () => {
   return (
     <SharedHeader
-      title="Inbound"
+      title="Training Hub"
       showUpgradeButton={true}
       showNotifications={true}
-      showSearch={false}
-      showSettingsGuide={false}
+      showSearch={true}
+      showSettingsGuide={true}
     />
   );
 };
 
-export default MessageHeader;
+export default TrainingHubHeader;

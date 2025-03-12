@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -15,7 +15,15 @@ const EnterPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token"); // Get token from URL
+  const token = searchParams.get("token");
+
+  useEffect(() => {
+    // If no token is present, redirect to reset password page
+    if (!token) {
+      navigate("/reset-password");
+    }
+  }, [token, navigate]);
+
   const { loading, message, error } = useSelector(
     (state) => state.resetPassword
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PrimaryBtn from "../../../components/PrimaryBtn";
 import ProgressBar from "../../../components/Progress";
-
+import TrainingHubHeader from "./TrainingHubHeader";
 const menuItems = [
   "Files",
   "Links",
@@ -45,7 +45,8 @@ export default function TrainingHub() {
   const [selectedMenu, setSelectedMenu] = useState("Files");
 
   return (
-    <div className="flex h-screen">
+    <div className="h-screen">
+      <TrainingHubHeader />
       {/* Left Panel - 70% */}
       <div className="w-7/10 border-r">
         {/* Top Menu */}

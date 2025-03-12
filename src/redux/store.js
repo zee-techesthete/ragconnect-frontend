@@ -8,6 +8,7 @@ import emailReducer from "./slices/emailSlice";
 import loginSlice from "./slices/loginSlice";
 import resetPasswordSlice from "./slices/resetPasswordSlice";
 import profileSettingsReducer from "./slices/profileSettingsSlice";
+import conversationReducer from "./slices/conversationSlice";
 // Persist config for social authentication
 const socialAuthPersistConfig = {
   key: "socialAuth",
@@ -41,6 +42,7 @@ const store = configureStore({
     login: persistedLoginReducer,
     resetPassword: resetPasswordSlice,
     profileSettings: profileSettingsReducer,
+    conversation: conversationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

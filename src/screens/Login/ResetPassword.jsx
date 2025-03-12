@@ -6,15 +6,24 @@ import {
 } from "../../redux/slices/resetPasswordSlice";
 import Logo from "../../assets/svgs/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, success, error } = useSelector(
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const { loading, success, error, message } = useSelector(
     (state) => state.resetPassword
   );
+
+  useEffect(() => {
+    // If there's a token in the URL, redirect to the reset password page
+    if (token) {
+      navigate(`/reset-password/reset?token=${token}`);
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     return () => {
@@ -22,8 +31,22 @@ const ResetPassword = () => {
     };
   }, [dispatch]);
 
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    let timer;
+    if (success || error) {
+      timer = setTimeout(() => {
+        dispatch(clearState());
+      }, 10000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [success, error, dispatch]);
+
   const handleResetPassword = (e) => {
     e.preventDefault();
+    dispatch(clearState()); // Clear any existing messages
     dispatch(requestPasswordReset(email));
   };
 
@@ -48,18 +71,18 @@ const ResetPassword = () => {
       {/* Reset Password Form */}
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-md p-6 sm:p-8 rounded-lg">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6">
+          <h2 className="text-2xl sm:text-4xl font-bold text-center mb-6">
             Reset Password
           </h2>
 
           {error && (
-            <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-center">
+            <div className="bg-red-100 border border-red-400 text-red-700 p-3 rounded-lg mb-4 text-center">
               {error}
             </div>
           )}
-          {success && (
-            <div className="bg-green-100 text-green-700 p-3 rounded-lg mb-4 text-center">
-              {success}
+          {success && message && (
+            <div className="bg-silver  text-silver900 p-3 rounded-lg mb-4 text-center">
+              {message}
             </div>
           )}
 
@@ -89,14 +112,14 @@ const ResetPassword = () => {
           </form>
 
           {/* Back to Login */}
-          <div className="mt-4 text-center">
+          {/* <div className="mt-4 text-center">
             <button
               onClick={() => navigate("/login")}
               className="text-gray-600 hover:text-gray-800 text-sm"
             >
               Back to Login
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
