@@ -6,11 +6,9 @@ const rootUrl = import.meta.env.VITE_ROOT_URL;
 export const authenticateSocial = createAsyncThunk(
   "auth/authenticateSocial",
   async (platform, { rejectWithValue }) => {
-    console.log("platform in social auth slice: ", platform);
     try {
-      const response = await axios.get(
-        `${rootUrl}/api/auth/${platform.toLowerCase()}`
-      );
+      const url = `${rootUrl}/api/auth/${platform.toLowerCase()}`;
+      const response = await axios.get(url);
       return { platform, url: response.data.url };
     } catch (error) {
       return rejectWithValue({
@@ -31,6 +29,26 @@ export const authenticateSmtp = createAsyncThunk(
       return rejectWithValue({
         platform: "smtp",
         error: error.response?.data || "SMTP authentication failed",
+      });
+    }
+  }
+);
+
+export const authenticateShopify = createAsyncThunk(
+  "auth/authenticateShopify",
+  async (shopUrl, { rejectWithValue }) => {
+    try {
+      if (!shopUrl) {
+        throw new Error("Shop URL is required");
+      }
+      const response = await axios.get(
+        `${rootUrl}/api/auth/shopify?shop=${shopUrl}`
+      );
+      return { platform: "shopify", data: response.data };
+    } catch (error) {
+      return rejectWithValue({
+        platform: "shopify",
+        error: error.response?.data || "Shopify authentication failed",
       });
     }
   }
@@ -71,17 +89,19 @@ const socialAuthSlice = createSlice({
         const platform = action.meta.arg;
         state.isLoading[platform] = true;
         state.isVerifying[platform] = false;
-        state.isConnected[platform] = false;
+        state.errors[platform] = null;
       })
       .addCase(authenticateSocial.fulfilled, (state, action) => {
         const { platform, url } = action.payload;
         state.isLoading[platform] = false;
         state.isVerifying[platform] = true;
         state.authUrls[platform] = url;
-        location.href = url;
+        if (url) {
+          window.location.href = url;
+        }
       })
       .addCase(authenticateSocial.rejected, (state, action) => {
-        const platform = action.meta.arg || "unknown";
+        const platform = action.meta.arg;
         state.isLoading[platform] = false;
         state.isVerifying[platform] = false;
         state.errors[platform] =
@@ -101,6 +121,23 @@ const socialAuthSlice = createSlice({
       .addCase(authenticateSmtp.rejected, (state, action) => {
         state.isLoading["smtp"] = false;
         state.errors["smtp"] = action.payload.error;
+      })
+
+      // Handle Shopify Authentication
+      .addCase(authenticateShopify.pending, (state) => {
+        state.isLoading["shopify"] = true;
+        state.errors["shopify"] = null;
+      })
+      .addCase(authenticateShopify.fulfilled, (state, action) => {
+        state.isLoading["shopify"] = false;
+        if (action.payload.data.url) {
+          window.location.href = action.payload.data.url;
+        }
+        state.isVerifying["shopify"] = true;
+      })
+      .addCase(authenticateShopify.rejected, (state, action) => {
+        state.isLoading["shopify"] = false;
+        state.errors["shopify"] = action.payload.error;
       });
   },
 });
