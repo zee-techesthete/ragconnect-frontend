@@ -34,16 +34,26 @@ const Connector = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("user_id");
-    const token = urlParams.get("token");
-
     const storedPlatform = localStorage.getItem("selectedPlatform");
+    
+    console.log("Current URL:", window.location.href);
+    console.log("URL Parameters:", Object.fromEntries(urlParams));
+    console.log("Stored Platform:", storedPlatform);
+    console.log("Is callback present?", urlParams.has('callback'));
+    console.log("Callback value:", urlParams.get('callback'));
 
-    if (id && token && storedPlatform) {
-      dispatch(setAuthData({ platform: storedPlatform, id, token }));
-
+    if (urlParams.get('callback') === 'true' && storedPlatform) {
+      console.log("✅ Connecting platform:", storedPlatform);
+      // Handle successful connection
+      dispatch(setAuthData({ platform: storedPlatform, isConnected: true }));
       localStorage.removeItem("selectedPlatform");
       window.history.replaceState(null, "", window.location.pathname);
+    } else {
+      console.log("❌ No valid callback or stored platform found");
+      console.log("Required conditions:", {
+        "callback=true": urlParams.get('callback') === 'true',
+        "has storedPlatform": Boolean(storedPlatform)
+      });
     }
   }, [dispatch]);
 

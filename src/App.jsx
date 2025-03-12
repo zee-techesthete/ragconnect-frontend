@@ -31,6 +31,7 @@ import EmailConfirmed from "./screens/Registration/EmailConfirmed";
 import ResetPassword from "./screens/Login/ResetPassword";
 import EnterPassword from "./screens/Login/EnterPassword";
 import AccountSetting from "./screens/menuScreens/AccountSetting/AccountSetting";
+import CustomerHub from "./screens/menuScreens/CustomerHub/CustomerHub";
 
 // Initialize Axios interceptors
 setupAxiosInterceptors();
@@ -169,7 +170,7 @@ const protectedRoutes = [
     path: "/customer-hub",
     element: (
       <ProtectedRoute>
-        <div>Customer Hub Content</div>
+        <CustomerHub />
       </ProtectedRoute>
     ),
   },
