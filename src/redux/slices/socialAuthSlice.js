@@ -8,8 +8,14 @@ export const authenticateSocial = createAsyncThunk(
   async (platform, { rejectWithValue }) => {
     console.log("platform in social auth slice: ", platform);
     try {
+      const token = localStorage.getItem('authToken');
       const response = await axios.get(
-        `${rootUrl}/api/auth/${platform.toLowerCase()}`
+        `${rootUrl}/api/auth/${platform.toLowerCase()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       return { platform, url: response.data.url };
     } catch (error) {
@@ -25,12 +31,60 @@ export const authenticateSmtp = createAsyncThunk(
   "auth/authenticateSmtp",
   async (smtpData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${rootUrl}/api/auth/smtp`, smtpData);
+      const token = localStorage.getItem('authToken');
+      const response = await axios.post(
+        `${rootUrl}/api/auth/smtp`, 
+        smtpData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       return { platform: "smtp", data: response.data };
     } catch (error) {
       return rejectWithValue({
         platform: "smtp",
         error: error.response?.data || "SMTP authentication failed",
+      });
+    }
+  }
+);
+
+export const authenticateOutlook = createAsyncThunk(
+  "auth/authenticateOutlook",
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      // Get the logged-in user's ID from auth state
+      const loggedInUserId = getState().login.user?.id;
+      const token = localStorage.getItem('authToken');
+
+      if (!loggedInUserId) {
+        throw new Error("No logged in user found");
+      }
+
+      const response = await axios.get(
+        `${rootUrl}/api/auth/outlook?userId=${loggedInUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      if (!response.data.url) {
+        throw new Error("No URL returned from auth endpoint");
+      }
+
+      return { platform: "outlook", url: response.data.url };
+    } catch (error) {
+      console.error("Outlook auth error:", error);
+      return rejectWithValue({
+        platform: "outlook",
+        error:
+          error.response?.data ||
+          error.message ||
+          "Outlook authentication failed",
       });
     }
   }
@@ -101,6 +155,22 @@ const socialAuthSlice = createSlice({
       .addCase(authenticateSmtp.rejected, (state, action) => {
         state.isLoading["smtp"] = false;
         state.errors["smtp"] = action.payload.error;
+      })
+      // Handle Outlook Authentication
+      .addCase(authenticateOutlook.pending, (state) => {
+        state.isLoading["outlook"] = true;
+        state.errors["outlook"] = null;
+      })
+      .addCase(authenticateOutlook.fulfilled, (state, action) => {
+        const { platform, url } = action.payload;
+        state.isLoading[platform] = false;
+        state.isVerifying[platform] = true;
+        state.authUrls[platform] = url;
+        location.href = url;
+      })
+      .addCase(authenticateOutlook.rejected, (state, action) => {
+        state.isLoading["outlook"] = false;
+        state.errors["outlook"] = action.payload.error;
       });
   },
 });

@@ -5,6 +5,7 @@ import SoIcons from "../../utils/Icons";
 import {
   authenticateSocial,
   setAuthData,
+  authenticateOutlook,
 } from "../../redux/slices/socialAuthSlice";
 import ConnectorHeader from "./ConnectorHeader";
 import { Button, Checkbox, Dropdown, Menu } from "antd";
@@ -61,6 +62,8 @@ const Connector = () => {
 
   const handleSocialAuth = (platform) => {
     let platformKey = platform.toLowerCase();
+    console.log("Platform clicked:", platformKey); // Debug log
+    
     if (platformKey === "email") {
       platformKey = "smpt";
     }
@@ -69,9 +72,22 @@ const Connector = () => {
       setIsSmtpModalOpen(true);
       return;
     }
-    console.log();
+
+    if (platformKey === 'outlook') {
+      console.log("Handling Outlook connection"); // Debug log
+      localStorage.setItem("selectedPlatform", platformKey);
+      dispatch(authenticateOutlook()).then((response) => {
+        // console.log("Outlook response:", response); // Debug log
+        if (response?.payload?.url) {
+          window.location.href = response.payload.url;
+        }
+      }).catch(error => {
+        console.error("Outlook auth error:", error); // Debug log
+      });
+      return;
+    }
+    
     localStorage.setItem("selectedPlatform", platformKey);
-    console.log("======>>>>", platformKey);
     dispatch(authenticateSocial(platformKey));
   };
 
