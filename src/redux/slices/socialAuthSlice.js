@@ -8,7 +8,8 @@ export const authenticateSocial = createAsyncThunk(
   async (platform, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const loggedInUserId = getState().login.user?.id;
+      const loggedInUserId =
+        getState().login.user?.id || getState().login.user?.user?.id;
 
       if (!loggedInUserId) {
         throw new Error("No logged in user found");
@@ -22,6 +23,7 @@ export const authenticateSocial = createAsyncThunk(
       });
       return { platform, url: response.data.url };
     } catch (error) {
+      console.log("*error: ", error);
       return rejectWithValue({
         platform,
         error: error.response?.data || "Something went wrong",
@@ -35,7 +37,8 @@ export const authenticateSmtp = createAsyncThunk(
   async (smtpData, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const loggedInUserId = getState().login.user?.id;
+      const loggedInUserId =
+        getState().login.user?.id || getState().login.user?.user?.id;
 
       if (!loggedInUserId) {
         throw new Error("No logged in user found");
