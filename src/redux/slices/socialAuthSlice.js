@@ -69,7 +69,9 @@ export const authenticateShopify = createAsyncThunk(
       }
 
       const token = localStorage.getItem("authToken");
-      const loggedInUserId = getState().login.user?.id;
+      console.log("getState().login.user: ", getState().login.user);
+      const loggedInUserId =
+        getState().login.user?.id || getState().login.user?.user?.id;
 
       if (!loggedInUserId) {
         throw new Error("No logged in user found");
@@ -88,6 +90,7 @@ export const authenticateShopify = createAsyncThunk(
       const url = response.data;
       return { platform: "shopify", url };
     } catch (error) {
+      console.log("error", error);
       return rejectWithValue({
         platform: "shopify",
         error: error.response?.data || "Shopify authentication failed",
@@ -100,7 +103,8 @@ export const authenticateOutlook = createAsyncThunk(
   "auth/authenticateOutlook",
   async (_, { rejectWithValue, getState }) => {
     try {
-      const loggedInUserId = getState().login.user?.id || getState().login.user?.user?.id;
+      const loggedInUserId =
+        getState().login.user?.id || getState().login.user?.user?.id;
       // console.log("loggedInUserId", loggedInUserId);
       const token = localStorage.getItem("authToken");
 
