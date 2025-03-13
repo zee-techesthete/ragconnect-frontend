@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Modal, Input, Button } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { authenticateSmtp } from "../redux/slices/socialAuthSlice"; // Import action
+import { authenticateSmtp, clearErrors } from "../redux/slices/socialAuthSlice";
 
 const SmtpModal = ({ isOpen, onClose }) => {
+  const formikRef = useRef();
   const dispatch = useDispatch();
   const { isLoading, isConnected, errors } = useSelector(
     (state) => state.socialAuth
@@ -19,18 +20,29 @@ const SmtpModal = ({ isOpen, onClose }) => {
     port: Yup.number().required("Required").positive("Must be positive"),
   });
 
+  const handleClose = () => {
+    // Reset form when modal closes
+    if (formikRef.current) {
+      formikRef.current.resetForm();
+    }
+    // Clear any SMTP errors
+    dispatch(clearErrors("smtp"));
+    onClose();
+  };
+
   return (
     <Modal
       title="Email Connection"
       open={isOpen}
-      onCancel={onClose}
+      onCancel={handleClose}
       footer={null}
     >
       <Formik
+        innerRef={formikRef}
         initialValues={{ email: "", password: "", host: "", port: 993 }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          dispatch(authenticateSmtp(values)); // ✅ Dispatch SMTP authentication action
+          dispatch(authenticateSmtp(values));
           setSubmitting(false);
         }}
       >
@@ -82,7 +94,7 @@ const SmtpModal = ({ isOpen, onClose }) => {
             )}
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleClose}>Cancel</Button>
               <Button
                 type="primary"
                 htmlType="submit"

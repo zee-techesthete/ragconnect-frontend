@@ -8,7 +8,7 @@ const CustomerHubHeader = () => {
       showUpgradeButton={true}
       showNotifications={true}
       showSearch={true}
-      showSettingsGuide={true}
+    //   showSettingsGuide={true}
     />
   );
 };

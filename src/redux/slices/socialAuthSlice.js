@@ -68,7 +68,8 @@ export const authenticateOutlook = createAsyncThunk(
   "auth/authenticateOutlook",
   async (_, { rejectWithValue, getState }) => {
     try {
-      const loggedInUserId = getState().login.user?.id;
+      const loggedInUserId = getState().login.user?.id || getState().login.user?.user?.id;
+      // console.log("loggedInUserId", loggedInUserId);
       const token = localStorage.getItem("authToken");
 
       if (!loggedInUserId) {
@@ -129,6 +130,14 @@ const socialAuthSlice = createSlice({
     setVerifying: (state, action) => {
       const { platform, isVerifying } = action.payload;
       state.isVerifying[platform] = isVerifying;
+    },
+    clearErrors: (state, action) => {
+      const platform = action.payload;
+      if (platform) {
+        state.errors[platform] = null;
+      } else {
+        state.errors = {};
+      }
     },
   },
   extraReducers: (builder) => {
@@ -206,6 +215,6 @@ const socialAuthSlice = createSlice({
   },
 });
 
-export const { setAuthData, setLoading, setVerifying } =
+export const { setAuthData, setLoading, setVerifying, clearErrors } =
   socialAuthSlice.actions;
 export default socialAuthSlice.reducer;

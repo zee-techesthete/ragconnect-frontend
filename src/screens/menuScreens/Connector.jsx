@@ -77,6 +77,7 @@ const Connector = () => {
     if (platformKey === "email") {
       platformKey = "smtp";
     }
+    
     if (platformKey === 'outlook') {
       console.log("Handling Outlook connection"); // Debug log
       localStorage.setItem("selectedPlatform", platformKey);
@@ -162,7 +163,7 @@ const Connector = () => {
   const menuItems = ["Channels", "All Integrations", "Custom code", "GitHub"];
 
   return (
-    <div className="p-4">
+    <div className="">
       <ConnectorHeader
         selectedMenu={formData.selectedMenu}
         handleMenuClick={handleMenuClick}

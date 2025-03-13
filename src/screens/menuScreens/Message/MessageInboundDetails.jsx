@@ -95,7 +95,7 @@ const MessageDetail = () => {
         </TabPane>
 
         <TabPane tab="Agent Reggie" key="agent">
-          <div className="flex flex-col h-[80vh] p-4">
+          <div className="flex flex-col h-[75vh] p-4">
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto space-y-3 content-center">
               {messages.map((msg, index) => (
