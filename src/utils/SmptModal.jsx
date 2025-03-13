@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Modal, Input, Button } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -11,6 +11,20 @@ const SmtpModal = ({ isOpen, onClose }) => {
   const { isLoading, isConnected, errors } = useSelector(
     (state) => state.socialAuth
   );
+
+  // Add debug logs for SMTP connection status
+  useEffect(() => {
+    console.log("SMTP Modal - Connection Status:", isConnected.smtp);
+    console.log("SMTP Modal - Loading Status:", isLoading.smtp);
+    console.log("SMTP Modal - Errors:", errors.smtp);
+  }, [isConnected.smtp, isLoading.smtp, errors.smtp]);
+
+  // Close modal when connection is successful
+  useEffect(() => {
+    if (isConnected.smtp) {
+      handleClose();
+    }
+  }, [isConnected.smtp]);
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -30,6 +44,22 @@ const SmtpModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  // Add debug logs for form submission
+  const handleSubmit = (values, { setSubmitting }) => {
+    console.log("Submitting SMTP credentials...");
+    dispatch(authenticateSmtp(values))
+      .then((result) => {
+        console.log("SMTP authentication result:", result);
+        if (result.error) {
+          console.error("SMTP authentication error:", result.error);
+        }
+      })
+      .catch((error) => {
+        console.error("SMTP authentication error:", error);
+      });
+    setSubmitting(false);
+  };
+
   return (
     <Modal
       title="Email Connection"
@@ -41,10 +71,7 @@ const SmtpModal = ({ isOpen, onClose }) => {
         innerRef={formikRef}
         initialValues={{ email: "", password: "", host: "", port: 993 }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          dispatch(authenticateSmtp(values));
-          setSubmitting(false);
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-4">

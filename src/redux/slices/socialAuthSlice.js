@@ -152,6 +152,7 @@ const socialAuthSlice = createSlice({
     tokens: {},
     userIds: {},
     errors: {},
+    pinnedConnections: {},
   },
   reducers: {
     setAuthData: (state, action) => {
@@ -177,6 +178,10 @@ const socialAuthSlice = createSlice({
       } else {
         state.errors = {};
       }
+    },
+    togglePin: (state, action) => {
+      const platform = action.payload.toLowerCase();
+      state.pinnedConnections[platform] = !state.pinnedConnections[platform];
     },
   },
   extraReducers: (builder) => {
@@ -256,6 +261,6 @@ const socialAuthSlice = createSlice({
   },
 });
 
-export const { setAuthData, setLoading, setVerifying, clearErrors } =
+export const { setAuthData, setLoading, setVerifying, clearErrors, togglePin } =
   socialAuthSlice.actions;
 export default socialAuthSlice.reducer;

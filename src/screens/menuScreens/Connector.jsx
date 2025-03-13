@@ -6,6 +6,7 @@ import {
   authenticateSocial,
   setAuthData,
   authenticateOutlook,
+  togglePin,
 } from "../../redux/slices/socialAuthSlice";
 import ConnectorHeader from "./ConnectorHeader";
 import { Button, Checkbox, Dropdown, Menu } from "antd";
@@ -30,38 +31,44 @@ const Connector = () => {
     isConnected = {},
     isLoading = {},
     isVerifying = {},
+    pinnedConnections = {},
   } = useSelector((state) => state?.socialAuth) || {};
+
+  // Add debug logs for SMTP connection status
+  useEffect(() => {
+  }, [isConnected]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const storedPlatform = localStorage.getItem("selectedPlatform");
+    const connectedPlatform = urlParams.get('connected');
     
     console.log("Current URL:", window.location.href);
     console.log("URL Parameters:", Object.fromEntries(urlParams));
-    console.log("Stored Platform:", storedPlatform);
-    console.log("Is callback present?", urlParams.has('callback'));
-    console.log("Callback value:", urlParams.get('callback'));
+    console.log("Connected Platform:", connectedPlatform);
 
-    if (urlParams.get('callback') === 'true' && storedPlatform) {
-      console.log("✅ Connecting platform:", storedPlatform);
+    if (connectedPlatform && connectedPlatform !== 'smtp') {
+      console.log("✅ Connecting platform:", connectedPlatform);
       // Handle successful connection
-      dispatch(setAuthData({ platform: storedPlatform, isConnected: true }));
-      localStorage.removeItem("selectedPlatform");
+      dispatch(setAuthData({ platform: connectedPlatform, isConnected: true }));
+      // Clean up the URL
       window.history.replaceState(null, "", window.location.pathname);
     } else {
-      console.log("❌ No valid callback or stored platform found");
-      console.log("Required conditions:", {
-        "callback=true": urlParams.get('callback') === 'true',
-        "has storedPlatform": Boolean(storedPlatform)
-      });
+      console.log("❌ No valid platform connection found in URL");
     }
   }, [dispatch]);
 
-  const socialPlatforms = Object.keys(SoIcons).map((key) => ({
-    name: key.charAt(0).toUpperCase() + key.slice(1),
-    url: SoIcons[key],
-    connected: isConnected[key.toLowerCase()] || false,
-  }));
+  const socialPlatforms = Object.keys(SoIcons).map((key) => {
+    const platformKey = key.toLowerCase();
+    const isEmailPlatform = platformKey === "email";
+    const connectedKey = isEmailPlatform ? "smtp" : platformKey;
+    console.log("Platform mapping:", { key, platformKey, isEmailPlatform, connectedKey, isConnected: isConnected[connectedKey] });
+    return {
+      name: key.charAt(0).toUpperCase() + key.slice(1),
+      url: SoIcons[key],
+      connected: isConnected[connectedKey] || false,
+      isPinned: pinnedConnections[connectedKey] || false,
+    };
+  });
 
   const handleMenuClick = (menu) => {
     setFormData((prevState) => ({
@@ -82,7 +89,6 @@ const Connector = () => {
       console.log("Handling Outlook connection"); // Debug log
       localStorage.setItem("selectedPlatform", platformKey);
       dispatch(authenticateOutlook()).then((response) => {
-        // console.log("Outlook response:", response); // Debug log
         if (response?.payload?.url) {
           window.location.href = response.payload.url;
         }
@@ -92,11 +98,10 @@ const Connector = () => {
       return;
     }
 
-
     // Handle different authentication methods
     switch (platformKey) {
       case "smtp":
-        setSelectedPlatform(platformKey);
+        setSelectedPlatform("email"); // Use "email" for UI consistency
         setIsSmtpModalOpen(true);
         break;
       case "shopify":
@@ -107,6 +112,11 @@ const Connector = () => {
         localStorage.setItem("selectedPlatform", platformKey);
         dispatch(authenticateSocial(platformKey));
     }
+  };
+
+  const handlePinToggle = (platform) => {
+    const platformKey = platform.toLowerCase();
+    dispatch(togglePin(platformKey === "email" ? "smtp" : platformKey));
   };
 
   const filterOptions = [
@@ -215,16 +225,20 @@ const Connector = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
         {socialPlatforms.map((platform) => {
           const platformKey = platform.name.toLowerCase();
+          const isEmailPlatform = platformKey === "email";
+          const connectedKey = isEmailPlatform ? "smtp" : platformKey;
 
           return (
             <SocialCards
               key={platform.name}
               platform={platform}
               onConnect={() => handleSocialAuth(platformKey)}
-              isConnecting={isLoading[platformKey] || false}
-              isConnected={isConnected[platformKey] || false}
-              isVerifying={isVerifying[platformKey]}
+              onPinToggle={() => handlePinToggle(platformKey)}
+              isConnecting={isLoading[connectedKey] || false}
+              isConnected={isConnected[connectedKey] || false}
+              isVerifying={isVerifying[connectedKey]}
               isSelected={selectedPlatform === platformKey}
+              isPinned={platform.isPinned}
               linkText={true}
             />
           );

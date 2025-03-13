@@ -3,7 +3,7 @@ import { Modal, Input, Button, Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticateShopify } from "../redux/slices/socialAuthSlice";
 
-const ShopifyConnector = ({ isOpen, onClose }) => {
+const ShopifyConnector = ({ isOpen, onClose, onVerifyingStart }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { isLoading, isConnected, errors } = useSelector(
@@ -18,6 +18,11 @@ const ShopifyConnector = ({ isOpen, onClose }) => {
       .replace(/^https?:\/\//, "")
       .replace(/\/$/, "");
 
+    // Close modal and notify parent about verification start
+    onClose();
+    onVerifyingStart?.();
+    
+    // Dispatch the authentication action
     await dispatch(authenticateShopify(cleanShopUrl));
   };
 
@@ -50,7 +55,7 @@ const ShopifyConnector = ({ isOpen, onClose }) => {
         >
           <Input
             placeholder="my-store.myshopify.com"
-            disabled={isConnected?.shopify}
+            disabled={isLoading?.shopify || isConnected?.shopify}
           />
         </Form.Item>
 
@@ -59,14 +64,14 @@ const ShopifyConnector = ({ isOpen, onClose }) => {
         )}
 
         <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose} disabled={isLoading?.shopify}>Cancel</Button>
           <Button
             type="primary"
             htmlType="submit"
             loading={isLoading?.shopify}
-            disabled={isConnected?.shopify}
+            disabled={isLoading?.shopify || isConnected?.shopify}
           >
-            {isConnected?.shopify ? "Connected" : "Connect Store"}
+            {isLoading?.shopify ? "Verifying..." : isConnected?.shopify ? "Connected" : "Connect Store"}
           </Button>
         </div>
       </Form>
