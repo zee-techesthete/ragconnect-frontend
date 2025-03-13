@@ -1,4 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const rootUrl = import.meta.env.VITE_ROOT_URL;
+
+// Async thunk for fetching conversations
+export const fetchConversations = createAsyncThunk(
+  "conversation/fetchConversations",
+  async ({ userId, token, platforms }, { rejectWithValue }) => {
+    try {
+      if (!userId || !token) {
+        throw new Error("Missing userId or token");
+      }
+
+      const response = await axios.get(`${rootUrl}/api/fetch/conversations`, {
+        params: { 
+          user_id: userId,
+          platforms: platforms
+        },
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.error || "Failed to fetch conversations"
+      );
+    }
+  }
+);
 
 const conversationSlice = createSlice({
   name: "conversation",
@@ -36,6 +68,21 @@ const conversationSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchConversations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchConversations.fulfilled, (state, action) => {
+        state.loading = false;
+        state.conversations = action.payload;
+      })
+      .addCase(fetchConversations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
