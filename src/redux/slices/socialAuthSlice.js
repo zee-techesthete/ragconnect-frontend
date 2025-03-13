@@ -5,10 +5,16 @@ const rootUrl = import.meta.env.VITE_ROOT_URL;
 
 export const authenticateSocial = createAsyncThunk(
   "auth/authenticateSocial",
-  async (platform, { rejectWithValue }) => {
+  async (platform, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const url = `${rootUrl}/api/auth/${platform.toLowerCase()}`;
+      const loggedInUserId = getState().login.user?.id;
+
+      if (!loggedInUserId) {
+        throw new Error("No logged in user found");
+      }
+
+      const url = `${rootUrl}/api/auth/${platform.toLowerCase()}?userId=${loggedInUserId}`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -26,14 +32,24 @@ export const authenticateSocial = createAsyncThunk(
 
 export const authenticateSmtp = createAsyncThunk(
   "auth/authenticateSmtp",
-  async (smtpData, { rejectWithValue }) => {
+  async (smtpData, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.post(`${rootUrl}/api/auth/smtp`, smtpData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const loggedInUserId = getState().login.user?.id;
+
+      if (!loggedInUserId) {
+        throw new Error("No logged in user found");
+      }
+
+      const response = await axios.post(
+        `${rootUrl}/api/auth/smtp?userId=${loggedInUserId}`,
+        smtpData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return { platform: "smtp", data: response.data };
     } catch (error) {
       return rejectWithValue({
@@ -46,15 +62,31 @@ export const authenticateSmtp = createAsyncThunk(
 
 export const authenticateShopify = createAsyncThunk(
   "auth/authenticateShopify",
-  async (shopUrl, { rejectWithValue }) => {
+  async (shopUrl, { rejectWithValue, getState }) => {
     try {
       if (!shopUrl) {
         throw new Error("Shop URL is required");
       }
+
+      const token = localStorage.getItem("authToken");
+      const loggedInUserId = getState().login.user?.id;
+
+      if (!loggedInUserId) {
+        throw new Error("No logged in user found");
+      }
+
       const response = await axios.get(
-        `${rootUrl}/api/auth/shopify?shop=${shopUrl}`
+        `${rootUrl}/api/auth/shopify?shop=${shopUrl}&userId=${loggedInUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      return { platform: "shopify", data: response.data };
+
+      // The response is now a plain text URL
+      const url = response.data;
+      return { platform: "shopify", url };
     } catch (error) {
       return rejectWithValue({
         platform: "shopify",
@@ -186,11 +218,13 @@ const socialAuthSlice = createSlice({
         state.errors["shopify"] = null;
       })
       .addCase(authenticateShopify.fulfilled, (state, action) => {
-        state.isLoading["shopify"] = false;
-        if (action.payload.data.url) {
-          window.location.href = action.payload.data.url;
+        const { platform, url } = action.payload;
+        state.isLoading[platform] = false;
+        state.isVerifying[platform] = true;
+        state.authUrls[platform] = url;
+        if (url) {
+          location.href = url;
         }
-        state.isVerifying["shopify"] = true;
       })
       .addCase(authenticateShopify.rejected, (state, action) => {
         state.isLoading["shopify"] = false;
