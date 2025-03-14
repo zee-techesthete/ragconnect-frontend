@@ -6,6 +6,7 @@ import PrimaryBtn from "../../../components/PrimaryBtn";
 import CustomSpinner from "../../../components/CustomSpinner";
 import { fetchUserConnectors } from "../../../redux/slices/channelSlice";
 import { fetchConversations } from "../../../redux/slices/conversationSlice";
+import { FaEnvelope, FaGlobe, FaInstagram, FaShoppingCart, FaWhatsapp } from "react-icons/fa";
 
 const filterOptions = [
   { label: "Order status", value: "order_status" },
@@ -130,22 +131,53 @@ const SearchMessageInbound = () => {
       return [];
     }
     
-    // Get unique providers
-    const uniqueProviders = [...new Set(connectors.connectors.map(c => c.provider_name))];
+    // Get unique providers with their connection types
+    const uniqueProviders = [...new Set(connectors.connectors.map(c => ({
+      provider_name: c.provider_name,
+      connection_type: c.connection_type
+    })))];
     console.log("getUniqueConnectorOptions - Unique providers:", uniqueProviders);
     
-    const options = uniqueProviders.map(provider => ({
+    const getIconForProvider = (provider, connectionType) => {
+      const providerLower = connectionType.toLowerCase();
+      
+      if (connectionType === "EMAIL") {
+        return <FaEnvelope className="text-gray mr-2" />;
+      }
+      if (providerLower.includes("instagram")) {
+        return <FaInstagram className="text-gray mr-2" />;
+      }
+      if (providerLower.includes("whatsapp")) {
+        return <FaWhatsapp className="text-gray mr-2" />;
+      }
+      if (providerLower.includes("web")) {
+        return <FaGlobe className="text-gray mr-2" />;
+      }
+      if (providerLower.includes("ecommerce")) {
+        return <FaShoppingCart className="text-gray mr-2" />;
+      }
+      return <FaGlobe className="text-gray mr-2" />; // Default icon
+    };
+    
+    const options = uniqueProviders.map(({ provider_name, connection_type }) => ({
       label: (
         <div className="flex justify-between items-center w-full">
-          <span>{provider}</span>
-          <Badge count={getChannelAccountCount(provider)} />
+          <span className="flex items-center">
+            {getIconForProvider(provider_name, connection_type)}
+            {provider_name === "SMTP_IMAP" 
+              ? "Email" 
+              : provider_name.charAt(0).toUpperCase() + provider_name.slice(1).toLowerCase()}
+          </span>
+          <span className="text-gray-600">{getChannelAccountCount(provider_name)}</span>
         </div>
       ),
-      value: provider.toLowerCase(),
+      value: provider_name.toLowerCase(),
     }));
     console.log("getUniqueConnectorOptions - Final options:", options);
     return options;
   };
+
+
 
   const channelMenu = (
     <Menu className="w-64 shadow-lg rounded-lg px-4">
@@ -158,12 +190,14 @@ const SearchMessageInbound = () => {
           {connectorsError}
         </div>
       ) : (
-        <Checkbox.Group
-          options={getUniqueConnectorOptions()}
-          value={selectedChannels}
-          onChange={handleChannelChange}
-          className="flex flex-col gap-2"
-        />
+        <div className="[&_.ant-checkbox-label]:w-full">
+          <Checkbox.Group
+            options={getUniqueConnectorOptions()}
+            value={selectedChannels}
+            onChange={handleChannelChange}
+            className="flex flex-col gap-2"
+          />
+        </div>
       )}
     </Menu>
   );
@@ -227,16 +261,21 @@ const SearchMessageInbound = () => {
         </div>
 
         <Dropdown
-          overlay={menu}
-          trigger={["click"]}
+          menu={{
+            items: filterCategories.map(category => ({
+              key: category.label,
+              label: category.label,
+              children: category.hasSubFilters ? category.subFilters.map(subFilter => ({
+                key: subFilter.value,
+                label: subFilter.label
+              })) : undefined
+            }))
+          }}
+          trigger={['click']}
           open={filterOpen}
           onOpenChange={toggleFilter}
-          overlayStyle={{ position: "absolute", left: "280px" }}
         >
-          <Button
-            icon={<FilterOutlined />}
-            className="size-10 border border-gray bg-white hover:bg-gray200"
-          />
+          <Button icon={<FilterOutlined />}>Filters</Button>
         </Dropdown>
 
         <div className="flex items-center gap-2 flex-wrap">

@@ -11,11 +11,14 @@ export const fetchConversations = createAsyncThunk(
       if (!userId || !token) {
         throw new Error("Missing userId or token");
       }
-
-      const response = await axios.get(`${rootUrl}/api/fetch/conversations`, {
+      
+      // Decode the platforms array to prevent URL encoding
+      const decodedPlatforms = decodeURIComponent(JSON.stringify(platforms));
+      
+      const response = await axios.get(`${rootUrl}/api/connector/conversations`, {
         params: { 
           user_id: userId,
-          platforms: platforms
+          platforms: decodedPlatforms
         },
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -31,6 +34,8 @@ export const fetchConversations = createAsyncThunk(
     }
   }
 );
+
+
 
 const conversationSlice = createSlice({
   name: "conversation",
