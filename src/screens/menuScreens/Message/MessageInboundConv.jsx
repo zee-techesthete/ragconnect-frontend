@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Avatar, Badge, Spin, message } from "antd";
+import { Avatar, Badge, Spin, message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 import {
@@ -13,51 +13,11 @@ import {
 } from "@ant-design/icons";
 import { setSelectedConversation, fetchConversations } from "../../../redux/slices/conversationSlice";
 
-// Static data for testing
-const staticConversations = [
-  {
-    id: "123",
-    name: "John Doe",
-    platform: "google",
-    message: "Hi team, Let's discuss the project updates tomorrow sj das adsa sdas d dasda das dsa das at 2 PM...",
-    time: moment().subtract(1, 'hours').format(),  // 1 hour ago
-    iconType: "google",
-    unread: true
-  },
-  {
-    id: "124",
-    name: "Client Name",
-    platform: "outlook",
-    message: "Here are the key points from our client meeting...",
-    time: moment().subtract(2, 'hours').format(),  // 2 hours ago
-    iconType: "windows",
-    unread: false
-  },
-  {
-    id: "125",
-    name: "Alice Smith",
-    platform: "google",
-    message: "Just sent the latest design files...",
-    time: moment().subtract(30, 'minutes').format(),  // 30 minutes ago
-    iconType: "google",
-    unread: true
-  },
-  {
-    id: "126",
-    name: "Bob Wilson",
-    platform: "outlook",
-    message: "Can we schedule a quick call?",
-    time: moment().subtract(3, 'hours').format(),  // 3 hours ago
-    iconType: "windows",
-    unread: false
-  }
-];
-
-const getIconComponent = (iconType) => {
-  switch (iconType) {
+const getIconComponent = (platform) => {
+  switch (platform.toLowerCase()) {
     case 'google':
       return <GoogleOutlined />;
-    case 'windows':
+    case 'outlook':
       return <WindowsOutlined />;
     case 'shopping':
       return <ShoppingCartOutlined />;
@@ -74,6 +34,27 @@ const getIconComponent = (iconType) => {
   }
 };
 
+const getPlatformName = (platform) => {
+  switch (platform.toLowerCase()) {
+    case 'google':
+      return 'Google';
+    case 'outlook':
+      return 'Outlook';
+    case 'shopping':
+      return 'Shopping';
+    case 'gift':
+      return 'Gift';
+    case 'message':
+      return 'Message';
+    case 'phone':
+      return 'Phone';
+    case 'link':
+      return 'Link';
+    default:
+      return 'Message';
+  }
+};
+
 const formatMessageTime = (timestamp) => {
   const messageTime = moment(timestamp);
   const now = moment();
@@ -81,17 +62,25 @@ const formatMessageTime = (timestamp) => {
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = now.diff(messageTime, 'days');
 
-  if (diffHours < 24) {
-    if (diffMinutes < 60) {
-      return `${diffMinutes}m`;
-    }
-    return `${diffHours}h`;
+  if (diffMinutes < 1) {
+    return 'Just now';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes}m ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours}h ago`;
   } else if (diffDays === 1) {
     return 'Yesterday';
   } else if (diffDays < 7) {
-    return messageTime.format('ddd');
+    return `${diffDays}d ago`;
+  } else if (diffDays < 30) {
+    const weeks = Math.floor(diffDays / 7);
+    return `${weeks}w ago`;
+  } else if (diffDays < 365) {
+    const months = Math.floor(diffDays / 30);
+    return `${months}mo ago`;
   } else {
-    return messageTime.format('MMM D');
+    const years = Math.floor(diffDays / 365);
+    return `${years}y ago`;
   }
 };
 
@@ -176,6 +165,7 @@ const MessageInboundConv = () => {
 
   const handleConversationSelect = (conversation) => {
     setSelectedConv(conversation);
+    dispatch(setSelectedConversation(conversation));
   };
 
   const handleRetry = useCallback(() => {
@@ -183,20 +173,22 @@ const MessageInboundConv = () => {
     fetchConversationsData(defaultPlatforms);
   }, [defaultPlatforms, fetchConversationsData]);
 
-  // Error boundary
-  // if (error) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center h-full p-4">
-  //       <p className="text-red-500 text-center mb-4">Error: {error}</p>
-  //       <button 
-  //         onClick={handleRetry}
-  //         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-  //       >
-  //         Retry
-  //       </button>
-  //     </div>
-  //   );
-  // }
+  const processConversations = () => {
+    if (!conversations?.results) return [];
+    
+    return conversations.results.flatMap(result => 
+      result.conversations.map(conversation => ({
+        id: conversation.id,
+        name: conversation.messages[0]?.sender?.name || 'Unknown',
+        platform: result.platform,
+        message: conversation.body,
+        time: conversation.received_at,
+        subject: conversation.subject,
+        thread_id: conversation.thread_id,
+        messages: conversation.messages
+      }))
+    );
+  };
 
   const renderContent = () => {
     if (loading) {
@@ -209,7 +201,9 @@ const MessageInboundConv = () => {
       );
     }
 
-    if (conversations.length === 0) {
+    const processedConversations = processConversations();
+
+    if (processedConversations.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
           <MessageOutlined className="text-4xl mb-2" />
@@ -225,7 +219,7 @@ const MessageInboundConv = () => {
       );
     }
 
-    return conversations.map((msg) => (
+    return processedConversations.map((msg) => (
       <div
         key={msg.id}
         className={`p-3 px-4 flex flex-col gap-1 cursor-pointer border-b border-gray hover:bg-gray-50 transition-colors duration-200
@@ -243,18 +237,20 @@ const MessageInboundConv = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`text-lg ${msg.unread ? 'text-blue-500' : 'text-gray-500'}`}>
-              {getIconComponent(msg.iconType)}
-            </span>
+            <Tooltip title={getPlatformName(msg.platform)} placement="top">
+              <span className="text-lg text-gray-500">
+                {getIconComponent(msg.platform)}
+              </span>
+            </Tooltip>
           </div>
         </div>
 
         {/* Message Content */}
         <div className="flex items-center justify-between gap-2">
-          <p className={`text-sm truncate flex-1 ${msg.unread ? 'text-gray900 font-medium' : 'text-gray'}`}>
+          <p className="text-sm truncate flex-1 text-gray900">
             {msg.message}
           </p>
-          <span className={`text-xs whitespace-nowrap ${msg.unread ? 'text-blue-500 font-medium' : 'text-gray-500'}`}>
+          <span className="text-xs whitespace-nowrap text-gray-500">
             {formatMessageTime(msg.time)}
           </span>
         </div>
@@ -268,7 +264,7 @@ const MessageInboundConv = () => {
       <div className="px-4 py-3 border-b border-gray flex items-center justify-between min-h-14">
         <h2 className="font-semibold text-lg">All Conversations</h2>
         <Badge 
-          count={staticConversations.length} 
+          count={processConversations().length} 
           className="text-gray font-semibold" 
           style={{ backgroundColor: "transparent", color: "gray", fontWeight: "bold" }} 
         />
@@ -276,41 +272,7 @@ const MessageInboundConv = () => {
 
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto">
-        {staticConversations.map((msg) => (
-          <div
-            key={msg.id}
-            className={`p-3 px-4 flex flex-col gap-1 cursor-pointer border-b border-gray hover:bg-primary transition-colors duration-200
-              ${selectedConv?.id === msg.id ? "border-l-4 border-gray400 bg-lightGray80" : ""}`}
-            onClick={() => handleConversationSelect(msg)}
-          >
-            {/* Message Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Avatar className="bg-gray-200 text-gray-700">
-                  {msg.name[0].toUpperCase()}
-                </Avatar>
-                <div>
-                  <p className="font-medium truncate max-w-[150px] sm:max-w-[200px]">{msg.name}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-lg ${msg.unread ? 'text-gray400' : 'text-gray800'}`}>
-                  {getIconComponent(msg.iconType)}
-                </span>
-              </div>
-            </div>
-
-            {/* Message Content */}
-            <div className="flex items-center justify-between gap-2">
-              <p className={`text-sm truncate flex-1 ${msg.unread ? 'text-gray100 font-normal' : 'text-black'}`}>
-                {msg.message}
-              </p>
-              <span className={`text-xs whitespace-nowrap ${msg.unread ? 'text-black font-medium' : 'text-black'}`}>
-                {formatMessageTime(msg.time)}
-              </span>
-            </div>
-          </div>
-        ))}
+        {renderContent()}
       </div>
     </div>
   );
