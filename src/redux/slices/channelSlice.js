@@ -8,24 +8,33 @@ export const fetchUserConnectors = createAsyncThunk(
   "channels/fetchUserConnectors",
   async ({ userId, token }, { rejectWithValue }) => {
     try {
-      console.log("channelSlice - Making API call with:", { userId, hasToken: !!token });
-      
+      console.log("channelSlice - Making API call with:", {
+        userId,
+        hasToken: !!token,
+      });
+
       if (!userId || !token) {
         throw new Error("Missing userId or token");
       }
 
-      const response = await axios.get(`${rootUrl}/api/user-connectors`, {
-        params: { user_id: userId },
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
+      const response = await axios.get(
+        `${rootUrl}/api/connector/user-connectors`,
+        {
+          params: { user_id: userId },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       console.log("channelSlice - API Response:", response.data);
       return response.data;
     } catch (error) {
-      console.error("channelSlice - API Error:", error.response?.data || error.message);
+      console.error(
+        "channelSlice - API Error:",
+        error.response?.data || error.message
+      );
       return rejectWithValue(
         error.response?.data?.error || "Failed to fetch channels"
       );
@@ -53,12 +62,18 @@ const channelSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchUserConnectors.fulfilled, (state, action) => {
-        console.log("channelSlice - Fulfilled state with data:", action.payload);
+        console.log(
+          "channelSlice - Fulfilled state with data:",
+          action.payload
+        );
         state.loading = false;
         state.connectors = action.payload;
       })
       .addCase(fetchUserConnectors.rejected, (state, action) => {
-        console.log("channelSlice - Rejected state with error:", action.payload);
+        console.log(
+          "channelSlice - Rejected state with error:",
+          action.payload
+        );
         state.loading = false;
         state.error = action.payload;
       });
@@ -66,4 +81,4 @@ const channelSlice = createSlice({
 });
 
 export const { clearError } = channelSlice.actions;
-export default channelSlice.reducer; 
+export default channelSlice.reducer;
