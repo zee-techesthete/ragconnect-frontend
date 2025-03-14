@@ -182,8 +182,8 @@ const SearchMessageInbound = () => {
   const channelMenu = (
     <Menu className="w-64 shadow-lg rounded-lg px-4">
       {connectorsLoading ? (
-        <div className="flex justify-center items-center py-4">
-          <CustomSpinner size="medium" color="#1890ff" />
+        <div className="flex justify-center items-center py-6">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
         </div>
       ) : connectorsError ? (
         <div className="text-red-500 py-4 text-center">
@@ -243,9 +243,16 @@ const SearchMessageInbound = () => {
             className="w-64 p-5 rounded-lg"
             disabled={connectorsLoading}
           >
-            <Button className="border border-gray bg-white">
-              Channels ({selectedChannels.length}) <DownOutlined className="ml-32" />
-              {connectorsLoading && <CustomSpinner size="small" className="ml-2" />}
+            <Button className="border border-gray bg-white flex items-center justify-between">
+              <div className="flex items-center">
+                <span>Channels ({selectedChannels.length})</span>
+                {connectorsLoading && (
+                  <div className="ml-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                  </div>
+                )}
+              </div>
+              <DownOutlined className="ml-2" />
             </Button>
           </Dropdown>
         </div>
