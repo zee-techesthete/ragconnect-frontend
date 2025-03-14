@@ -12,6 +12,11 @@ import {
   UserAddOutlined,
   FolderOpenOutlined,
 } from "@ant-design/icons";
+import moment from 'moment';
+
+const formatMessageTime = (timestamp) => {
+  return moment(timestamp).format('h:mm A');
+};
 
 const ChatUI = () => {
   const selectedConversation = useSelector((state) => state.conversation.selectedConversation);
@@ -33,6 +38,10 @@ const ChatUI = () => {
     );
   }
 
+  const isUserMessage = (message) => {
+    return message.direction === "OUTBOUND";
+  };
+
   return (
     <div className="flex flex-col bg-primary h-full">
       {/* Top Navbar - Fixed */}
@@ -41,12 +50,16 @@ const ChatUI = () => {
         <div className="flex items-center">
           <Avatar
             size="large"
-            src="https://via.placeholder.com/40"
-            className="me-2"
-          />
-          <div className="flex">
-            <p className="font-medium underline me-2">{selectedConversation.name}</p>
-            <span className="font-medium">• {selectedConversation.app}</span>
+            className="bg-gray200 text-gray900 me-2"
+          >
+            {selectedConversation.name?.[0]?.toUpperCase()}
+          </Avatar>
+          <div className="flex items-center">
+            <p className="font-medium">{selectedConversation.name}</p>
+            <span className="mx-2 text-gray-400">•</span>
+            <span className="text-gray-600 font-semibold">
+              {selectedConversation.platform?.charAt(0).toUpperCase() + selectedConversation.platform?.slice(1)}
+            </span>
           </div>
         </div>
 
@@ -73,20 +86,22 @@ const ChatUI = () => {
               }
             }}
           >
-            {selectedConversation.messages.map((msg, index) => (
-              msg.sender === "user" ? (
-                <UserBubble
-                  key={index}
-                  message={msg.text}
-                  userAvatar={true}
-                />
-              ) : (
-                <AiBubble
-                  key={index}
-                  message={msg.text}
-                  botAvatar={true}
-                />
-              )
+            {selectedConversation.messages?.map((msg, index) => (
+              <div key={index} className="flex flex-col">
+                {isUserMessage(msg) ? (
+                  <UserBubble
+                    message={msg.content}
+                    userAvatar={true}
+                    time={formatMessageTime(msg.sent_at)}
+                  />
+                ) : (
+                  <AiBubble
+                    message={msg.content}
+                    botAvatar={true}
+                    time={formatMessageTime(msg.sent_at)}
+                  />
+                )}
+              </div>
             ))}
             <div ref={messagesEndRef} /> {/* Scroll anchor */}
           </div>

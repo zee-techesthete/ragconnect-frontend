@@ -143,7 +143,7 @@ const conversationSlice = createSlice({
         state.selectedConversation.messages.push(message);
       }
       // Update the conversation in the conversations array
-      const conversation = state.conversations.find(conv => conv.id === conversationId);
+      const conversation = state.conversations.find(conv => conv.thread_id === conversationId);
       if (conversation) {
         conversation.messages.push(message);
         // Update the last message preview
