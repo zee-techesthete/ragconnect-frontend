@@ -1,37 +1,30 @@
-import { Suspense, useMemo } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
   useLocation,
 } from "react-router-dom";
+import { Suspense } from "react";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AuthScreen from "./screens/Registration/AuthScreen";
+import Login from "./screens/Login/Login";
+import ResetPassword from "./screens/Login/ResetPassword";
+import EnterPassword from "./screens/Login/EnterPassword";
+import AuthCallback from "./components/AuthCallback";
+import AccountCreated from "./screens/Registration/AccountCreated";
 
 import "./App.css";
 import Sidebar from "./screens/Sidebar";
-import ProtectedRoute from "./components/ProtectedRoute";
 import setupAxiosInterceptors from "./utils/axiosConfig";
-import AuthCallback from "./components/AuthCallback";
-
-// Screens
-import OnBoarding from "./screens/onboarding/OnBoarding";
-import Onboarding1 from "./screens/onboarding/Onboarding1";
-import Onboarding2 from "./screens/onboarding/Onboarding2";
-import Onboarding3 from "./screens/onboarding/Onboarding3";
+import EmailList from "./screens/Emails/EmailList";
+import TrainingHub from "./screens/menuScreens/trainingHub/TrainingHub";
+import AccountSetting from "./screens/menuScreens/AccountSetting/AccountSetting";
+import CustomerHub from "./screens/menuScreens/CustomerHub/CustomerHub";
 import HomeScreen from "./screens/menuScreens/HomeScreen/HomeScreen";
 import ChatUI from "./screens/ChatUI/ChatUI";
 import MainScreen from "./screens/MainScreen";
-import Login from "./screens/Login/Login";
 import MessageInbound from "./screens/menuScreens/Message/MessageInbound";
 import Connector from "./screens/menuScreens/Connector";
-import EmailList from "./screens/Emails/EmailList";
-import TrainingHub from "./screens/menuScreens/trainingHub/TrainingHub";
-import AuthScreen from "./screens/Registration/AuthScreen";
-import AccountCreated from "./screens/Registration/AccountCreated";
-import EmailConfirmed from "./screens/Registration/EmailConfirmed";
-import ResetPassword from "./screens/Login/ResetPassword";
-import EnterPassword from "./screens/Login/EnterPassword";
-import AccountSetting from "./screens/menuScreens/AccountSetting/AccountSetting";
-import CustomerHub from "./screens/menuScreens/CustomerHub/CustomerHub";
 
 // Initialize Axios interceptors
 setupAxiosInterceptors();
@@ -60,14 +53,6 @@ const publicRoutes = [
   //   ),
   // },
   { path: "/account-created", element: <AccountCreated /> },
-  {
-    path: "/verify-email",
-    element: (
-      <ProtectedRoute isPublic>
-        <EmailConfirmed />
-      </ProtectedRoute>
-    ),
-  },
   {
     path: "/login",
     element: (
@@ -102,8 +87,8 @@ const publicRoutes = [
             <EnterPassword />
           </ProtectedRoute>
         ),
-      }
-    ]
+      },
+    ],
   },
 ];
 
@@ -113,35 +98,18 @@ const protectedRoutes = [
     path: "/",
     element: (
       <ProtectedRoute>
-        <OnBoarding />
+        <AuthScreen />
       </ProtectedRoute>
     ),
   },
   {
-    path: "/onboarding-step1",
+    path: "/home",
     element: (
       <ProtectedRoute>
-        <Onboarding1 />
+        <HomeScreen />
       </ProtectedRoute>
     ),
   },
-  {
-    path: "/onboarding-step2",
-    element: (
-      <ProtectedRoute>
-        <Onboarding2 />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/onboarding-step3",
-    element: (
-      <ProtectedRoute>
-        <Onboarding3 />
-      </ProtectedRoute>
-    ),
-  },
-  { path: "/home", element: <ProtectedRoute><HomeScreen /></ProtectedRoute> },
   {
     path: "/chatui",
     element: (
@@ -223,7 +191,6 @@ const AppLayout = () => {
     "/",
     "/signup",
     "/account-created",
-    "/verify-email",
     "/login",
     "/reset-password",
     "/reset-password/reset",

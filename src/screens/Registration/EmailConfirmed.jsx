@@ -4,12 +4,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Logo from "../../assets/svgs/logo.svg";
 import { verifyEmail } from "../../redux/slices/authSlice";
+import { setUser } from "../../redux/slices/authSlice";
 
 const EmailConfirmed = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { error } = useSelector((state) => state.auth);
   const [verificationStatus, setVerificationStatus] = useState("verifying");
 
   useEffect(() => {
@@ -25,30 +26,32 @@ const EmailConfirmed = () => {
         const result = await dispatch(verifyEmail(token)).unwrap();
         if (result.success) {
           setVerificationStatus("success");
-          // Redirect to login after a short delay
-          // setTimeout(() => {
-          //   navigate("/login");
-          // }, 2000);
+          // Store the token and user data
+          localStorage.setItem("token", result.token);
+          dispatch(setUser(result.user));
+          // Redirect to home page after a short delay
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         } else {
           setVerificationStatus("error");
         }
       } catch (err) {
         console.error("Verification error:", err);
         setVerificationStatus("error");
+        // Redirect to login with error message after a short delay
+        setTimeout(() => {
+          navigate("/login", {
+            state: {
+              error: "Email verification failed, verify your email to login",
+            },
+          });
+        }, 2000);
       }
     };
 
     verifyEmailToken();
   }, [dispatch, searchParams, navigate]);
-
-  const handleLogin = () => {
-    navigate("/login");
-  };
-
-  const handleGetHelp = () => {
-    // Implement help functionality
-    console.log("Get help clicked");
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-primary px-4">
@@ -81,34 +84,18 @@ const EmailConfirmed = () => {
           {verificationStatus === "success" && (
             <div className="text-center">
               <h1 className="text-4xl font-bold">Email confirmed</h1>
-
               <p className="text-dullGray mt-2 text-sm md:text-base">
-                Your email has been confirmed, you can now login and start your
-                account!
+                Your email has been confirmed! Redirecting you to the home
+                page...
               </p>
-              <div className="flex justify-center mt-4">
-                <PrimaryBtn
-                  title="Login"
-                  className="bg-black text-white"
-                  href="/login"
-                />
-              </div>
             </div>
-           )} 
+          )}
 
           {verificationStatus === "error" && (
             <div className="text-center">
               <p className="text-red-600 mb-4">
-                {error || "Email is not verified. Please try again."}
+                {error || "Email verification failed. Redirecting to login..."}
               </p>
-              {/* <div className="space-y-4">
-              <button
-                onClick={handleGetHelp}
-                className="w-full text-sm text-gray-600 hover:text-gray-900"
-              >
-                Need help? Contact support
-              </button>
-            </div> */}
             </div>
           )}
         </div>

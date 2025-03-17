@@ -1,5 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ children, requireSignup, isPublic }) => {
   const { user, token } = useSelector((state) => state.login);
@@ -10,7 +11,7 @@ const ProtectedRoute = ({ children, requireSignup, isPublic }) => {
   if (isPublic) {
     // If user is authenticated, redirect to home
     if (user && token) {
-      return <Navigate to="/" replace />;
+      return <Navigate to="/home" replace />;
     }
     return children;
   }
@@ -26,7 +27,23 @@ const ProtectedRoute = ({ children, requireSignup, isPublic }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // If user is authenticated and trying to access root path, redirect to home
+  if (location.pathname === "/" && user && token) {
+    return <Navigate to="/home" replace />;
+  }
+
   return children;
 };
 
-export default ProtectedRoute; 
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  requireSignup: PropTypes.bool,
+  isPublic: PropTypes.bool,
+};
+
+ProtectedRoute.defaultProps = {
+  requireSignup: false,
+  isPublic: false,
+};
+
+export default ProtectedRoute;

@@ -14,26 +14,29 @@ export const loginUser = createAsyncThunk(
       );
 
       const { token, user } = response.data;
-      
+
       if (!token || !user) {
         throw new Error("Invalid response from server");
       }
 
       // Store token in localStorage
-      localStorage.setItem('authToken', token);
+      localStorage.setItem("authToken", token);
       // Set token as default header for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       return { token, user };
     } catch (error) {
-      if (error.response?.status === 403 && error.response?.data?.needsVerification) {
+      if (
+        error.response?.status === 403 &&
+        error.response?.data?.needsVerification
+      ) {
         return rejectWithValue({
           error: "Please verify your email before logging in.",
           needsVerification: true,
         });
       }
       return rejectWithValue({
-        error: error.response?.data?.error || "Login failed. Please try again."
+        error: error.response?.data?.error || "Login failed. Please try again.",
       });
     }
   }
@@ -46,13 +49,13 @@ export const logoutUser = createAsyncThunk(
     try {
       await axios.post(`${rootUrl}/api/auth/logout`);
       // Clear token from localStorage and axios headers
-      localStorage.removeItem('authToken');
-      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem("authToken");
+      delete axios.defaults.headers.common["Authorization"];
       return null;
     } catch (error) {
       // Even if the API call fails, we should still clear local state
-      localStorage.removeItem('authToken');
-      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem("authToken");
+      delete axios.defaults.headers.common["Authorization"];
       return rejectWithValue(error.response?.data?.error || "Logout failed");
     }
   }
@@ -102,9 +105,9 @@ export const handleSSOCallback = createAsyncThunk(
   async (token, { rejectWithValue }) => {
     try {
       // Store token in localStorage
-      localStorage.setItem('authToken', token);
+      localStorage.setItem("authToken", token);
       // Set token as default header for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       // Verify the token with your backend
       const response = await axios.get(`${rootUrl}/api/auth/me`, {
@@ -115,8 +118,8 @@ export const handleSSOCallback = createAsyncThunk(
       return { token, user: response.data };
     } catch (error) {
       // Clear token if verification fails
-      localStorage.removeItem('authToken');
-      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem("authToken");
+      delete axios.defaults.headers.common["Authorization"];
       return rejectWithValue(
         error.response?.data?.error || "Failed to verify SSO login."
       );
@@ -124,9 +127,40 @@ export const handleSSOCallback = createAsyncThunk(
   }
 );
 
+// Async thunk for email verification
+export const verifyEmail = createAsyncThunk(
+  "login/verifyEmail",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${rootUrl}/api/auth/verify-email`, {
+        token,
+      });
+
+      const { token: authToken, user } = response.data;
+
+      if (!authToken || !user) {
+        throw new Error("Invalid response from server");
+      }
+
+      // Store token in localStorage
+      localStorage.setItem("authToken", authToken);
+      // Set token as default header for future requests
+      axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
+
+      return { token: authToken, user };
+    } catch (error) {
+      return rejectWithValue({
+        error:
+          error.response?.data?.error ||
+          "Email verification failed. Please try again.",
+      });
+    }
+  }
+);
+
 const initialState = {
   user: null,
-  token: localStorage.getItem('authToken'),
+  token: localStorage.getItem("authToken"),
   loading: false,
   error: null,
   success: false,
@@ -234,6 +268,26 @@ const loginSlice = createSlice({
       .addCase(handleSSOCallback.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.token = null;
+        state.user = null;
+        state.success = false;
+      })
+      // Handle Email Verification
+      .addCase(verifyEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(verifyEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.success = true;
+        state.error = null;
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error || "Email verification failed";
         state.token = null;
         state.user = null;
         state.success = false;
