@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineTeam, AiOutlineBook, AiOutlineLink, AiOutlineSetting, AiOutlineHome } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import {
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineTeam,
+  AiOutlineBook,
+  AiOutlineLink,
+  AiOutlineSetting,
+  AiOutlineHome,
+} from "react-icons/ai";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import Logo from "../assets/svgs/userLogo.svg";
 import ProgressBar from "../components/Progress";
 import { Button, Input } from "antd";
 import { FaSearch } from "react-icons/fa";
+import { logoutUser } from "../redux/slices/loginSlice";
 
 const Sidebar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -13,6 +23,7 @@ const Sidebar = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   // Close sidebar when screen size changes to desktop
   useEffect(() => {
@@ -22,8 +33,8 @@ const Sidebar = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
@@ -32,13 +43,43 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Home", path: "/home", icon: <AiOutlineHome size={20} /> },
-    { name: "Inbound", path: "/inbound", icon: <BiMessageSquareDetail size={20} /> },
-    { name: "Customer Hub", path: "/customer-hub", icon: <AiOutlineTeam size={20} /> },
-    { name: "Training Hub", path: "/training-hub", icon: <AiOutlineBook size={20} /> },
-    { name: "Connector", path: "/connector", icon: <AiOutlineLink size={20} /> },
-    { name: "Agent Setting", path: "/agent-setting", icon: <AiOutlineSetting size={20} /> },
-    { name: "Account Setting", path: "/account-setting", icon: <AiOutlineSetting size={20} /> },
+    {
+      name: "Inbound",
+      path: "/inbound",
+      icon: <BiMessageSquareDetail size={20} />,
+    },
+    {
+      name: "Customer Hub",
+      path: "/customer-hub",
+      icon: <AiOutlineTeam size={20} />,
+    },
+    {
+      name: "Training Hub",
+      path: "/training-hub",
+      icon: <AiOutlineBook size={20} />,
+    },
+    {
+      name: "Connector",
+      path: "/connector",
+      icon: <AiOutlineLink size={20} />,
+    },
+    {
+      name: "Agent Setting",
+      path: "/agent-setting",
+      icon: <AiOutlineSetting size={20} />,
+    },
+    {
+      name: "Account Setting",
+      path: "/account-setting",
+      icon: <AiOutlineSetting size={20} />,
+    },
   ];
+
+  const handleLogout = () => {
+    dispatch(logoutUser()).then(() => {
+      navigate("/login");
+    });
+  };
 
   return (
     <>
@@ -76,12 +117,16 @@ const Sidebar = () => {
 
         {/* Profile and Settings */}
         <div className="flex items-center mb-8 relative">
-          <img src={Logo} alt="Profile" className="w-12 h-12 rounded-md mr-3 shadow-md" />
+          <img
+            src={Logo}
+            alt="Profile"
+            className="w-12 h-12 rounded-md mr-3 shadow-md"
+          />
           <div className="">
             <span className="font-semibold text-lg block">John Doe</span>
           </div>
-          <button 
-            onClick={toggleDropdown} 
+          <button
+            onClick={toggleDropdown}
             className="p-2 hover:bg-gray-100 rounded-md transition-colors"
             aria-label="Toggle Profile Menu"
           >
@@ -97,7 +142,7 @@ const Sidebar = () => {
                 Settings
               </div>
               <div
-                onClick={() => alert("Logging Out")}
+                onClick={handleLogout}
                 className="cursor-pointer px-4 py-2 hover:bg-gray-50 text-gray-700"
               >
                 Logout
@@ -126,12 +171,18 @@ const Sidebar = () => {
                 closeSidebar();
               }}
               className={`flex items-center space-x-3 cursor-pointer p-3 rounded-lg transition-colors ${
-                location.pathname === item.path 
-                  ? "bg-gray800 text-black" 
+                location.pathname === item.path
+                  ? "bg-gray800 text-black"
                   : "hover:bg-gray-100 text-gray-700"
               }`}
             >
-              <span className={`${location.pathname === item.path ? "text-white" : "text-gray-600"}`}>
+              <span
+                className={`${
+                  location.pathname === item.path
+                    ? "text-white"
+                    : "text-gray-600"
+                }`}
+              >
                 {item.icon}
               </span>
               <span className="font-medium">{item.name}</span>

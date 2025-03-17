@@ -59,6 +59,8 @@ const getPlatformName = (platform) => {
 };
 
 const formatMessageTime = (timestamp) => {
+  if (!timestamp) return "Unknown time";
+
   const messageTime = moment(timestamp);
   const now = moment();
   const diffMinutes = now.diff(messageTime, "minutes");
@@ -68,22 +70,22 @@ const formatMessageTime = (timestamp) => {
   if (diffMinutes < 1) {
     return "Just now";
   } else if (diffMinutes < 60) {
-    return `${diffMinutes}m ago`;
+    return `${diffMinutes}m`;
   } else if (diffHours < 24) {
-    return `${diffHours}h ago`;
+    return `${diffHours}h`;
   } else if (diffDays === 1) {
     return "Yesterday";
   } else if (diffDays < 7) {
-    return `${diffDays}d ago`;
+    return `${diffDays}d`;
   } else if (diffDays < 30) {
     const weeks = Math.floor(diffDays / 7);
-    return `${weeks}w ago`;
+    return `${weeks}w`;
   } else if (diffDays < 365) {
     const months = Math.floor(diffDays / 30);
-    return `${months}mo ago`;
+    return `${months}mo`;
   } else {
     const years = Math.floor(diffDays / 365);
-    return `${years}y ago`;
+    return `${years}y`;
   }
 };
 
@@ -142,6 +144,7 @@ const MessageInboundConv = () => {
     let isMounted = true;
 
     const initializeData = async () => {
+      console.log("defaultPlatforms", defaultPlatforms);
       if (!defaultPlatforms.length) {
         message.warning("No channels available");
         return;
@@ -194,7 +197,7 @@ const MessageInboundConv = () => {
       name: conversation.messages?.[0]?.sender?.name || "Unknown",
       platform: conversation.platform,
       message: conversation.body,
-      time: conversation.received_at,
+      time: conversation.messages?.[0]?.sent_at || conversation.received_at,
       subject: conversation.subject,
       thread_id: conversation.thread_id,
       messages: conversation.messages || [],
