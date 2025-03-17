@@ -34,14 +34,17 @@ export const fetchConversations = createAsyncThunk(
       const allConversations = response.data.results.reduce(
         (acc, platformData) => {
           if (platformData.success && platformData.conversations) {
-            // Add platform info to each conversation
-            const conversationsWithPlatform = platformData.conversations.map(
-              (conv) => ({
-                ...conv,
-                platform: platformData.platform,
-              })
-            );
-            return [...acc, ...conversationsWithPlatform];
+            // Only include conversations from requested platforms
+            if (platforms.includes(platformData.platform.toLowerCase())) {
+              // Add platform info to each conversation
+              const conversationsWithPlatform = platformData.conversations.map(
+                (conv) => ({
+                  ...conv,
+                  platform: platformData.platform,
+                })
+              );
+              return [...acc, ...conversationsWithPlatform];
+            }
           }
           return acc;
         },
